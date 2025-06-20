@@ -1,4 +1,4 @@
-package dao.mappers;
+package com.recipeapp.dao.mappers;
 
 import java.io.Serializable;
 /**

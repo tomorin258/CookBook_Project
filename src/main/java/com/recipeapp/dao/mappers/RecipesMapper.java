@@ -1,7 +1,7 @@
-package dao.mappers;
+package com.recipeapp.dao.mappers;
+import java.util.ArrayList;
 
 import org.apache.ibatis.annotations.Param;
-import java.util.ArrayList;
 
 /**
  * The interface RecipesMapper.
