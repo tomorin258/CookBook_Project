@@ -1,5 +1,5 @@
 package view;
 
 public class RecipeListView {
-    // TODO: 实现食谱列表管理界面
+    // This class can be used to display a list of recipes in the UI.
 }

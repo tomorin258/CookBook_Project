@@ -1,5 +1,5 @@
 package view;
 
 public class RecipeDetailView {
-    // TODO: 实现食谱详情界面
+    // This class will handle the display of recipe details, including ingredients, comments, and interactions.
 }
