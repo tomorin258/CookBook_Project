@@ -7,48 +7,48 @@
 
     <!-- add a new users entry -->
     <insert id="addUsers" parameterType="Users">
-        INSERT INTO users (user_name, password)
+        INSERT INTO users (username, password)
         VALUES (#{users.userName}, #{users.password})
     </insert>
 
     <!-- delete a users entry by ID -->
     <delete id="deleteUsers" parameterType="int">
-        DELETE FROM users WHERE user_id = #{userId}
+        DELETE FROM users WHERE id = #{userId}
     </delete>
 
     <!-- update a users entry -->
     <update id="updateUsers" parameterType="Users">
         UPDATE users
-        SET user_name = #{users.userName},
+        SET username = #{users.userName},
             password = #{users.password}
-        WHERE user_id = #{users.userId}
+        WH = #{users.userId}
     </update>
 
     <!-- Select a users entry by ID -->
     <select id="getUsersById" resultType="Users" parameterType="int">
-        SELECT user_id, user_name, password
+        SEL, username, password
         FROM users
-        WHERE user_id = #{userId}
+        WH = #{userId}
     </select>
 
     <!-- Select users entries by Name (fuzzy match) -->
     <select id="getUsersByName" resultType="Users" parameterType="string">
-        SELECT user_id, user_name, password
+        SEL, username, password
         FROM users
-        WHERE user_name LIKE CONCAT('%', #{userName}, '%')
+        WHERE username LIKE CONCAT('%', #{userName}, '%')
     </select>
 
     <!-- Select the newest users entry -->
     <select id="getNewestUsers" resultType="Users">
-        SELECT user_id, user_name, password
+        SEL, username, password
         FROM users
-        ORDER BY user_id DESC
+        ORDER DESC
         LIMIT 1
     </select>
 
     <!-- Select all users entries -->
     <select id="getAllUsers" resultType="Users">
-        SELECT user_id, user_name, password
+        SEL, username, password
         FROM users
     </select>
 
