@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<<<<<<< HEAD
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
@@ -99,9 +98,3 @@
     </right>
 
 </BorderPane>
-=======
-<!-- TODO: 食谱编辑/添加界面 FXML -->
-<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.yourcompany.recipeapp.controller.RecipeManagementController">
-    <!-- 布局内容 -->
-</AnchorPane>
->>>>>>> bde501285c262325e8fc5b05c83eaf136233e4c1
