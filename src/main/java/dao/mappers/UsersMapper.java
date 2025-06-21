@@ -1,4 +1,4 @@
-package com.recipeapp.dao.mappers;
+package dao.mappers;
 import java.util.ArrayList;
 
 import org.apache.ibatis.annotations.Param;
