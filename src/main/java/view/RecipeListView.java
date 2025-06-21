@@ -1,4 +1,4 @@
-package com.recipeapp.view;
+package view;
 
 public class RecipeListView {
     // TODO: 实现食谱列表管理界面

@@ -1,5 +1,100 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- TODO: 食谱编辑/添加界面 FXML -->
-<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.yourcompany.recipeapp.controller.RecipeManagementController">
-    <!-- 布局内容 -->
-</AnchorPane>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.SpinnerValueFactory.IntegerSpinnerValueFactory?>
+
+<!-- Recipe add / edit screen – mirrors recipe_detail size & layout (tweaked) -->
+<BorderPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.recipeapp.controller.RecipeManagementController"
+            prefWidth="768" prefHeight="889"
+            style="-fx-background-color:#fbf9e5;">
+
+    <!-- ─── TOP BAR ─────────────────────────────────────────────────────────── -->
+    <top>
+        <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-background-color:#fff7c8; -fx-padding:12;">
+            <Button fx:id="backBtn" text="⟵  Back" onAction="#onBack" style="-fx-font-weight:bold;" />
+            <Separator orientation="VERTICAL" />
+            <!-- Editable title field in top bar -->
+            <TextField fx:id="titleField" promptText="Recipe title" HBox.hgrow="ALWAYS"
+                       style="-fx-font-size:26; -fx-font-family:'Comic Sans MS'; -fx-text-fill:#333; -fx-font-weight:bold;" />
+            <Button fx:id="removeAllBtn" text="Remove All" onAction="#onRemoveAll" />
+            <Button fx:id="saveBtn" text="Save" defaultButton="true" onAction="#onSave" />
+        </HBox>
+    </top>
+
+    <!-- ─── CENTER AREA ─────────────────────────────────────────────────────── -->
+    <center>
+        <VBox spacing="15" style="-fx-padding:15 20 20 20;">
+            <!-- Serve number spinner -->
+            <HBox spacing="8" alignment="CENTER_LEFT">
+                <Label text="Serve number:" />
+                <Spinner fx:id="serveSpinner" prefWidth="90" editable="true">
+                    <valueFactory>
+                        <SpinnerValueFactory.IntegerSpinnerValueFactory min="1" max="99" initialValue="1" />
+                    </valueFactory>
+                </Spinner>
+            </HBox>
+
+            <!-- Ingredients table inside scroll -->
+            <ScrollPane fitToWidth="true" fitToHeight="true" VBox.vgrow="ALWAYS">
+                <content>
+                    <VBox spacing="8">
+                        <TableView fx:id="ingredientsTable" prefHeight="420" prefWidth="380" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="ingredientNameCol" text="Ingredient" prefWidth="120" />
+                                <TableColumn fx:id="quantityCol" text="Quantity" prefWidth="80" />
+                                <TableColumn fx:id="unitsCol" text="Units" prefWidth="80" />
+                                <TableColumn fx:id="ingredientDescCol" text="Description" prefWidth="160" />
+                            </columns>
+                        </TableView>
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <Button fx:id="addRowBtn" text="＋ Add Row" onAction="#onAddRow" />
+                            <Button fx:id="delRowBtn" text="− Delete Row" onAction="#onDeleteRow" />
+                        </HBox>
+                    </VBox>
+                </content>
+            </ScrollPane>
+        </VBox>
+    </center>
+
+    <!-- ─── RIGHT SIDEBAR ───────────────────────────────────────────────────── -->
+    <right>
+        <VBox spacing="14" alignment="TOP_CENTER"
+              style="-fx-padding:16 24 16 16; -fx-background-color:#fff2af;">
+
+            <!-- Image placeholder -->
+            <StackPane prefWidth="220" prefHeight="220" maxWidth="220" maxHeight="220"
+                       style="-fx-background-color:#fefefe; -fx-border-color:#d1d1d1; -fx-border-radius:6; -fx-background-radius:6; -fx-effect:dropshadow( gaussian , rgba(0,0,0,0.25) , 10 ,0,0,2 );">
+                <ImageView fx:id="recipeImageView" fitWidth="220" fitHeight="220" preserveRatio="true" />
+            </StackPane>
+
+            <!-- Upload picture button BELOW image -->
+            <Button fx:id="uploadBtn" text="Upload Picture" onAction="#onUpload" />
+
+            <!-- Blue separator above cooking time -->
+            <Separator orientation="HORIZONTAL" prefWidth="200" style="-fx-background-color:#3da9fc;" />
+
+            <!-- Cooking & Preparation inputs -->
+            <HBox spacing="6" alignment="CENTER">
+                <Label text="Cooking:" style="-fx-font-weight:bold;" />
+                <TextField fx:id="cookTimeField" promptText="min" prefWidth="60" />
+                <Label text="min" style="-fx-font-weight:bold;" />
+            </HBox>
+
+            <HBox spacing="6" alignment="CENTER">
+                <Label text="Preparation:" style="-fx-font-weight:bold;" />
+                <TextField fx:id="prepTimeField" promptText="min" prefWidth="60" />
+                <Label text="min" style="-fx-font-weight:bold;" />
+            </HBox>
+
+            <!-- Blue separator below preparation time -->
+            <Separator orientation="HORIZONTAL" prefWidth="200" style="-fx-background-color:#3da9fc;" />
+
+            <!-- Instructions editable area -->
+            <Label text="Instructions:" style="-fx-font-weight:bold; -fx-font-size:14;" />
+            <TextArea fx:id="instructionsArea" wrapText="true" prefHeight="280" prefWidth="220" VBox.vgrow="ALWAYS" />
+        </VBox>
+    </right>
+
+</BorderPane>

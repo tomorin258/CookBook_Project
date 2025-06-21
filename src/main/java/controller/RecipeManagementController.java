@@ -1,4 +1,4 @@
-package com.recipeapp.controller;
+package controller;
 
 public class RecipeManagementController {
     // TODO: 实现食谱管理相关控制逻辑

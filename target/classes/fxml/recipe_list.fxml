@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- TODO: 食谱列表界面 FXML -->
-<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.yourcompany.recipeapp.controller.RecipeManagementController">
-    <!-- 布局内容 -->
-</AnchorPane>
