@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import org.apache.ibatis.annotations.Param;
 
+import model.RecipeIngredients;
+
 /**
  * The interface RecipeIngredientsMapper.
  * Provides CRUD operations for the recipe_ingredients table.

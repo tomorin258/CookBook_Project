@@ -1,8 +1,15 @@
 package model;
 
 import java.io.Serializable;
-
+/**
+ * Represents a recipes entity.
+ * Each recipes entry contains information such as user ID, title, description, instructions, cook time, servings, and like count.
+ * Maps to the 'recipe' table in the database.
+ * 
+ * @author: Pan Zitao
+ */
 public class Recipes implements Serializable {
+
     private int id;
     private int userId;
     private String title;
@@ -12,8 +19,25 @@ public class Recipes implements Serializable {
     private int servings;
     private int likeCount;
 
-    public Recipes() {}
+    /**
+     * Default constructor for the Recipes class.
+     */
+    public Recipes() {
 
+    }
+
+    /**
+     * Constructs a Recipes object with all fields.
+     *
+     * @param id            The ID of the recipe (primary key).
+     * @param userId        The ID of the user who created the recipe.
+     * @param title         The title of the recipe.
+     * @param description   The description of the recipe.
+     * @param instructions  The cooking instructions.
+     * @param cookTime      The cooking time in minutes.
+     * @param servings      The number of servings.
+     * @param likeCount     The number of likes this recipe has received.
+     */
     public Recipes(int id, int userId, String title, String description, String instructions, int cookTime, int servings, int likeCount) {
         this.id = id;
         this.userId = userId;
@@ -25,30 +49,75 @@ public class Recipes implements Serializable {
         this.likeCount = likeCount;
     }
 
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+    public int getId() {
+        return id;
+    }
 
-    public int getUserId() { return userId; }
-    public void setUserId(int userId) { this.userId = userId; }
+    public void setId(int id) {
+        this.id = id;
+    }
 
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
+    public int getUserId() {
+        return userId;
+    }
 
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
 
-    public String getInstructions() { return instructions; }
-    public void setInstructions(String instructions) { this.instructions = instructions; }
+    public String getTitle() {
+        return title;
+    }
 
-    public int getCookTime() { return cookTime; }
-    public void setCookTime(int cookTime) { this.cookTime = cookTime; }
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-    public int getServings() { return servings; }
-    public void setServings(int servings) { this.servings = servings; }
+    public String getDescription() {
+        return description;
+    }
 
-    public int getLikeCount() { return likeCount; }
-    public void setLikeCount(int likeCount) { this.likeCount = likeCount; }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
+    public String getInstructions() {
+        return instructions;
+    }
+
+    public void setInstructions(String instructions) {
+        this.instructions = instructions;
+    }
+
+    public int getCookTime() {
+        return cookTime;
+    }
+
+    public void setCookTime(int cookTime) {
+        this.cookTime = cookTime;
+    }
+
+    public int getServings() {
+        return servings;
+    }
+
+    public void setServings(int servings) {
+        this.servings = servings;
+    }
+
+    public int getLikeCount() {
+        return likeCount;
+    }
+
+    public void setLikeCount(int likeCount) {
+        this.likeCount = likeCount;
+    }
+
+    /**
+     * Returns a string representation of the Recipes object.
+     *
+     * @return A string representation including all recipes fields.
+     */
     @Override
     public String toString() {
         return "Recipes{" +

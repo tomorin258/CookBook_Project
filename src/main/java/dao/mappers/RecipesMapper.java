@@ -3,6 +3,8 @@ import java.util.ArrayList;
 
 import org.apache.ibatis.annotations.Param;
 
+import model.Recipes;
+
 /**
  * The interface RecipesMapper.
  * Provides CRUD operations for Recipes table.

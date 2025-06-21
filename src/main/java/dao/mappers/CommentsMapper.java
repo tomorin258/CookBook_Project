@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import org.apache.ibatis.annotations.Param;
 
+import model.Comments;
+
 /**
  * The interface CommentsMapper.
  * Provides CRUD operations for the comments table.
