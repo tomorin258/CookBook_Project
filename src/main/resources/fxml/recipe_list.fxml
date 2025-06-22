@@ -1,5 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- TODO: 食谱列表界面 FXML -->
-<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.yourcompany.recipeapp.controller.RecipeManagementController">
-    <!-- 布局内容 -->
-</AnchorPane>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<!-- Recipe list screen – title slightly left‑shifted, centered search bar, scrollable list -->
+<BorderPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.recipeapp.controller.RecipeManagementController"
+            prefWidth="768" prefHeight="889"
+            style="-fx-background-color:#fbf9e5;">
+
+    <!-- ─── HEADER ─────────────────────────────────────────────────────────── -->
+    <top>
+        <!-- Stack title row and search row -->
+        <VBox spacing="10" style="-fx-background-color:#fff7c8; -fx-padding:14;">
+            <!-- Title row: Back on left, title slightly left‑aligned by adding spacer on right -->
+            <BorderPane>
+                <left>
+                    <Button fx:id="backBtn" text="⟵  Back" onAction="#onBack" style="-fx-font-weight:bold;" />
+                </left>
+                <center>
+                    <Label text="Recipe List" style="-fx-font-size:34; -fx-font-weight:bold; -fx-text-fill:#333;" />
+                </center>
+                <!-- narrow spacer pushes title少许向左 -->
+                <right>
+                    <Region prefWidth="60" />
+                </right>
+            </BorderPane>
+
+            <!-- Search row -->
+            <HBox spacing="10" alignment="CENTER">
+                <TextField fx:id="keywordField" promptText="Search recipes..." prefWidth="340" />
+                <Button fx:id="searchBtn" text="Search" onAction="#onSearch" />
+            </HBox>
+        </VBox>
+    </top>
+
+    <!-- ─── CENTER LIST ─────────────────────────────────────────────────────── -->
+    <center>
+        <!-- ListView automatically scrolls; cellFactory shows image + name -->
+        <ListView fx:id="recipeListView" BorderPane.alignment="CENTER"
+                  prefWidth="720" prefHeight="800" />
+    </center>
+
+</BorderPane>
+ 
