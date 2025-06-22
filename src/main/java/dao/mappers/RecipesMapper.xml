@@ -54,6 +54,14 @@
         LIMIT 1
     </select>
 
+    <!-- Select  recipes entries by likeCount -->
+    <select id="getNewestRecipes" resultType="Recipes">
+        SELECT id, user_id AS userId, title, description, instructions,
+               cook_time AS cookTime, servings, like_count AS likeCount
+        FROM recipe
+        ORDER BY likeCount DESC
+    </select>
+
     <!-- Select all recipes entries -->
     <select id="getAllRecipes" resultType="Recipes">
         SELECT id, user_id AS userId, title, description, instructions,
