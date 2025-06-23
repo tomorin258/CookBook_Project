@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane prefHeight="420" prefWidth="640" style="-fx-background-color:#e6f4ff;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.RecipeLoginController">
+
+    <!-- ── 顶栏：标题居中 ─────────────────────────────────────────── -->
+    <top>
+        <StackPane style="-fx-background-color:#d3eaff; -fx-padding:14;">
+            <Label style="-fx-font-size:34; -fx-font-weight:bold; -fx-text-fill:#0d3b66;" text="CookBook -- Get your account!" />
+        </StackPane>
+    </top>
+
+    <!-- ── 表单区 ───────────────────────────────────────────────── -->
+    <center>
+        <VBox alignment="CENTER" spacing="18">
+            <Label style="-fx-font-size:28; -fx-font-weight:bold;" text="Create Account" />
+
+            <!-- 输入表单 -->
+            <GridPane alignment="CENTER" hgap="12" vgap="14">
+                <padding><Insets bottom="10" left="20" right="20" top="20" /></padding>
+
+                <!-- Username -->
+                <Label text="Username:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                <TextField fx:id="usernameField" alignment="CENTER" promptText="Enter your username" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+                <!-- Email -->
+                <Label text="Email:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                <TextField fx:id="emailField" alignment="CENTER" promptText="Enter your email" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                <!-- Password -->
+                <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                <PasswordField fx:id="passwordField" alignment="CENTER" promptText="Enter your password" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                <!-- Confirm -->
+                <Label text="Confirm Password:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                <PasswordField fx:id="confirmField" alignment="CENTER" promptText="Re-enter password" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <columnConstraints>
+               <ColumnConstraints />
+               <ColumnConstraints />
+            </columnConstraints>
+            <rowConstraints>
+               <RowConstraints />
+               <RowConstraints />
+               <RowConstraints />
+               <RowConstraints />
+            </rowConstraints>
+            </GridPane>
+
+            <!-- 操作按钮 -->
+            <HBox alignment="CENTER" spacing="12">
+                <!-- 主按钮：深蓝底白字 -->
+                <Button fx:id="registerBtn" defaultButton="true" onAction="#onRegister" style="                             -fx-background-color:#0d3b66;                             -fx-text-fill:white;                             -fx-font-weight:bold;                             -fx-background-radius:20;                             -fx-padding:6 30;" text="Sign Up" />
+
+                <!-- 次按钮：白底蓝字 -->
+                <Button fx:id="backBtn" onAction="#onBackToLogin" style="                             -fx-background-color:#ffffff;                             -fx-text-fill:#0d3b66;                             -fx-font-weight:bold;                             -fx-border-color:#0d3b66;                             -fx-border-radius:20;                             -fx-background-radius:20;                             -fx-padding:6 28;" text="Back" />
+            </HBox>
+
+            <!-- 消息 / 错误提示 -->
+            <Label fx:id="messageLabel" textFill="red" />
+        </VBox>
+    </center>
+</BorderPane>
