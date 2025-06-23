@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="dao.mappers.RecipesMapper">
+
+    <!-- Add a new recipes entry -->
+    <insert id="addRecipes" parameterType="Recipes">
+        INSERT INTO recipe (user_id, title, description, instructions, cook_time, servings, like_count)
+        VALUES (#{recipes.userId}, #{recipes.title}, #{recipes.description}, #{recipes.instructions}, #{recipes.cookTime}, #{recipes.servings}, #{recipes.likeCount})
+    </insert>
+
+    <!-- Delete a recipes entry by ID -->
+    <delete id="deleteRecipes" parameterType="Integer">
+        DELETE FROM recipe WHERE id = #{recipesId}
+    </delete>
+
+    <!-- Update a recipes entry -->
+    <update id="updateRecipes" parameterType="Recipes">
+        UPDATE recipe
+        SET user_id = #{recipes.userId},
+            title = #{recipes.title},
+            description = #{recipes.description},
+            instructions = #{recipes.instructions},
+            cook_time = #{recipes.cookTime},
+            servings = #{recipes.servings},
+            like_count = #{recipes.likeCount}
+        WHERE id = #{recipes.id}
+    </update>
+
+    <!-- Select a recipes entry by ID -->
+    <select id="getRecipesById" parameterType="int" resultType="Recipes">
+        SELECT id, user_id AS userId, title, description, instructions,
+               cook_time AS cookTime, servings, like_count AS likeCount
+        FROM recipe
+        WHERE id = #{recipesId}
+    </select>
+
+    <!-- Select recipes entries by title (fuzzy match) -->
+    <select id="getRecipesByTitle" parameterType="string" resultType="Recipes">
+        SELECT id, user_id AS userId, title, description, instructions,
+               cook_time AS cookTime, servings, like_count AS likeCount
+        FROM recipe
+        WHERE title LIKE CONCAT('%', #{title}, '%')
+    </select>
+
+    <!-- Select the newest recipes entry -->
+    <select id="getNewestRecipes" resultType="Recipes">
+        SELECT id, user_id AS userId, title, description, instructions,
+               cook_time AS cookTime, servings, like_count AS likeCount
+        FROM recipe
+        ORDER BY id DESC
+        LIMIT 1
+    </select>
+
+    <!-- Select  recipes entries by likeCount -->
+    <select id="getLikeRecipes" resultType="Recipes">
+        SELECT id, user_id AS userId, title, description, instructions,
+               cook_time AS cookTime, servings, like_count AS likeCount
+        FROM recipe
+        ORDER BY like_count DESC
+    </select>
+
+    <!-- Select all recipes entries -->
+    <select id="getAllRecipes" resultType="Recipes">
+        SELECT id, user_id AS userId, title, description, instructions,
+               cook_time AS cookTime, servings, like_count AS likeCount
+        FROM recipe
+        ORDER BY id ASC
+    </select>
+
+</mapper>
