@@ -43,7 +43,7 @@ public class RecipeLoginController {
         boolean success = login(userName, password);
         if (success) {
             errorLabel.setText("Login successfully.");
-            // TODO: jump to the main application window
+            switchScene("/fxml/rcipe_list.fxml", loginBtn);
         } else {
             errorLabel.setText("Incorrect account or password.");
         }
@@ -70,7 +70,7 @@ public class RecipeLoginController {
     // Backbtn event handler
     @FXML
     private void onBackToLogin(ActionEvent event) {
-        switchScene("/fxml/login.fxml", loginBtn);
+        switchScene("/fxml/login.fxml", onBackToLogin(event);Btn);
     }
 
     private void switchScene(String fxmlPath, Button anyButton) {
