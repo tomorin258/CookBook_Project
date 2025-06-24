@@ -16,6 +16,7 @@ public class RecipeLoginController {
     @FXML private PasswordField passwordField;
     @FXML private Button loginBtn;
     @FXML private Button signupBtn;
+    @FXML private Button backBtn;
     @FXML private Label errorLabel;
 
     private UsersMapper usersMapper;
@@ -70,7 +71,7 @@ public class RecipeLoginController {
     // Backbtn event handler
     @FXML
     private void onBackToLogin(ActionEvent event) {
-        switchScene("/fxml/login.fxml", onBackToLogin(event);Btn);
+        switchScene("/fxml/login.fxml", backBtn);
     }
 
     private void switchScene(String fxmlPath, Button anyButton) {
