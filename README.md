@@ -4,12 +4,7 @@
 
 ## 目录结构
 
-│
-├── pom.xml
-├── cookbook.sql
-├── .gitignore
-├── README.md
-├── src/
+
 │   └── main/
 │       ├── java/
 │       │   ├── controller/
