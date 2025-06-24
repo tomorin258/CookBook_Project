@@ -52,13 +52,7 @@ public class RecipeLoginController {
     // registerBtn event handler
     @FXML
     private void onSignup(ActionEvent event) {
-        try {
-            view.SignupView signupView = new view.SignupView();
-            signupView.showAndWait();
-        } catch (Exception e) {
-            errorLabel.setText("Failed to open sign up window.");
-            e.printStackTrace();
-        }
+        switchScene("/fxml/signup.fxml", signupBtn);
     }
 
     // register event handler
@@ -76,12 +70,16 @@ public class RecipeLoginController {
     // Backbtn event handler
     @FXML
     private void onBackToLogin(ActionEvent event) {
+        switchScene("/fxml/login.fxml", loginBtn);
+    }
+
+    private void switchScene(String fxmlPath, Button anyButton) {
         try {
-            view.LoginView LoginView = new view.LoginView();
-            LoginView.showAndWait();
-        } catch (Exception e) {
-            errorLabel.setText("Failed to return to the main window.");
-            e.printStackTrace();
-        }
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource(fxmlPath));
+            javafx.scene.Parent root = loader.load();
+            javafx.stage.Stage stage = (javafx.stage.Stage) anyButton.getScene().getWindow();
+            stage.setScene(new javafx.scene.Scene(root));
+        }catch (Exception ignored) {
+    }
     }
 }
