@@ -12,7 +12,6 @@
 │   └── controller/
 ├── src/main/resources/
 │   ├── fxml/
-│   ├── css/
 │   └── images/
 ├── pom.xml
 └── README.md
