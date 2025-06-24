@@ -76,7 +76,7 @@ public class RecipeManagementController {
 
     //get keyword for search
     @FXML
-    private void onSearch() {
+    public void onSearch() {
         String keyword = keywordField.getText();
         List<Recipes> result = searchRecipes(keyword);
         recipeListView.getItems().setAll(result);

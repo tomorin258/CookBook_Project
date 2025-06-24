@@ -52,7 +52,36 @@ public class RecipeLoginController {
     // registerBtn event handler
     @FXML
     private void onSignup(ActionEvent event) {
-        errorLabel.setText("Sign up feature not implemented yet.");
-        // TODO: enable sign up feature
+        try {
+            view.SignupView signupView = new view.SignupView();
+            signupView.showAndWait();
+        } catch (Exception e) {
+            errorLabel.setText("Failed to open sign up window.");
+            e.printStackTrace();
+        }
+    }
+
+    // register event handler
+    @FXML
+    private void onRegister(ActionEvent event) {
+        try {
+            view.SignupView signupView = new view.SignupView();
+            signupView.showAndWait();
+        } catch (Exception e) {
+            errorLabel.setText("Failed to open sign up window.");
+            e.printStackTrace();
+        }
+    }
+
+    // Backbtn event handler
+    @FXML
+    private void onBackToLogin(ActionEvent event) {
+        try {
+            view.LoginView LoginView = new view.LoginView();
+            LoginView.showAndWait();
+        } catch (Exception e) {
+            errorLabel.setText("Failed to return to the main window.");
+            e.printStackTrace();
+        }
     }
 }
