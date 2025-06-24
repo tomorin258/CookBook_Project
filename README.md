@@ -7,11 +7,14 @@
 ```
 ├── src/main/java
 │   ├── model/
+│   ├── dao/
+│   ├── init/
 │   ├── data/
 │   ├── view/
 │   └── controller/
 ├── src/main/resources/
 │   ├── fxml/
+│   ├── mybatis_config.xml
 │   └── images/
 ├── pom.xml
 └── README.md
