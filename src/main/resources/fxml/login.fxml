@@ -58,7 +58,7 @@
                                -fx-border-radius:20; -fx-background-radius:20; -fx-padding:6 24;"/>
             </HBox>
 
-            <Label fx:id="errorLabel" textFill="red"/>
+            <Label fx:id="messageLabel" textFill="red"/>
         </VBox>
     </center>
 </BorderPane>

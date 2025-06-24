@@ -32,11 +32,6 @@
                            promptText="Enter your username"
                            GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
-                <Label text="Email:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                <TextField fx:id="emailField" alignment="CENTER"
-                           promptText="Enter your email"
-                           GridPane.rowIndex="1" GridPane.columnIndex="1"/>
-
                 <Label text="Password:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
                 <PasswordField fx:id="passwordField" alignment="CENTER"
                                promptText="Enter your password"

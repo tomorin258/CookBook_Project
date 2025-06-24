@@ -16,8 +16,12 @@ public class RecipeLoginController {
     @FXML private PasswordField passwordField;
     @FXML private Button loginBtn;
     @FXML private Button signupBtn;
+
+    // sign up related fields
+    @FXML private PasswordField confirmField;
+    @FXML private Button registerBtn;
     @FXML private Button backBtn;
-    @FXML private Label errorLabel;
+    @FXML private Label messageLabel;
 
     private UsersMapper usersMapper;
 
@@ -29,7 +33,7 @@ public class RecipeLoginController {
     // login logic
     private boolean login(String userName, String password) {
         if (usersMapper == null) {
-            errorLabel.setText("system error: UsersMapper is not set.");
+            messageLabel.setText("system error: UsersMapper is not set.");
             return false;
         }
         Users user = usersMapper.getUsersByName(userName).stream().findFirst().orElse(null);
@@ -43,44 +47,93 @@ public class RecipeLoginController {
         String password = passwordField.getText();
         boolean success = login(userName, password);
         if (success) {
-            errorLabel.setText("Login successfully.");
-            switchScene("/fxml/rcipe_list.fxml", loginBtn);
+            messageLabel.setText("Login successfully.");
+            // TODO: jump to the main application window
         } else {
-            errorLabel.setText("Incorrect account or password.");
+            messageLabel.setText("Incorrect account or password.");
         }
     }
 
-    // registerBtn event handler
+    // signupBtn event handler
     @FXML
     private void onSignup(ActionEvent event) {
-        switchScene("/fxml/signup.fxml", signupBtn);
-    }
-
-    // register event handler
-    @FXML
-    private void onRegister(ActionEvent event) {
         try {
-            view.SignupView signupView = new view.SignupView();
-            signupView.showAndWait();
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/fxml/signup.fxml"));
+            javafx.scene.Parent root = loader.load();
+            
+            // Set the UsersMapper in the controller
+            if (usersMapper == null) {
+                messageLabel.setText("system error: UsersMapper is not set.");
+                return;
+            }
+            RecipeLoginController signupController = loader.getController();
+            signupController.setUsersMapper(this.usersMapper);
+
+            javafx.stage.Stage stage = (javafx.stage.Stage) signupBtn.getScene().getWindow();
+            stage.setScene(new javafx.scene.Scene(root));
         } catch (Exception e) {
-            errorLabel.setText("Failed to open sign up window.");
+            messageLabel.setText("cannot open signup" + e.getMessage());
             e.printStackTrace();
         }
     }
 
-    // Backbtn event handler
+    // sign up logic
     @FXML
-    private void onBackToLogin(ActionEvent event) {
-        switchScene("/fxml/login.fxml", backBtn);
+    private void onRegister(ActionEvent event) {
+        String username = usernameField.getText();
+        String password = passwordField.getText();
+        String confirm = confirmField.getText();
+
+        if (username == null || username.isEmpty()) {
+            messageLabel.setText("account name cannot be empty!");
+            return;
+        }
+        if (password == null || password.isEmpty()) {
+            messageLabel.setText("password cannot be empty!");
+            return;
+        }
+        if (!password.equals(confirm)) {
+            messageLabel.setText("the two passwords do not match!");
+            return;
+        }
+        if (usersMapper == null) {
+            messageLabel.setText("system error: UsersMapper is not set.");
+            return;
+        }
+        // search for existing user
+        Users existUser = usersMapper.getUsersByName(username).stream().findFirst().orElse(null);
+        if (existUser != null) {
+            messageLabel.setText("account already exists, please choose another one!");
+            return;
+        }
+        // create new user
+        Users newUser = new Users();
+        newUser.setUserName(username);
+        newUser.setPassword(password);
+        usersMapper.addUsers(newUser);
+        messageLabel.setText("sign up successfully, please login now!");
     }
 
-    private void switchScene(String fxmlPath, Button anyButton) {
+    // jump back to login feature
+    @FXML
+    private void onBackToLogin(ActionEvent event) {
         try {
-            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource(fxmlPath));
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/fxml/login.fxml"));
             javafx.scene.Parent root = loader.load();
-            javafx.stage.Stage stage = (javafx.stage.Stage) anyButton.getScene().getWindow();
+
+            // Set the UsersMapper in the controller
+            if (usersMapper == null) {
+                messageLabel.setText("system error: UsersMapper is not set.");
+                return;
+            }
+            RecipeLoginController loginController = loader.getController();
+            loginController.setUsersMapper(this.usersMapper);
+
+            javafx.stage.Stage stage = (javafx.stage.Stage) backBtn.getScene().getWindow();
             stage.setScene(new javafx.scene.Scene(root));
-        }catch (Exception ignored) {
-    }
+        } catch (Exception e) {
+            messageLabel.setText("cannot open login" + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }
