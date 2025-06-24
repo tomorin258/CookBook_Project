@@ -113,6 +113,7 @@ CREATE TABLE `recipes` (
   `cook_time` int DEFAULT '0',
   `servings` int DEFAULT '1',
   `like_count` int DEFAULT '0',
+  `image_url` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `recipes_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
@@ -162,4 +163,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-06-21 17:24:46
+-- Dump completed on 2025-06-24 10:31:06
