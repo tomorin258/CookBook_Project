@@ -4,7 +4,6 @@
 
 ## 目录结构
 
-SEII_Project/
 │
 ├── pom.xml                        // Maven项目配置，依赖管理
 ├── cookbook.sql                   // MySQL数据库建表脚本
