@@ -14,6 +14,9 @@
 ├── src/main/resources/
 │   ├── fxml/
 │   └── images/
+├── config/
+│   ├── mybatis_config.xml
+│   └── images/
 ├── pom.xml
 ├── CookBook.sql
 └── README.md
