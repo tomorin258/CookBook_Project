@@ -5,7 +5,7 @@
 ## 目录结构
 
 ```
-├── src/main/java/com/yourcompany/recipeapp/
+├── src/main/java
 │   ├── model/
 │   ├── data/
 │   ├── view/
