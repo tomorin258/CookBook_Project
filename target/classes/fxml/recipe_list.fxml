@@ -1,5 +1,116 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- TODO: 食谱列表界面 FXML -->
-<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.yourcompany.recipeapp.controller.RecipeManagementController">
-    <!-- 布局内容 -->
-</AnchorPane>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane prefHeight="850" prefWidth="768"
+            xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controller.RecipeManagementController"
+            style="-fx-background-color:#e6f4ff; -fx-font-family:'Segoe UI','sans-serif';">
+
+    <!-- ─── HEADER ────────────────────────────────────────────────────────── -->
+    <top>
+        <VBox spacing="10" style="-fx-background-color:#d3eaff; -fx-padding:14;">
+            <!-- Title row -->
+            <BorderPane>
+                <left>
+                    <Button fx:id="backBtn" text="⟵  Back" onAction="#onBack"
+                            style="
+                                -fx-background-color:#ffffff;
+                                -fx-text-fill:#0d3b66;
+                                -fx-font-weight:bold;
+                                -fx-border-color:#0d3b66;
+                                -fx-border-radius:6;
+                                -fx-background-radius:6;
+                                -fx-padding:4 14;"/>
+                </left>
+
+                <center>
+                    <Label text="Recipe List"
+                           style="-fx-font-size:30; -fx-font-weight:bold; -fx-text-fill:#0d3b66;"/>
+                </center>
+
+                <right><Region prefWidth="60"/></right>
+            </BorderPane>
+
+            <!-- Search + Sort row -->
+            <HBox alignment="CENTER" spacing="10">
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <Button fx:id="addRecipeBtn" text="＋ Add Recipe" onAction="#onAddRecipe"
+                        style="
+                            -fx-background-color:#0d3b66;
+                            -fx-text-fill:#ffffff;
+                            -fx-font-weight:bold;
+                            -fx-background-radius:6;
+                            -fx-padding:4 18;"/>
+
+                <TextField fx:id="keywordField" prefHeight="26" prefWidth="360"
+                           promptText="Search recipes..."
+                           style="
+                               -fx-background-radius:20;
+                               -fx-background-color:#ffffff;
+                               -fx-border-color:#0d3b66;
+                               -fx-border-radius:20;
+                               -fx-padding:4 12;"/>
+
+                <Button fx:id="searchBtn" text="Search" onAction="#onSearch"
+                        style="
+                            -fx-background-color:#0d3b66;
+                            -fx-text-fill:#ffffff;
+                            -fx-font-weight:bold;
+                            -fx-background-radius:20;
+                            -fx-padding:4 22;"/>
+
+                <Button fx:id="sortLikeBtn" text="Sort by Likes" onAction="#onSortByLikes"
+                        style="
+                            -fx-background-color:#ffffff;
+                            -fx-text-fill:#0d3b66;
+                            -fx-font-weight:bold;
+                            -fx-border-color:#0d3b66;
+                            -fx-border-radius:20;
+                            -fx-background-radius:20;
+                            -fx-padding:4 18;"/>
+            </HBox>
+
+            <Separator orientation="HORIZONTAL" prefWidth="720"
+                       style="-fx-background-color:#8cc7ff;"/>
+        </VBox>
+    </top>
+
+    <!-- ─── CENTER LIST ────────────────────────────────────────────────────── -->
+    <center>
+        <ListView fx:id="recipeListView" prefHeight="800" prefWidth="720" BorderPane.alignment="CENTER"
+                  style="
+                      -fx-background-color:#f4faff;
+                      -fx-control-inner-background:#ffffff;
+                      -fx-background-radius:8;
+                      -fx-padding:6;"/>
+    </center>
+
+    <!-- ─── PAGINATION BAR ─────────────────────────────────────────────────── -->
+    <bottom>
+        <HBox alignment="CENTER" spacing="12" style="-fx-padding:12;">
+            <Button fx:id="prevPageBtn" text="⟵ Previous" onAction="#onPrevPage"
+                    style="
+                        -fx-background-color:#ffffff;
+                        -fx-text-fill:#0d3b66;
+                        -fx-font-weight:bold;
+                        -fx-border-color:#0d3b66;
+                        -fx-border-radius:20;
+                        -fx-background-radius:20;
+                        -fx-padding:4 18;"/>
+
+            <Label fx:id="pageInfoLabel" text="Page 1 / 1"
+                   style="-fx-font-size:14; -fx-font-weight:bold;"/>
+
+            <Button fx:id="nextPageBtn" text="Next ⟶" onAction="#onNextPage"
+                    style="
+                        -fx-background-color:#0d3b66;
+                        -fx-text-fill:#ffffff;
+                        -fx-font-weight:bold;
+                        -fx-background-radius:20;
+                        -fx-padding:4 20;"/>
+        </HBox>
+    </bottom>
+</BorderPane>
