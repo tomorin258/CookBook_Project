@@ -3,26 +3,21 @@
 一个基于 JavaFX 的食谱管理应用。
 
 ## 目录结构
-
-
-│   └── main/
-│       ├── java/
-│       │   ├── controller/
-│       │   │   └── ...
-│       │   ├── dao/
-│       │   │   └── ...
-│       │   ├── model/
-│       │   │   └── ...
-│       │   ├── view/
-│       │   │   └── ...
-│       │   └── Init/
-│       └── resources/
-│           ├── mybatis_config.xml
-│           ├── fxml/
-│           │   └── ...
-│           ├── images/
-│           └── ...
-└── target/
+```
+├── src/main/java
+│   ├── dao/
+│   ├── init/
+│   ├── model/
+│   ├── data/
+│   ├── view/
+│   └── controller/
+├── src/main/resources/
+│   ├── fxml/
+│   └── images/
+├── pom.xml
+├── CookBook.sql
+└── README.md
+```
 ## 依赖
 - Java 17+
 - JavaFX
