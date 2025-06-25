@@ -2,7 +2,7 @@ package service;
 
 import dao.mappers.UsersMapper;
 import model.Users;
-import resources.MyBatisUtil;
+import config.MyBatisUtil;
 
 import org.apache.ibatis.session.SqlSession;
 

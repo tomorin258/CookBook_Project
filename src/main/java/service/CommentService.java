@@ -2,7 +2,7 @@ package service;
 
 import dao.mappers.CommentsMapper;
 import model.Comments;
-import resources.MyBatisUtil;
+import config.MyBatisUtil;
 
 import org.apache.ibatis.session.SqlSession;
 

@@ -4,6 +4,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+<<<<<<< HEAD
+=======
+import service.RecipeService;
+>>>>>>> 9505fc0761a20a92127299d307ecc7014c97c7ca
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -54,10 +58,25 @@ public class RecipeManagementController {
         return recipeService.searchRecipes(keyword);
     }
 
+<<<<<<< HEAD
     // 加载所有配方（初始化或搜索为空时调用）
     private void loadAllRecipes() {
         List<Recipes> all = recipeService.searchRecipes(null);
         sortedRecipes = all.stream()
+=======
+    // search recipes by keyword
+    @FXML
+    public void onSearch() {
+        String keyword = keywordField.getText();
+        List<Recipes> result = searchRecipes(keyword);
+        recipeListView.getItems().setAll(result);
+    }
+
+    // sort recipes by likes
+    public List<Recipes> getRecipesSortedByLikes() {
+        List<Recipes> all = recipeService.searchRecipes(null);
+        return all.stream()
+>>>>>>> 9505fc0761a20a92127299d307ecc7014c97c7ca
                 .sorted(Comparator.comparingInt(Recipes::getLikeCount).reversed())
                 .collect(Collectors.toList());
         totalPage = (int) Math.ceil((double) sortedRecipes.size() / pageSize);
@@ -65,6 +84,7 @@ public class RecipeManagementController {
         showSortedPage(currentPage);
     }
 
+<<<<<<< HEAD
     // 分页显示（显示到 recipeListView）
     @FXML
     private void showSortedPage(int page) {
@@ -87,6 +107,12 @@ public class RecipeManagementController {
     public void initialize() {
         if (sortedListVBox != null) { //only when sortedListVBox is present
             sortedRecipes = recipeService.getRecipesSortedByLikes();
+=======
+    @FXML
+    public void initialize() {
+        if (sortedListVBox != null) {
+            sortedRecipes = getRecipesSortedByLikes();
+>>>>>>> 9505fc0761a20a92127299d307ecc7014c97c7ca
             totalPage = (int) Math.ceil((double) sortedRecipes.size() / pageSize);
             currentPage = 1;
             showSortedPageByLikes(currentPage);
@@ -95,7 +121,10 @@ public class RecipeManagementController {
         }
     }
 
+<<<<<<< HEAD
     // showSortedPageByLikes
+=======
+>>>>>>> 9505fc0761a20a92127299d307ecc7014c97c7ca
     @FXML
     private void showSortedPageByLikes(int page) {
         sortedListVBox.getChildren().clear();
@@ -115,6 +144,7 @@ public class RecipeManagementController {
         prevPageBtn.setDisable(page == 1);
         nextPageBtn.setDisable(page == totalPage);
     }
+<<<<<<< HEAD
 
     // previous page
     @FXML
@@ -180,4 +210,6 @@ public class RecipeManagementController {
             e.printStackTrace();
         }
     }
+=======
+>>>>>>> 9505fc0761a20a92127299d307ecc7014c97c7ca
 }
