@@ -25,7 +25,6 @@ public class RecipeInteractionController {
     private Recipes currentRecipe;
     private int baseServings = 1;
 
-    // 只依赖 Service
     private final RecipeService recipeService = new RecipeService();
     private final CommentService commentService = new CommentService();
     private final RecipeIngredientsService recipeIngredientsService = new RecipeIngredientsService();
