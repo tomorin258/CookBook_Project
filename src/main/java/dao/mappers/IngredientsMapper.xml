@@ -5,40 +5,40 @@
 
 <mapper namespace="dao.mappers.IngredientsMapper">
 
-    <!-- add a new ingredients entry -->
+    <!-- add a new Ingredients entry -->
     <insert id="addIngredients" parameterType="Ingredients">
         INSERT INTO ingredients (name)
-        VALUES (#{ingredients.name})
+        VALUES (#{name})
     </insert>
 
-    <!-- delete an ingredients entry by ID -->
+    <!-- delete an Ingredients entry by ID -->
     <delete id="deleteIngredients" parameterType="int">
         DELETE FROM ingredients
         WHERE id = #{ingredientsId}
     </delete>
 
-    <!-- update an ingredients entry -->
+    <!-- update an Ingredients entry -->
     <update id="updateIngredients" parameterType="Ingredients">
         UPDATE ingredients
-        SET name = #{ingredients.name}
-        WHERE id = #{ingredients.id}
+        SET name = #{name}
+        WHERE id = #{id}
     </update>
 
-    <!-- Select a ingredients entry by ID -->
+    <!-- Select a Ingredients entry by ID -->
     <select id="getIngredientsById" resultType="Ingredients" parameterType="int">
         SELECT id, name
         FROM ingredients
         WHERE id = #{ingredientsId}
     </select>
 
-    <!-- Select ingredients entries by Name (fuzzy match) -->
-    <select id="getIngredientsByName" resultType="Ingredients" parameterType="string">
+    <!-- Select Ingredients entries by Name (fuzzy match) -->
+    <select id="getIngredientsByName" resultType="Ingredients" parameterType="String">
         SELECT id, name
         FROM ingredients
         WHERE name LIKE CONCAT('%', #{name}, '%')
     </select>
 
-    <!-- Select the newest ingredients entry -->
+    <!-- Select the newest Ingredients entry -->
     <select id="getNewestIngredients" resultType="Ingredients">
         SELECT id, name
         FROM ingredients
@@ -46,7 +46,7 @@
         LIMIT 1
     </select>
 
-    <!-- Select all ingredients entries -->
+    <!-- Select all Ingredients entries -->
     <select id="getAllIngredients" resultType="Ingredients">
         SELECT id, name
         FROM ingredients

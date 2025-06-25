@@ -18,6 +18,7 @@ public class Recipes implements Serializable {
     private int cookTime;
     private int servings;
     private int likeCount;
+    private String imageUrl;
 
     /**
      * Default constructor for the Recipes class.
@@ -37,6 +38,7 @@ public class Recipes implements Serializable {
      * @param cookTime      The cooking time in minutes.
      * @param servings      The number of servings.
      * @param likeCount     The number of likes this recipe has received.
+     * @param imageUrl      The URL of the recipe image (optional).
      */
     public Recipes(int id, int userId, String title, String description, String instructions, int cookTime, int servings, int likeCount) {
         this.id = id;
@@ -47,6 +49,7 @@ public class Recipes implements Serializable {
         this.cookTime = cookTime;
         this.servings = servings;
         this.likeCount = likeCount;
+        this.imageUrl = null; // Default to null if no image URL is provided
     }
 
     public int getId() {
@@ -113,6 +116,13 @@ public class Recipes implements Serializable {
         this.likeCount = likeCount;
     }
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
     /**
      * Returns a string representation of the Recipes object.
      *
@@ -129,6 +139,7 @@ public class Recipes implements Serializable {
                 ", cookTime=" + cookTime +
                 ", servings=" + servings +
                 ", likeCount=" + likeCount +
+                ", imageUrl='" + imageUrl + '\'' +
                 '}';
     }
 }

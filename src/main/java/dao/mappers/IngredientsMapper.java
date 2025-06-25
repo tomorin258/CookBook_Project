@@ -1,8 +1,6 @@
 package dao.mappers;
 import java.util.ArrayList;
 
-import org.apache.ibatis.annotations.Param;
-
 import model.Ingredients;
 
 /**
@@ -20,35 +18,35 @@ public interface IngredientsMapper {
      * @param ingredients the ingredients object
      * @return the boolean
      */
-    boolean addIngredients(@Param("ingredients") Ingredients ingredients);
+    boolean addIngredients(Ingredients ingredients);
 
     /**
      * Delete an ingredient entry.
      * @param ingredientsId the ingredients id
      * @return the boolean
      */
-    boolean deleteIngredients(@Param("ingredientsId") Integer ingredientsId);
+    boolean deleteIngredients(Integer ingredientsId);
 
     /**
      * Update an ingredient entry.
      * @param ingredients the ingredients object
      * @return the boolean
      */
-    boolean updateIngredients(@Param("ingredients") Ingredients ingredients);
+    boolean updateIngredients(Ingredients ingredients);
 
     /**
      * Get ingredient by id.
      * @param ingredientsId the ingredients id
      * @return the ingredients
      * */
-    Ingredients getIngredientsById(@Param("ingredientsId") int ingredientsId);
+    Ingredients getIngredientsById(int ingredientsId);
 
     /**
      * Get ingredient by name.
      * @param name the ingredients name
      * @return the list of ingredients
      */
-    ArrayList<Ingredients> getIngredientsByName(@Param("name") String name);
+    ArrayList<Ingredients> getIngredientsByName(String name);
 
     /**
      * Get the newest ingredient.
