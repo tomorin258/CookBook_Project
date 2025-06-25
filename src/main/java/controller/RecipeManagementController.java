@@ -1,11 +1,10 @@
 package controller;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import dao.mappers.RecipesMapper;
+import service.RecipeService;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -28,53 +27,31 @@ public class RecipeManagementController {
     private int pageSize = 10;
     private int totalPage = 1;
     private List<Recipes> sortedRecipes;
-    private RecipesMapper recipesMapper;
 
-    //add recipes
-    /**
-     * Adds a new recipe to the database.
-     * @param recipe The recipe to add.
-     * @return true if the addition was successful, false otherwise.
-     */
+    // 只依赖 Service
+    private final RecipeService recipeService = new RecipeService();
+
+    // add recipes
     public boolean addRecipe(Recipes recipe) {
-        return recipesMapper.addRecipes(recipe);
+        return recipeService.addRecipe(recipe);
     }
-    
-    //delete recipes
-    /**
-     * Deletes a recipe by its ID.
-     * @param recipeId The ID of the recipe to delete.
-     * @return true if the deletion was successful, false otherwise.
-     */
+
+    // delete recipes
     public boolean deleteRecipe(int recipeId) {
-        return recipesMapper.deleteRecipes(recipeId);
+        return recipeService.deleteRecipe(recipeId);
     }
 
-    //edit recipes
-    /**
-     * Edits an existing recipe.
-     * @param recipe The recipe with updated information.
-     * @return true if the edit was successful, false otherwise.
-     */
+    // edit recipes
     public boolean editRecipe(Recipes recipe) {
-        return recipesMapper.updateRecipes(recipe);
+        return recipeService.editRecipe(recipe);
     }
 
-    //get recipes by keyword
-    /**
-     * Searches for recipes by a keyword in their title.
-     * If the keyword is null or empty, returns all recipes.
-     * @param keyword The keyword to search for.
-     * @return A list of recipes that match the keyword.
-     */
+    // get recipes by keyword
     public List<Recipes> searchRecipes(String keyword) {
-        if (keyword == null || keyword.trim().isEmpty()) {
-            return recipesMapper.getAllRecipes();
-        }
-        return recipesMapper.getRecipesByTitle(keyword);
+        return recipeService.searchRecipes(keyword);
     }
 
-    //get keyword for search
+    // 搜索按钮事件
     @FXML
     public void onSearch() {
         String keyword = keywordField.getText();
@@ -82,26 +59,16 @@ public class RecipeManagementController {
         recipeListView.getItems().setAll(result);
     }
 
-    //order recipes by likes
-    /**
-     * Retrieves all recipes sorted by the number of likes in descending order.
-     * @return A list of recipes sorted by likes.
-     */
+    // 按点赞数排序
     public List<Recipes> getRecipesSortedByLikes() {
-        ArrayList<Recipes> all = recipesMapper.getAllRecipes();
+        List<Recipes> all = recipeService.searchRecipes(null);
         return all.stream()
                 .sorted(Comparator.comparingInt(Recipes::getLikeCount).reversed())
                 .collect(Collectors.toList());
     }
 
-    //initialize pagination controls
-    /**
-     * Initializes the pagination controls and displays the first page of sorted recipes.
-     * This method should be called after the sortedListVBox is set up.
-     */
     @FXML
     public void initialize() {
-        // if sortedListVBox exists， initialize pagination controls
         if (sortedListVBox != null) {
             sortedRecipes = getRecipesSortedByLikes();
             totalPage = (int) Math.ceil((double) sortedRecipes.size() / pageSize);
@@ -109,8 +76,6 @@ public class RecipeManagementController {
         }
     }
 
-
-    //show sorted recipes
     @FXML
     private void showSortedPage(int page) {
         sortedListVBox.getChildren().clear();
@@ -130,8 +95,4 @@ public class RecipeManagementController {
         prevPageBtn.setDisable(page == 1);
         nextPageBtn.setDisable(page == totalPage);
     }
-
-    
-
-    
 }

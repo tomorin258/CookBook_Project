@@ -1,6 +1,5 @@
 package controller;
 
-import dao.mappers.UsersMapper;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -11,27 +10,18 @@ import service.UserService;
 
 public class RecipeLoginController {
 
-    // to modify login.fxml
     @FXML private TextField usernameField;
     @FXML private PasswordField passwordField;
     @FXML private Button loginBtn;
     @FXML private Button signupBtn;
 
-    // sign up related fields
     @FXML private PasswordField confirmField;
     @FXML private Button registerBtn;
     @FXML private Button backBtn;
     @FXML private Label messageLabel;
 
-    private UsersMapper usersMapper;
     private final UserService userService = new UserService();
 
-    // set UsersMapper
-    public void setUsersMapper(UsersMapper usersMapper) {
-        this.usersMapper = usersMapper;
-    }
-
-    // loginBtn event handler
     @FXML
     private void onLogin(ActionEvent event) {
         String userName = usernameField.getText();
@@ -53,16 +43,11 @@ public class RecipeLoginController {
         }
     }
 
-    // signupBtn event handler
     @FXML
     private void onSignup(ActionEvent event) {
         try {
             javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/fxml/signup.fxml"));
             javafx.scene.Parent root = loader.load();
-            
-            RecipeLoginController signupController = loader.getController();
-            signupController.setUsersMapper(this.usersMapper);
-
             javafx.stage.Stage stage = (javafx.stage.Stage) signupBtn.getScene().getWindow();
             stage.setScene(new javafx.scene.Scene(root));
         } catch (Exception e) {
@@ -71,7 +56,6 @@ public class RecipeLoginController {
         }
     }
 
-    // sign up logic
     @FXML
     private void onRegister(ActionEvent event) {
         String username = usernameField.getText();
@@ -81,16 +65,11 @@ public class RecipeLoginController {
         messageLabel.setText(result);
     }
 
-    // jump back to login feature
     @FXML
     private void onBackToLogin(ActionEvent event) {
         try {
             javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/fxml/login.fxml"));
             javafx.scene.Parent root = loader.load();
-
-            RecipeLoginController loginController = loader.getController();
-            loginController.setUsersMapper(this.usersMapper);
-
             javafx.stage.Stage stage = (javafx.stage.Stage) backBtn.getScene().getWindow();
             stage.setScene(new javafx.scene.Scene(root));
         } catch (Exception e) {

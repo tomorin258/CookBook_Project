@@ -31,4 +31,18 @@ public class RecipeService {
             return mapper.getRecipesByTitle(keyword);
         }
     }
+
+    public boolean editRecipe(Recipes recipe) {
+        try (SqlSession session = MyBatisUtil.getSqlSession(true)) {
+            RecipesMapper mapper = session.getMapper(RecipesMapper.class);
+            return mapper.updateRecipes(recipe);
+        }
+    }
+
+        public boolean updateRecipe(Recipes recipe) {
+        try (SqlSession session = MyBatisUtil.getSqlSession(true)) {
+            RecipesMapper mapper = session.getMapper(RecipesMapper.class);
+            return mapper.updateRecipes(recipe);
+        }
+    }
 }
