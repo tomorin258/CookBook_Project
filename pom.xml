@@ -27,11 +27,14 @@
             <artifactId>mybatis</artifactId>
             <version>3.5.15</version>
         </dependency>
+<<<<<<< HEAD
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.33</version>
         </dependency>
+=======
+>>>>>>> 158e4cf06541bbd7a1d92d52fa6af4bc116aff8f
     </dependencies>
     <build>
         <plugins>

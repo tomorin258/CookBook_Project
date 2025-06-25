@@ -5,9 +5,12 @@
 ## 目录结构
 ```
 ├── src/main/java
+<<<<<<< HEAD
 │   ├── dao/
 │   ├── service/
 │   ├── init/
+=======
+>>>>>>> 158e4cf06541bbd7a1d92d52fa6af4bc116aff8f
 │   ├── model/
 │   ├── data/
 │   ├── view/
