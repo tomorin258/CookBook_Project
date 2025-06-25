@@ -8,7 +8,7 @@
     <!-- add a new users entry -->
     <insert id="addUsers" parameterType="Users">
         INSERT INTO users (username, password)
-        VALUES (#{users.userName}, #{users.password})
+        VALUES (#{userName}, #{password})
     </insert>
 
     <!-- delete a users entry by ID -->
@@ -19,36 +19,36 @@
     <!-- update a users entry -->
     <update id="updateUsers" parameterType="Users">
         UPDATE users
-        SET username = #{users.userName},
-            password = #{users.password}
-        WH = #{users.userId}
+        SET username = #{userName},
+            password = #{password}
+        WHERE id = #{userId}
     </update>
 
     <!-- Select a users entry by ID -->
     <select id="getUsersById" resultType="Users" parameterType="int">
-        SEL, username, password
+        SELECT id AS userId, username AS userName, password
         FROM users
-        WH = #{userId}
+        WHERE id = #{userId}
     </select>
 
     <!-- Select users entries by Name (fuzzy match) -->
-    <select id="getUsersByName" resultType="Users" parameterType="string">
-        SEL, username, password
+    <select id="getUsersByName" resultType="Users" parameterType="String">
+        SELECT id AS userId, username AS userName, password
         FROM users
         WHERE username LIKE CONCAT('%', #{userName}, '%')
     </select>
 
     <!-- Select the newest users entry -->
     <select id="getNewestUsers" resultType="Users">
-        SEL, username, password
+        SELECT id AS userId, username AS userName, password
         FROM users
-        ORDER DESC
+        ORDER BY id DESC
         LIMIT 1
     </select>
 
     <!-- Select all users entries -->
     <select id="getAllUsers" resultType="Users">
-        SEL, username, password
+        SELECT id AS userId, username AS userName, password
         FROM users
     </select>
 

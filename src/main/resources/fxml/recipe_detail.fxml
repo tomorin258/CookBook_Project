@@ -92,13 +92,25 @@
 
     <!-- ── BOTTOM BAR ──────────────────────────────────────────────────────── -->
     <bottom>
-        <HBox alignment="CENTER_RIGHT" spacing="10" style="-fx-padding:10;">
-            <Label text="Likes:" style="-fx-font-size:14;"/>
+        <HBox alignment="CENTER_RIGHT" spacing="14" style="-fx-padding:16;">
+            <!-- Like elements -->
+            <Label text="Likes:" style="-fx-font-size:16; -fx-font-weight:bold;"/>
             <Label fx:id="likeCountLabel" text="0"
-                   style="-fx-font-size:14;-fx-font-weight:bold;"/>
+                   style="-fx-font-size:16; -fx-font-weight:bold;"/>
             <Button fx:id="likeBtn" text="👍 Like" onAction="#onLike"
-                    style="-fx-background-color:#0d3b66;-fx-text-fill:#ffffff;-fx-font-weight:bold;
-                           -fx-background-radius:20;-fx-padding:4 18;"/>
+                    style="-fx-font-size:16; -fx-background-color:#0d3b66; -fx-text-fill:#ffffff;
+                           -fx-font-weight:bold; -fx-background-radius:20; -fx-padding:8 26;"/>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <TextField fx:id="commentField" promptText="Add a comment..."
+                       prefWidth="380" prefHeight="36"
+                       style="-fx-font-size:16; -fx-background-radius:20;
+                              -fx-padding:8 14;"/>
+
+            <Button fx:id="addCommentBtn" text="Add" onAction="#onAddComment"
+                    style="-fx-font-size:16; -fx-background-color:#0d3b66; -fx-text-fill:#ffffff;
+                           -fx-font-weight:bold; -fx-background-radius:20; -fx-padding:8 28;"/>
         </HBox>
     </bottom>
 </BorderPane>

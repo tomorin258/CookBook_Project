@@ -5,33 +5,33 @@
 
 <mapper namespace="dao.mappers.CommentsMapper">
     <!-- Add a new comment -->
-    <insert id="addComment" parameterType="Comment">
+    <insert id="addComments" parameterType="Comments">
         INSERT INTO comments (recipe_id, user_id, content, created_at)
         VALUES (#{recipeId}, #{userId}, #{content}, NOW())
     </insert>
 
     <!-- Delete a comment by ID -->
-    <delete id="deleteComment" parameterType="int">
+    <delete id="deleteComments" parameterType="int">
         DELETE FROM comments
         WHERE id = #{commentId}
     </delete>
 
     <!-- Update a comment -->
-    <update id="updateComment" parameterType="Comment">
+    <update id="updateComments" parameterType="Comments">
         UPDATE comments
         SET content = #{content}
         WHERE id = #{id}
     </update>
 
     <!-- Select a comment by ID -->
-    <select id="getCommentById" resultType="Comment" parameterType="int">
+    <select id="getCommentsById" resultType="Comments" parameterType="int">
         SELECT id, recipe_id, user_id, content, created_at
         FROM comments
         WHERE id = #{commentId}
     </select>
 
     <!-- Select all comments for a recipe -->
-    <select id="getCommentsByRecipeId" resultType="Comment" parameterType="int">
+    <select id="getCommentsByRecipeId" resultType="Comments" parameterType="int">
         SELECT id, recipe_id, user_id, content, created_at
         FROM comments
         WHERE recipe_id = #{recipeId}
@@ -39,7 +39,7 @@
     </select>
 
     <!-- Select all comments by a user -->
-    <select id="getCommentsByUserId" resultType="Comment" parameterType="int">
+    <select id="getCommentsByUserId" resultType="Comments" parameterType="int">
         SELECT id, recipe_id, user_id, content, created_at
         FROM comments
         WHERE user_id = #{userId}
@@ -47,7 +47,7 @@
     </select>
 
     <!-- Select the newest comment -->
-    <select id="getNewestComment" resultType="Comment">
+    <select id="getNewestComments" resultType="Comments">
         SELECT id, recipe_id, user_id, content, created_at
         FROM comments
         ORDER BY created_at DESC
@@ -55,7 +55,7 @@
     </select>
 
     <!-- Select all comments -->
-    <select id="getAllComments" resultType="Comment">
+    <select id="getAllComments" resultType="Comments">
         SELECT id, recipe_id, user_id, content, created_at
         FROM comments
     </select>

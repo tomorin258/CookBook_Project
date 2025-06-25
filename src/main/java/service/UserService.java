@@ -1,0 +1,47 @@
+package service;
+
+import dao.mappers.UsersMapper;
+import model.Users;
+import resources.MyBatisUtil;
+
+import org.apache.ibatis.session.SqlSession;
+
+public class UserService {
+    /**
+     * Login check.
+     */
+    public boolean login(String username, String password) {
+        try (SqlSession session = MyBatisUtil.getSqlSession()) {
+            UsersMapper usersMapper = session.getMapper(UsersMapper.class);
+            Users user = usersMapper.getUsersByName(username).stream().findFirst().orElse(null);
+            return user != null && user.getPassword().equals(password);
+        }
+    }
+
+    /**
+     * Register a new user.
+     */
+    public String register(String username, String password, String confirm) {
+        if (username == null || username.isEmpty()) {
+            return "account name cannot be empty!";
+        }
+        if (password == null || password.isEmpty()) {
+            return "password cannot be empty!";
+        }
+        if (!password.equals(confirm)) {
+            return "the two passwords do not match!";
+        }
+        try (SqlSession session = MyBatisUtil.getSqlSession(true)) {
+            UsersMapper usersMapper = session.getMapper(UsersMapper.class);
+            Users existUser = usersMapper.getUsersByName(username).stream().findFirst().orElse(null);
+            if (existUser != null) {
+                return "account already exists, please choose another one!";
+            }
+            Users newUser = new Users();
+            newUser.setUserName(username);
+            newUser.setPassword(password);
+            usersMapper.addUsers(newUser);
+            return "sign up successfully, please login now!";
+        }
+    }
+}
