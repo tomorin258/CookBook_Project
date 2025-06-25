@@ -1,25 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<<<<<<< HEAD
-=======
-
->>>>>>> 158e4cf06541bbd7a1d92d52fa6af4bc116aff8f
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
 <BorderPane prefHeight="420" prefWidth="640"
-<<<<<<< HEAD
-            xmlns="http://javafx.com/javafx/17.0.12"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="controller.RecipeLoginController"
-            style="-fx-background-color:#e6f4ff;">
-
-    <!-- ── TOP BAR ─────────────────────────────────────────── -->
-    <top>
-        <StackPane style="-fx-background-color:#d3eaff;-fx-padding:14;">
-            <Label text="CookBook — Get your account!"
-                   style="-fx-font-size:34;-fx-font-weight:bold;-fx-text-fill:#0d3b66;"/>
-=======
             style="-fx-background-color:#e6f4ff;"
             xmlns="http://javafx.com/javafx/17.0.12"
             xmlns:fx="http://javafx.com/fxml/1"
@@ -30,22 +14,12 @@
         <StackPane style="-fx-background-color:#d3eaff; -fx-padding:14;">
             <Label text="CookBook — Get your account!"
                    style="-fx-font-size:34; -fx-font-weight:bold; -fx-text-fill:#0d3b66;"/>
->>>>>>> 158e4cf06541bbd7a1d92d52fa6af4bc116aff8f
         </StackPane>
     </top>
 
     <!-- ── FORM AREA ───────────────────────────────────────── -->
     <center>
         <VBox alignment="CENTER" spacing="18">
-<<<<<<< HEAD
-            <Label text="Create Account"
-                   style="-fx-font-size:28;-fx-font-weight:bold;"/>
-
-            <!-- Input form -->
-            <GridPane alignment="CENTER" hgap="12" vgap="14">
-                <padding><Insets top="20" right="20" bottom="10" left="20"/></padding>
-
-=======
             <Label text="Create Account" style="-fx-font-size:28; -fx-font-weight:bold;"/>
 
             <!-- Input form -->
@@ -55,29 +29,11 @@
                 </padding>
 
                 <!-- Row 0 -->
->>>>>>> 158e4cf06541bbd7a1d92d52fa6af4bc116aff8f
                 <Label text="Username:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
                 <TextField fx:id="usernameField" alignment="CENTER"
                            promptText="Enter your username"
                            GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
-<<<<<<< HEAD
-                <Label text="Password:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-                <PasswordField fx:id="passwordField" alignment="CENTER"
-                               promptText="Enter your password"
-                               GridPane.rowIndex="2" GridPane.columnIndex="1"/>
-
-                <Label text="Confirm Password:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-                <PasswordField fx:id="confirmField" alignment="CENTER"
-                               promptText="Re-enter password"
-                               GridPane.rowIndex="3" GridPane.columnIndex="1"/>
-
-                <columnConstraints>
-                    <ColumnConstraints/><ColumnConstraints/>
-                </columnConstraints>
-                <rowConstraints>
-                    <RowConstraints/><RowConstraints/><RowConstraints/><RowConstraints/>
-=======
                 <!-- Row 1 -->
                 <Label text="Password:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
                 <PasswordField fx:id="passwordField" alignment="CENTER"
@@ -101,27 +57,18 @@
                     <RowConstraints/>
                     <RowConstraints/>
                     <RowConstraints/>
->>>>>>> 158e4cf06541bbd7a1d92d52fa6af4bc116aff8f
                 </rowConstraints>
             </GridPane>
 
             <!-- Action buttons -->
             <HBox alignment="CENTER" spacing="12">
                 <Button fx:id="registerBtn" text="Sign Up" defaultButton="true" onAction="#onRegister"
-<<<<<<< HEAD
-                        style="-fx-background-color:#0d3b66;-fx-text-fill:white;-fx-font-weight:bold;
-                               -fx-background-radius:20;-fx-padding:6 30;"/>
-                <Button fx:id="backBtn" text="Back" onAction="#onBackToLogin"
-                        style="-fx-background-color:#ffffff;-fx-text-fill:#0d3b66;-fx-font-weight:bold;
-                               -fx-border-color:#0d3b66;-fx-border-radius:20;-fx-background-radius:20;
-=======
                         style="-fx-background-color:#0d3b66; -fx-text-fill:white; -fx-font-weight:bold;
                                -fx-background-radius:20; -fx-padding:6 30;"/>
 
                 <Button fx:id="backBtn" text="Back" onAction="#onBackToLogin"
                         style="-fx-background-color:#ffffff; -fx-text-fill:#0d3b66; -fx-font-weight:bold;
                                -fx-border-color:#0d3b66; -fx-border-radius:20; -fx-background-radius:20;
->>>>>>> 158e4cf06541bbd7a1d92d52fa6af4bc116aff8f
                                -fx-padding:6 28;"/>
             </HBox>
 
