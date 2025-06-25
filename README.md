@@ -17,7 +17,7 @@
 │   └── images/
 ├── config/
 │   ├── mybatis_config.xml
-│   └── images/
+│   └── MyBatisUtil.java
 ├── pom.xml
 ├── CookBook.sql
 └── README.md
