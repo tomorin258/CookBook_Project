@@ -1,6 +1,5 @@
 package service;
 
-<<<<<<< HEAD
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,15 +9,6 @@ import org.apache.ibatis.session.SqlSession;
 import config.MyBatisUtil;
 import dao.mappers.RecipesMapper;
 import model.Recipes;
-=======
-import dao.mappers.RecipesMapper;
-import model.Recipes;
-import resources.MyBatisUtil;
-
-import org.apache.ibatis.session.SqlSession;
-
-import java.util.List;
->>>>>>> 9505fc0761a20a92127299d307ecc7014c97c7ca
 
 public class RecipeService {
     public boolean addRecipe(Recipes recipe) {
@@ -52,17 +42,12 @@ public class RecipeService {
         }
     }
 
-<<<<<<< HEAD
     public boolean updateRecipe(Recipes recipe) {
-=======
-        public boolean updateRecipe(Recipes recipe) {
->>>>>>> 9505fc0761a20a92127299d307ecc7014c97c7ca
         try (SqlSession session = MyBatisUtil.getSqlSession(true)) {
             RecipesMapper mapper = session.getMapper(RecipesMapper.class);
             return mapper.updateRecipes(recipe);
         }
     }
-<<<<<<< HEAD
 
     public List<Recipes> getRecipesSortedByLikes() {
         List<Recipes> all = getAllRecipes(); // 或从数据库查
@@ -77,6 +62,4 @@ public class RecipeService {
             return mapper.getAllRecipes();
         }
     }
-=======
->>>>>>> 9505fc0761a20a92127299d307ecc7014c97c7ca
 }

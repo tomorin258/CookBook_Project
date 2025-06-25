@@ -30,11 +30,7 @@ public class RecipeLoginController {
         if (success) {
             messageLabel.setText("Login successfully.");
             try {
-<<<<<<< HEAD
                 javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/fxml/recipe_list.fxml"));
-=======
-                javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/fxml/recipelist.fxml"));
->>>>>>> 9505fc0761a20a92127299d307ecc7014c97c7ca
                 javafx.scene.Parent root = loader.load();
                 javafx.stage.Stage stage = (javafx.stage.Stage) loginBtn.getScene().getWindow();
                 stage.setScene(new javafx.scene.Scene(root));
