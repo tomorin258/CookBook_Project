@@ -1,8 +1,9 @@
 package service;
 
-import config.MyBatisUtil;
 import dao.mappers.UsersMapper;
 import model.Users;
+import resources.MyBatisUtil;
+
 import org.apache.ibatis.session.SqlSession;
 
 public class UserService {

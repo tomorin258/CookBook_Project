@@ -1,8 +1,9 @@
 package service;
 
-import config.MyBatisUtil;
 import dao.mappers.CommentsMapper;
 import model.Comments;
+import resources.MyBatisUtil;
+
 import org.apache.ibatis.session.SqlSession;
 
 import java.util.List;
