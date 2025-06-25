@@ -1,4 +1,4 @@
-package config;
+package resources;
 
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
