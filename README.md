@@ -13,10 +13,10 @@
 │   ├── view/
 │   └── controller/
 ├── src/main/resources/
+│   ├── mybatis_config.xml
 │   ├── fxml/
 │   └── images/
 ├── config/
-│   ├── mybatis_config.xml
 │   └── MyBatisUtil.java
 ├── pom.xml
 ├── CookBook.sql
