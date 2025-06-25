@@ -5,7 +5,7 @@
 
 <!-- Redesigned recipe detail screen – square image placeholder added -->
 <BorderPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.recipeapp.controller.RecipeInteractionController"
+            fx:controller="controller.RecipeInteractionController"
             style="-fx-background-color:#fbf9e5;">
 
     <!-- ─── TOP BAR ───────────────────────────────────────────────────────────── -->

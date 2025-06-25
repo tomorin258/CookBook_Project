@@ -6,7 +6,7 @@
 
 <!-- Recipe add / edit screen – mirrors recipe_detail size & layout (tweaked) -->
 <BorderPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.recipeapp.controller.RecipeManagementController"
+            fx:controller="controller.RecipeManagementController"
             prefWidth="768" prefHeight="889"
             style="-fx-background-color:#fbf9e5;">
 
