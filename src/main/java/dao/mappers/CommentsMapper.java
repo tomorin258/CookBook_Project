@@ -2,8 +2,6 @@ package dao.mappers;
 
 import java.util.ArrayList;
 
-import org.apache.ibatis.annotations.Param;
-
 import model.Comments;
 
 /**
@@ -20,42 +18,42 @@ public interface CommentsMapper {
      * @param comments the comments object
      * @return true if successful, false otherwise
      */
-    boolean addComments(@Param("comments") Comments comments);
+    boolean addComments(Comments comments);
 
     /**
      * Delete a comment by its ID.
      * @param commentId the comment ID
      * @return true if successful, false otherwise
      */
-    boolean deleteComments(@Param("commentId") Integer commentId);
+    boolean deleteComments(Integer commentId);
 
     /**
      * Update a comment entry.
      * @param comments the comments object
      * @return true if successful, false otherwise
      */
-    boolean updateComments(@Param("comments") Comments comments);
+    boolean updateComments(Comments comments);
 
     /**
      * Get a comment by its ID.
-     * @param commentId the comment ID
+     * @param id the comment ID
      * @return the comments object
      */
-    Comments getCommentsById(@Param("commentId") int commentId);
+    Comments getCommentsById(int commentId);
 
     /**
      * Get all comments for a specific recipe.
      * @param recipeId the recipe ID
      * @return a list of comments
      */
-    ArrayList<Comments> getCommentsByRecipeId(@Param("recipeId") int recipeId);
+    ArrayList<Comments> getCommentsByRecipeId(int recipeId);
 
     /**
      * Get all comments made by a specific user.
      * @param userId the user ID
      * @return a list of comments
      */
-    ArrayList<Comments> getCommentsByUserId(@Param("userId") int userId);
+    ArrayList<Comments> getCommentsByUserId(int userId);
 
     /**
      * Get the newest comment (based on createdAt).

@@ -3,13 +3,22 @@
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
+
+    <typeAliases>
+        <typeAlias alias="Users" type="model.Users"/>
+        <typeAlias alias="Recipes" type="model.Recipes"/>
+        <typeAlias alias="Ingredients" type="model.Ingredients"/>
+        <typeAlias alias="Comments" type="model.Comments"/>
+        <typeAlias alias="RecipeIngredients" type="model.RecipeIngredients"/>
+    </typeAliases>
+
     <environments default="dev">
         <environment id="dev">
             <transactionManager type="JDBC"/>
             <dataSource type="POOLED">
                 <property name="driver" value="com.mysql.cj.jdbc.Driver"/>
-                <property name="url" value="jdbc:mysql://localhost:3306/cookbook?useSSL=false&serverTimezone=UTC"/>
-                <property name="username" value=""/>
+                <property name="url" value="jdbc:mysql://localhost:3306/cookbook?useSSL=false&amp;serverTimezone=UTC"/>
+                <property name="username" value="root"/>
                 <property name="password" value=""/>
             </dataSource>
         </environment>
@@ -22,4 +31,6 @@
         <mapper resource="dao/mappers/CommentsMapper.xml"/>
         <mapper resource="dao/mappers/RecipeIngredientsMapper.xml"/>
     </mappers>
+
+    
 </configuration>

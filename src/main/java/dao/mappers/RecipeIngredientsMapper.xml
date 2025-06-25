@@ -5,14 +5,14 @@
 
 <mapper namespace="dao.mappers.RecipeIngredientsMapper">
 
-    <resultMap id="RecipeIngredientsResultMap" type="dao.mappers.RecipeIngredients">
+    <resultMap id="RecipeIngredientsResultMap" type="model.RecipeIngredients">
         <id property="recipeId" column="recipe_id" />
         <id property="ingredientId" column="ingredient_id" />
         <result property="amount" column="amount" />
         <result property="unit" column="unit" />
     </resultMap>
 
-    <insert id="addRecipeIngredients" parameterType="com.recipeapp.dao.mappers.RecipeIngredients">
+    <insert id="addRecipeIngredients" parameterType="model.RecipeIngredients">
         INSERT INTO recipe_ingredients (recipe_id, ingredient_id, amount, unit)
         VALUES (#{recipeIngredients.recipeId}, #{recipeIngredients.ingredientId}, #{recipeIngredients.amount}, #{recipeIngredients.unit})
     </insert>
@@ -22,7 +22,7 @@
         WHERE recipe_id = #{recipeId} AND ingredient_id = #{ingredientId}
     </delete>
 
-    <update id="updateRecipeIngredients" parameterType="com.recipeapp.dao.mappers.RecipeIngredients">
+    <update id="updateRecipeIngredients" parameterType="model.RecipeIngredients">
         UPDATE recipe_ingredients
         SET amount = #{recipeIngredients.amount},
             unit = #{recipeIngredients.unit}

@@ -7,49 +7,50 @@
 
     <!-- Add a new recipes entry -->
     <insert id="addRecipes" parameterType="Recipes">
-        INSERT INTO recipe (user_id, title, description, instructions, cook_time, servings, like_count)
-        VALUES (#{recipes.userId}, #{recipes.title}, #{recipes.description}, #{recipes.instructions}, #{recipes.cookTime}, #{recipes.servings}, #{recipes.likeCount})
+        INSERT INTO recipes (user_id, title, description, instructions, cook_time, servings, like_count, image_url)
+        VALUES (#{userId}, #{title}, #{description}, #{instructions}, #{cookTime}, #{servings}, #{likeCount}, #{imageUrl})
     </insert>
 
     <!-- Delete a recipes entry by ID -->
     <delete id="deleteRecipes" parameterType="Integer">
-        DELETE FROM recipe WHERE id = #{recipesId}
+        DELETE FROM recipes WHERE id = #{recipesId}
     </delete>
 
     <!-- Update a recipes entry -->
     <update id="updateRecipes" parameterType="Recipes">
-        UPDATE recipe
-        SET user_id = #{recipes.userId},
-            title = #{recipes.title},
-            description = #{recipes.description},
-            instructions = #{recipes.instructions},
-            cook_time = #{recipes.cookTime},
-            servings = #{recipes.servings},
-            like_count = #{recipes.likeCount}
-        WHERE id = #{recipes.id}
+        UPDATE recipes
+        SET user_id = #{userId},
+            title = #{title},
+            description = #{description},
+            instructions = #{instructions},
+            cook_time = #{cookTime},
+            servings = #{servings},
+            like_count = #{likeCount},
+            image_url = #{imageUrl}
+        WHERE id = #{id}
     </update>
 
     <!-- Select a recipes entry by ID -->
     <select id="getRecipesById" parameterType="int" resultType="Recipes">
         SELECT id, user_id AS userId, title, description, instructions,
-               cook_time AS cookTime, servings, like_count AS likeCount
-        FROM recipe
-        WHERE id = #{recipesId}
+               cook_time AS cookTime, servings, like_count AS likeCount, image_url AS imageUrl
+        FROM recipes
+        WHERE id = #{id}
     </select>
 
     <!-- Select recipes entries by title (fuzzy match) -->
-    <select id="getRecipesByTitle" parameterType="string" resultType="Recipes">
+    <select id="getRecipesByTitle" parameterType="String" resultType="Recipes">
         SELECT id, user_id AS userId, title, description, instructions,
-               cook_time AS cookTime, servings, like_count AS likeCount
-        FROM recipe
+               cook_time AS cookTime, servings, like_count AS likeCount, image_url AS imageUrl
+        FROM recipes
         WHERE title LIKE CONCAT('%', #{title}, '%')
     </select>
 
     <!-- Select the newest recipes entry -->
     <select id="getNewestRecipes" resultType="Recipes">
         SELECT id, user_id AS userId, title, description, instructions,
-               cook_time AS cookTime, servings, like_count AS likeCount
-        FROM recipe
+               cook_time AS cookTime, servings, like_count AS likeCount, image_url AS imageUrl
+        FROM recipes
         ORDER BY id DESC
         LIMIT 1
     </select>
@@ -57,16 +58,16 @@
     <!-- Select  recipes entries by likeCount -->
     <select id="getLikeRecipes" resultType="Recipes">
         SELECT id, user_id AS userId, title, description, instructions,
-               cook_time AS cookTime, servings, like_count AS likeCount
-        FROM recipe
+               cook_time AS cookTime, servings, like_count AS likeCount, image_url AS imageUrl
+        FROM recipes
         ORDER BY like_count DESC
     </select>
 
     <!-- Select all recipes entries -->
     <select id="getAllRecipes" resultType="Recipes">
         SELECT id, user_id AS userId, title, description, instructions,
-               cook_time AS cookTime, servings, like_count AS likeCount
-        FROM recipe
+               cook_time AS cookTime, servings, like_count AS likeCount, image_url AS imageUrl
+        FROM recipes
         ORDER BY id ASC
     </select>
 

@@ -28,7 +28,7 @@ public class RecipeManagementController {
     private int totalPage = 1;
     private List<Recipes> sortedRecipes;
 
-    // 只依赖 Service
+    // rely on Service
     private final RecipeService recipeService = new RecipeService();
 
     // add recipes
@@ -51,7 +51,7 @@ public class RecipeManagementController {
         return recipeService.searchRecipes(keyword);
     }
 
-    // 搜索按钮事件
+    // search recipes by keyword
     @FXML
     public void onSearch() {
         String keyword = keywordField.getText();
@@ -59,7 +59,7 @@ public class RecipeManagementController {
         recipeListView.getItems().setAll(result);
     }
 
-    // 按点赞数排序
+    // sort recipes by likes
     public List<Recipes> getRecipesSortedByLikes() {
         List<Recipes> all = recipeService.searchRecipes(null);
         return all.stream()
