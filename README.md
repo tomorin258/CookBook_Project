@@ -6,6 +6,7 @@
 ```
 ├── src/main/java
 │   ├── dao/
+│   ├── service/
 │   ├── init/
 │   ├── model/
 │   ├── data/
