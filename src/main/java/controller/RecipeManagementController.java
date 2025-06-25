@@ -82,20 +82,20 @@ public class RecipeManagementController {
         nextPageBtn.setDisable(page == totalPage);
     }
 
-    // 初始化方法，加载所有配方
+    // initialize方法
     @FXML
     public void initialize() {
-        if (sortedListVBox != null) { // 只在按赞排序界面执行
+        if (sortedListVBox != null) { //only when sortedListVBox is present
             sortedRecipes = recipeService.getRecipesSortedByLikes();
             totalPage = (int) Math.ceil((double) sortedRecipes.size() / pageSize);
             currentPage = 1;
             showSortedPageByLikes(currentPage);
         } else {
-            loadAllRecipes(); // 其它界面
+            loadAllRecipes(); // load all recipes if sortedListVBox is not present
         }
     }
 
-    // 按赞排序分页显示
+    // showSortedPageByLikes
     @FXML
     private void showSortedPageByLikes(int page) {
         sortedListVBox.getChildren().clear();
@@ -116,7 +116,7 @@ public class RecipeManagementController {
         nextPageBtn.setDisable(page == totalPage);
     }
 
-    // 上一页
+    // previous page
     @FXML
     private void onPrevPage() {
         if (currentPage > 1) {
@@ -125,7 +125,7 @@ public class RecipeManagementController {
         }
     }
 
-    // 下一页
+    // next page
     @FXML
     private void onNextPage() {
         if (currentPage < totalPage) {
@@ -141,10 +141,19 @@ public class RecipeManagementController {
 
     @FXML
     private void onAddRecipe() {
-        // TODO: 跳转到新增配方界面
+        try {
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/fxml/recipe_edit_add.fxml"));
+            javafx.scene.Parent root = loader.load();
+            javafx.stage.Stage stage = new javafx.stage.Stage();
+            stage.setTitle("Add Recipe");
+            stage.setScene(new javafx.scene.Scene(root));
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    // 搜索按钮事件
+    // onSearch
     @FXML
     public void onSearch() {
         String keyword = keywordField.getText();
@@ -157,7 +166,7 @@ public class RecipeManagementController {
         showSortedPage(currentPage);
     }
 
-    // 按点赞排序按钮事件
+    // onSortByLikes
     @FXML
     private void onSortByLikes() {
         try {
@@ -167,8 +176,6 @@ public class RecipeManagementController {
             stage.setTitle("Recipes Sorted by Likes");
             stage.setScene(new javafx.scene.Scene(root));
             stage.show();
-            // 可选：关闭当前窗口
-            // backBtn.getScene().getWindow().hide();
         } catch (Exception e) {
             e.printStackTrace();
         }
