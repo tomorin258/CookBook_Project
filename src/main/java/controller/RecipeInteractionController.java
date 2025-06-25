@@ -6,9 +6,9 @@ import javafx.event.ActionEvent;
 import model.Recipes;
 import model.Comments;
 import model.RecipeIngredients;
-import dao.mappers.RecipesMapper;
-import dao.mappers.CommentsMapper;
-import dao.mappers.RecipeIngredientsMapper;
+import service.RecipeService;
+import service.CommentService;
+import service.RecipeIngredientsService;
 
 import java.util.List;
 
@@ -23,11 +23,11 @@ public class RecipeInteractionController {
     @FXML private ListView<String> commentListView;
 
     private Recipes currentRecipe;
-    private RecipesMapper recipesMapper;
-    private CommentsMapper commentsMapper;
-    private RecipeIngredientsMapper recipeIngredientsMapper;
-
     private int baseServings = 1;
+
+    private final RecipeService recipeService = new RecipeService();
+    private final CommentService commentService = new CommentService();
+    private final RecipeIngredientsService recipeIngredientsService = new RecipeIngredientsService();
 
     @FXML
     public void initialize() {
@@ -48,12 +48,12 @@ public class RecipeInteractionController {
     private void onLike(ActionEvent event) {
         int likes = currentRecipe.getLikeCount() + 1;
         currentRecipe.setLikeCount(likes);
-        recipesMapper.updateRecipes(currentRecipe);
+        recipeService.updateRecipe(currentRecipe);
         likeCountLabel.setText(String.valueOf(likes));
     }
 
     private void updateIngredientsTable(int newServings) {
-        List<RecipeIngredients> ingredients = recipeIngredientsMapper.getRecipeIngredientsByRecipeId(currentRecipe.getId());
+        List<RecipeIngredients> ingredients = recipeIngredientsService.getByRecipeId(currentRecipe.getId());
         double ratio = (double) newServings / baseServings;
         for (RecipeIngredients ri : ingredients) {
             ri.setAmount(ri.getAmount().multiply(java.math.BigDecimal.valueOf(ratio)));
@@ -69,13 +69,13 @@ public class RecipeInteractionController {
         comment.setRecipeId(currentRecipe.getId());
         comment.setContent(content);
         comment.setCreatedAt(java.time.LocalDateTime.now().toString());
-        commentsMapper.addComments(comment);
+        commentService.addComment(comment);
         commentArea.clear();
         loadComments();
     }
 
     private void loadComments() {
-        List<Comments> comments = commentsMapper.getCommentsByRecipeId(currentRecipe.getId());
+        List<Comments> comments = commentService.getCommentsByRecipeId(currentRecipe.getId());
         commentListView.getItems().clear();
         for (Comments c : comments) {
             commentListView.getItems().add(c.getContent());
