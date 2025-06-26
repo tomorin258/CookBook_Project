@@ -58,5 +58,18 @@ public interface RecipeIngredientsMapper {
      * @return a list of recipe ingredients
      * */
     List<RecipeIngredients> getRecipeIngredientsByIngredientId(@Param("ingredientId") int ingredientId);
+    
+    /**
+     * Delete recipe ingredients by recipe ID.
+     * @param recipeId the recipe ID
+     * */
+    void deleteByRecipeId(Integer recipeId);
+    
+    /**
+     * Get recipe ingredients by recipe ID.
+     * @param recipeId the recipe ID
+     * @return a list of recipe ingredients
+     * */
+    List<RecipeIngredients> getByRecipeId(int recipeId);
 }
 

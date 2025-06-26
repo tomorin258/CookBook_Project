@@ -22,6 +22,10 @@
         WHERE recipe_id = #{recipeId} AND ingredient_id = #{ingredientId}
     </delete>
 
+    <delete id="deleteByRecipeId" parameterType="int">
+        DELETE FROM recipe_ingredients WHERE recipe_id = #{recipeId}
+    </delete>
+
     <update id="updateRecipeIngredients" parameterType="model.RecipeIngredients">
         UPDATE recipe_ingredients
         SET amount = #{amount},
@@ -46,6 +50,13 @@
         SELECT recipe_id, ingredient_id, amount, unit, description
         FROM recipe_ingredients
         WHERE ingredient_id = #{ingredientId}
+    </select>
+
+    <select id="getByRecipeId" resultType="model.RecipeIngredients">
+        SELECT ri.*, i.name AS ingredient_name
+        FROM recipe_ingredients ri
+        LEFT JOIN ingredients i ON ri.ingredient_id = i.id
+        WHERE ri.recipe_id = #{recipeId}
     </select>
 
 </mapper>

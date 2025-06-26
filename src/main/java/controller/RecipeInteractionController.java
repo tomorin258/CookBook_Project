@@ -30,6 +30,7 @@ public class RecipeInteractionController {
     @FXML private Button addCommentBtn;
     @FXML private Label cookTimeLabel;
     @FXML private TextArea instructionsArea;
+    @FXML private javafx.scene.image.ImageView recipeImageView; // 新增的 ImageView
 
     private Recipes currentRecipe;
     private int baseServings = 1;
@@ -147,10 +148,24 @@ public class RecipeInteractionController {
             baseServings = recipe.getServings();
             likeCountLabel.setText(String.valueOf(recipe.getLikeCount()));
             serveSpinner.getValueFactory().setValue(baseServings);
-            // 正确显示 cook_time 字段
             cookTimeLabel.setText("Cooking Time: " + recipe.getCookTime() + " min");
             instructionsArea.setText(recipe.getInstructions());
-            // 其它控件赋值...
+            // 配料
+            java.util.List<RecipeIngredients> ingredientList = recipeIngredientsService.getByRecipeId(recipe.getId());
+            ingredientsTable.setItems(javafx.collections.FXCollections.observableArrayList(ingredientList));
+            // 图片
+            if (recipeImageView != null && recipe.getImageUrl() != null) {
+                try {
+                    java.net.URL imgUrl = getClass().getResource("/" + recipe.getImageUrl());
+                    if (imgUrl != null) {
+                        recipeImageView.setImage(new javafx.scene.image.Image(imgUrl.toString()));
+                    } else {
+                        recipeImageView.setImage(null);
+                    }
+                } catch (Exception e) {
+                    recipeImageView.setImage(null);
+                }
+            }
             updateIngredientsTable(baseServings);
             loadComments();
         }

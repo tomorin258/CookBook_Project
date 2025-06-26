@@ -26,7 +26,15 @@ public class RecipeIngredientsService {
     public List<RecipeIngredients> getByRecipeId(int recipeId) {
         try (SqlSession session = MyBatisUtil.getSqlSession()) {
             RecipeIngredientsMapper mapper = session.getMapper(RecipeIngredientsMapper.class);
-            return mapper.getRecipeIngredientsByRecipeId(recipeId);
+            // 调用带联表查ingredient_name的方法
+            return mapper.getByRecipeId(recipeId);
+        }
+    }
+
+    public void deleteByRecipeId(Integer recipeId) {
+        try (org.apache.ibatis.session.SqlSession session = config.MyBatisUtil.getSqlSession(true)) {
+            dao.mappers.RecipeIngredientsMapper mapper = session.getMapper(dao.mappers.RecipeIngredientsMapper.class);
+            mapper.deleteByRecipeId(recipeId);
         }
     }
 }

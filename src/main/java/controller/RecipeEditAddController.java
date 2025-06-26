@@ -40,9 +40,11 @@ public class RecipeEditAddController {
     private final RecipeService recipeService = new RecipeService(); // 新增 RecipesService 实例
     private final IngredientService ingredientService = new IngredientService(MyBatisUtil.getSqlSessionFactory());
     private java.io.File imageFile; // 用于保存上传的图片文件对象
+    private Recipes editingRecipe; // 当前编辑的菜谱（新增字段）
 
     public void loadRecipe(Recipes recipe) {
         if (recipe == null) return;
+        editingRecipe = recipe; // 记录正在编辑的菜谱
         if (titleField != null) titleField.setText(recipe.getTitle());
         if (serveSpinner != null && serveSpinner.getValueFactory() != null) {
             serveSpinner.getValueFactory().setValue(recipe.getServings());
@@ -53,10 +55,9 @@ public class RecipeEditAddController {
         // 推荐将图片加载逻辑替换为如下
         if (recipeImageView != null && recipe.getImageUrl() != null) {
             try {
-                String imagePath = "src/main/resources/" + recipe.getImageUrl();
-                java.io.File imgFile = new java.io.File(imagePath);
-                if (imgFile.exists()) {
-                    recipeImageView.setImage(new javafx.scene.image.Image(imgFile.toURI().toString()));
+                java.net.URL imgUrl = getClass().getResource("/" + recipe.getImageUrl());
+                if (imgUrl != null) {
+                    recipeImageView.setImage(new javafx.scene.image.Image(imgUrl.toString()));
                 } else {
                     recipeImageView.setImage(null);
                 }
@@ -95,23 +96,27 @@ public class RecipeEditAddController {
         }
         String cookTime = cookTimeField.getText();
         String instructions = instructionsArea.getText();
-        Recipes recipe = new Recipes();
+
+        // 判断是编辑还是新增
+        boolean isEdit = (editingRecipe != null);
+
+        Recipes recipe = isEdit ? editingRecipe : new Recipes();
+
         recipe.setTitle(title);
         recipe.setServings(servings);
-        
         if (cookTime != null && !cookTime.isEmpty()) {
             recipe.setCookTime(Integer.parseInt(cookTime));
         }
         recipe.setInstructions(instructions);
-
-        // 关键：设置当前登录用户id（假设你有 CurrentUser 工具类）
         int currentUserId = CurrentUser.getId();
         recipe.setUserId(currentUserId);
 
-        // 新建时点赞数为0
-        recipe.setLikeCount(0);
+        // 新建时点赞数为0，编辑时保持原有
+        if (!isEdit) {
+            recipe.setLikeCount(0);
+        }
 
-        // 图片路径已处理
+        // 图片路径处理
         if (imageFile != null) {
             String projectRoot = System.getProperty("user.dir").replace("\\", "/");
             String imagesDir = projectRoot + "/src/main/resources/images";
@@ -124,30 +129,32 @@ public class RecipeEditAddController {
                 recipe.setImageUrl(imageFile.getName());
             }
         }
-        // 保存菜谱主表并获取 recipeId
-        Integer recipeId = recipeService.addRecipeAndReturnId(recipe);
-        if (recipeId == null) {
-            // 保存失败，弹窗提示
-            return;
+
+        Integer recipeId;
+        if (isEdit) {
+            // 编辑：更新原有菜谱
+            recipeService.updateRecipe(recipe);
+            recipeId = recipe.getId();
+            // 先删除原有配料
+            recipeIngredientsService.deleteByRecipeId(recipeId);
+        } else {
+            // 新增
+            recipeId = recipeService.addRecipeAndReturnId(recipe);
+            if (recipeId == null) {
+                // 保存失败，弹窗提示
+                return;
+            }
+            recipe.setId(recipeId);
         }
 
-        System.out.println("配料数量: " + ingredientsTable.getItems().size());
+        // 保存配料
         for (RecipeIngredients ri : ingredientsTable.getItems()) {
-            System.out.println("保存配料: " + ri.getIngredientName() + ", 数量: " + ri.getAmount());
-            // 1. 设置 recipeId
             ri.setRecipeId(recipeId);
-            
-            // 2. 查找 ingredientId
             Integer ingredientId = ingredientService.getIngredientIdByName(ri.getIngredientName());
             if (ingredientId == null) {
-                // 3. 没有则插入
                 ingredientId = ingredientService.addIngredient(ri.getIngredientName());
             }
             ri.setIngredientId(ingredientId);
-
-            
-
-            // 4. 保存配料
             recipeIngredientsService.addRecipeIngredients(ri);
         }
 
