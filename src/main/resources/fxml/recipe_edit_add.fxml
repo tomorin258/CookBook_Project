@@ -4,7 +4,7 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane prefHeight="850" prefWidth="768" style="-fx-background-color:#e6f4ff;-fx-font-family:'Segoe UI','sans-serif';" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.RecipeManagementController">
+<BorderPane prefHeight="850" prefWidth="768" style="-fx-background-color:#e6f4ff;-fx-font-family:'Segoe UI','sans-serif';" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.RecipeEditAddController">
 
     <!-- ── TOP BAR ─────────────────────────────────────────────────────────── -->
     <top>
@@ -36,12 +36,12 @@
             <ScrollPane fitToHeight="true" fitToWidth="true" style="-fx-background:#ffffff;-fx-background-radius:8;-fx-padding:6;" VBox.vgrow="ALWAYS">
                 <content>
                     <VBox spacing="8">
-                        <TableView fx:id="ingredientsTable" prefHeight="420" prefWidth="380" style="-fx-background-color:transparent;                                           -fx-table-cell-border-color:transparent;-fx-padding:4;" VBox.vgrow="ALWAYS">
+                        <TableView fx:id="ingredientsTable" prefHeight="420" editable="true" prefWidth="380" style="-fx-background-color:transparent;                                           -fx-table-cell-border-color:transparent;-fx-padding:4;" VBox.vgrow="ALWAYS">
                             <columns>
-                                <TableColumn fx:id="ingredientNameCol" prefWidth="120" text="Ingredient" />
-                                <TableColumn fx:id="quantityCol" prefWidth="80" text="Quantity" />
-                                <TableColumn fx:id="unitsCol" prefWidth="80" text="Units" />
-                                <TableColumn fx:id="ingredientDescCol" prefWidth="160" text="Description" />
+                                <TableColumn fx:id="ingredientNameCol" prefWidth="120" text="Ingredient" editable="true" />
+                                <TableColumn fx:id="quantityCol" prefWidth="80" text="Quantity" editable="true" />
+                                <TableColumn fx:id="unitsCol" prefWidth="80" text="Units" editable="true" />
+                                <TableColumn fx:id="ingredientDescCol" prefWidth="160" text="Description" editable="true" />
                             </columns>
                         </TableView>
 

@@ -1,20 +1,23 @@
 package service;
 
+import org.apache.ibatis.session.SqlSession;
+
+import config.MyBatisUtil;
 import dao.mappers.UsersMapper;
 import model.Users;
-import config.MyBatisUtil;
-
-import org.apache.ibatis.session.SqlSession;
 
 public class UserService {
     /**
      * Login check.
      */
-    public boolean login(String username, String password) {
+    public Users login(String username, String password) {
         try (SqlSession session = MyBatisUtil.getSqlSession()) {
             UsersMapper usersMapper = session.getMapper(UsersMapper.class);
             Users user = usersMapper.getUsersByName(username).stream().findFirst().orElse(null);
-            return user != null && user.getPassword().equals(password);
+            if (user != null && user.getPassword().equals(password)) {
+                return user;
+            }
+            return null;
         }
     }
 

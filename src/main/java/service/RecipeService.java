@@ -62,4 +62,22 @@ public class RecipeService {
             return mapper.getAllRecipes();
         }
     }
+
+    public Integer addRecipeAndReturnId(Recipes recipe) {
+        try (SqlSession session = MyBatisUtil.getSqlSession(true)) {
+            RecipesMapper mapper = session.getMapper(RecipesMapper.class);
+            boolean success = mapper.addRecipes(recipe);
+            if (success) {
+                return recipe.getId(); // MyBatis会自动回填id
+            }
+            return null;
+        }
+    }
+
+    public Recipes getRecipesById(int id) {
+        try (org.apache.ibatis.session.SqlSession session = MyBatisUtil.getSqlSession()) {
+            RecipesMapper mapper = session.getMapper(RecipesMapper.class);
+            return mapper.getRecipesById(id);
+        }
+    }
 }

@@ -2,6 +2,8 @@ package model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+
+import javafx.beans.property.SimpleStringProperty;
 /**
  * Represents a RecipeIngredients entity.
  * Each RecipeIngredients entry contains information such as recipe ID, ingredient ID, amount, unit.
@@ -13,8 +15,10 @@ import java.math.BigDecimal;
 public class RecipeIngredients implements Serializable {
     private int recipeId;
     private int ingredientId;
-    private BigDecimal amount;
-    private String unit;
+    private final SimpleStringProperty amount = new SimpleStringProperty(""); // 用字符串存储数量，便于绑定
+    private final SimpleStringProperty unit = new SimpleStringProperty("");
+    private final SimpleStringProperty ingredientName = new SimpleStringProperty("");
+    private final SimpleStringProperty description = new SimpleStringProperty(""); // 新增字段：描述
 
     /**
      * Default constructor for the RecipeIngredients class.
@@ -33,8 +37,8 @@ public class RecipeIngredients implements Serializable {
     public RecipeIngredients(int recipeId, int ingredientId, BigDecimal amount, String unit) {
         this.recipeId = recipeId;
         this.ingredientId = ingredientId;
-        this.amount = amount;
-        this.unit = unit;
+        this.amount.set(String.valueOf(amount));
+        this.unit.set(unit);
     }
 
     public int getRecipeId() {
@@ -53,21 +57,47 @@ public class RecipeIngredients implements Serializable {
         this.ingredientId = ingredientId;
     }
 
-    public BigDecimal getAmount() {
+    public String getAmount() {
+        return amount.get();
+    }
+
+    public void setAmount(String amount) {
+        this.amount.set(amount);
+    }
+
+    public SimpleStringProperty amountProperty() {
         return amount;
     }
 
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
-    }
-
     public String getUnit() {
-        return unit;
+        return unit.get();
     }
 
     public void setUnit(String unit) {
-        this.unit = unit;
+        this.unit.set(unit);
     }
+
+    public SimpleStringProperty unitProperty() {
+        return unit;
+    }
+
+    public String getIngredientName() {
+        return ingredientName.get();
+    }
+
+    public void setIngredientName(String ingredientName) {
+        this.ingredientName.set(ingredientName);
+    }
+
+    public SimpleStringProperty ingredientNameProperty() {
+        return ingredientName;
+    }
+
+    public String getDescription() { return description.get(); } // 新增：获取描述
+
+    public void setDescription(String desc) { description.set(desc); } // 新增：设置描述
+
+    public SimpleStringProperty descriptionProperty() { return description; } // 新增：描述属性
 
     @Override
     public String toString() {

@@ -1,18 +1,18 @@
 package service;
 
-import dao.mappers.CommentsMapper;
-import model.Comments;
-import config.MyBatisUtil;
+import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
 
-import java.util.List;
+import config.MyBatisUtil;
+import dao.mappers.CommentsMapper;
+import model.Comments;
 
 public class CommentService {
     public boolean addComment(Comments comment) {
         try (SqlSession session = MyBatisUtil.getSqlSession(true)) {
             CommentsMapper mapper = session.getMapper(CommentsMapper.class);
-            return mapper.addComments(comment);
+            return mapper.addComments(comment); // 直接返回boolean
         }
     }
 
