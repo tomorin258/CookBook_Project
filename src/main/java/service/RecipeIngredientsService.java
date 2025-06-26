@@ -2,7 +2,7 @@ package service;
 
 import dao.mappers.RecipeIngredientsMapper;
 import model.RecipeIngredients;
-import resources.MyBatisUtil;
+import config.MyBatisUtil;
 
 import org.apache.ibatis.session.SqlSession;
 

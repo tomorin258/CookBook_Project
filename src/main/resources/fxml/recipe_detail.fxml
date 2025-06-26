@@ -1,35 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.layout.*?>
+
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
 
-<BorderPane xmlns="http://javafx.com/javafx/17.0.12"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="controller.RecipeInteractionController"
-            prefWidth="768" prefHeight="850"
-            style="-fx-background-color:#e6f4ff;-fx-font-family:'Segoe UI','sans-serif';">
+<BorderPane prefHeight="850" prefWidth="768" style="-fx-background-color:#e6f4ff;-fx-font-family:'Segoe UI','sans-serif';" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.RecipeInteractionController">
 
     <!-- ── TOP BAR ─────────────────────────────────────────────────────────── -->
     <top>
-        <HBox alignment="CENTER_LEFT" spacing="10"
-              style="-fx-background-color:#d3eaff;-fx-padding:12;">
+        <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-background-color:#d3eaff;-fx-padding:12;">
             <!-- Back button -->
-            <Button fx:id="backBtn" text="⟵  Back" onAction="#onBack"
-                    style="-fx-background-color:#ffffff;-fx-text-fill:#0d3b66;-fx-font-weight:bold;
-                           -fx-border-color:#0d3b66;-fx-border-radius:6;-fx-background-radius:6;
-                           -fx-padding:4 14;"/>
-            <Separator orientation="VERTICAL"/>
+            <Button fx:id="backBtn" onAction="#onBack" style="-fx-background-color:#ffffff;-fx-text-fill:#0d3b66;-fx-font-weight:bold;                            -fx-border-color:#0d3b66;-fx-border-radius:6;-fx-background-radius:6;                            -fx-padding:4 14;" text="⟵  Back" />
+            <Separator orientation="VERTICAL" />
             <!-- Title -->
-            <Label fx:id="titleLabel" text="Recipe title"
-                   style="-fx-font-size:26;-fx-font-weight:bold;-fx-text-fill:#0d3b66;"/>
-            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="titleLabel" style="-fx-font-size:26;-fx-font-weight:bold;-fx-text-fill:#0d3b66;" text="Recipe title" />
+            <Region HBox.hgrow="ALWAYS" />
             <!-- Edit / Delete buttons -->
-            <Button fx:id="editBtn" text="✎ Edit" onAction="#onEdit"
-                    style="-fx-background-color:#0d3b66;-fx-text-fill:#ffffff;-fx-font-weight:bold;
-                           -fx-background-radius:6;-fx-padding:4 14;"/>
-            <Button fx:id="deleteBtn" text="🗑 Delete" onAction="#onDelete"
-                    style="-fx-background-color:#ff595e;-fx-text-fill:#ffffff;-fx-font-weight:bold;
-                           -fx-background-radius:6;-fx-padding:4 14;"/>
+            <Button fx:id="editBtn" onAction="#onEdit" style="-fx-background-color:#0d3b66;-fx-text-fill:#ffffff;-fx-font-weight:bold;                            -fx-background-radius:6;-fx-padding:4 14;" text="✎ Edit" />
+            <Button fx:id="deleteBtn" onAction="#onDelete" style="-fx-background-color:#ff595e;-fx-text-fill:#ffffff;-fx-font-weight:bold;                            -fx-background-radius:6;-fx-padding:4 14;" text="🗑 Delete" />
         </HBox>
     </top>
 
@@ -37,22 +25,18 @@
     <center>
         <VBox spacing="15" style="-fx-padding:15 20 20 20;">
             <HBox alignment="CENTER_LEFT" spacing="8">
-                <Label text="Serve number:" style="-fx-font-size:14;"/>
-                <Spinner fx:id="serveSpinner" prefWidth="90" editable="true"
-                         style="-fx-background-radius:6;"/>
+                <Label style="-fx-font-size:14;" text="Serve number:" />
+                <Spinner fx:id="serveSpinner" editable="true" prefWidth="90" style="-fx-background-radius:6;" />
             </HBox>
 
-            <ScrollPane fitToWidth="true" fitToHeight="true" VBox.vgrow="ALWAYS"
-                        style="-fx-background:#ffffff;-fx-background-radius:8;-fx-padding:6;">
+            <ScrollPane fitToHeight="true" fitToWidth="true" style="-fx-background:#ffffff;-fx-background-radius:8;-fx-padding:6;" VBox.vgrow="ALWAYS">
                 <content>
-                    <TableView fx:id="ingredientsTable" prefHeight="420"
-                               style="-fx-background-color:transparent;
-                                      -fx-table-cell-border-color:transparent;-fx-padding:4;">
+                    <TableView fx:id="ingredientsTable" prefHeight="420" style="-fx-background-color:transparent;                                       -fx-table-cell-border-color:transparent;-fx-padding:4;">
                         <columns>
-                            <TableColumn fx:id="ingredientNameCol" text="Ingredient"/>
-                            <TableColumn fx:id="quantityCol" text="Quantity"/>
-                            <TableColumn fx:id="unitsCol" text="Units"/>
-                            <TableColumn fx:id="ingredientDescCol" text="Description"/>
+                            <TableColumn fx:id="ingredientNameCol" text="Ingredient" />
+                            <TableColumn fx:id="quantityCol" text="Quantity" />
+                            <TableColumn fx:id="unitsCol" text="Units" />
+                            <TableColumn fx:id="ingredientDescCol" text="Description" />
                         </columns>
                     </TableView>
                 </content>
@@ -62,31 +46,20 @@
 
     <!-- ── RIGHT SIDEBAR ───────────────────────────────────────────────────── -->
     <right>
-        <VBox alignment="TOP_CENTER" spacing="14"
-              style="-fx-padding:16 24 16 16;-fx-background-color:#d9ecff;">
+        <VBox alignment="TOP_CENTER" spacing="14" style="-fx-padding:16 24 16 16;-fx-background-color:#d9ecff;">
             <!-- Image card -->
-            <StackPane prefWidth="220" prefHeight="220" maxWidth="220" maxHeight="220"
-                       style="-fx-background-color:#ffffff;-fx-border-color:#d1d1d1;
-                              -fx-border-radius:8;-fx-background-radius:8;
-                              -fx-effect:dropshadow(gaussian,rgba(0,0,0,0.12),10,0,0,2);">
-                <ImageView fx:id="recipeImageView" fitWidth="220" fitHeight="220" preserveRatio="true"/>
+            <StackPane maxHeight="220" maxWidth="220" prefHeight="220" prefWidth="220" style="-fx-background-color:#ffffff;-fx-border-color:#d1d1d1;                               -fx-border-radius:8;-fx-background-radius:8;                               -fx-effect:dropshadow(gaussian,rgba(0,0,0,0.12),10,0,0,2);">
+                <ImageView fx:id="recipeImageView" fitHeight="220" fitWidth="220" preserveRatio="true" />
             </StackPane>
 
-            <Separator orientation="HORIZONTAL" prefWidth="200"
-                       style="-fx-background-color:#8cc7ff;"/>
+            <Separator orientation="HORIZONTAL" prefWidth="200" style="-fx-background-color:#8cc7ff;" />
 
-            <Label fx:id="cookTimeLabel" text="Cooking: 00 min"
-                   style="-fx-font-size:14;-fx-font-weight:bold;"/>
-            <Label fx:id="prepTimeLabel" text="Preparation: 00 min"
-                   style="-fx-font-size:14;-fx-font-weight:bold;"/>
+            <Label fx:id="cookTimeLabel" style="-fx-font-size:14;-fx-font-weight:bold;" text="Cooking Time: 00 min" />
 
-            <Separator orientation="HORIZONTAL" prefWidth="200"
-                       style="-fx-background-color:#8cc7ff;"/>
+            <Separator orientation="HORIZONTAL" prefWidth="200" style="-fx-background-color:#8cc7ff;" />
 
-            <Label text="Instructions:" style="-fx-font-size:14;-fx-font-weight:bold;"/>
-            <TextArea fx:id="instructionsArea" editable="false" wrapText="true"
-                      prefHeight="280" prefWidth="220" VBox.vgrow="ALWAYS"
-                      style="-fx-background-radius:8;-fx-control-inner-background:#ffffff;-fx-padding:6;"/>
+            <Label style="-fx-font-size:14;-fx-font-weight:bold;" text="Instructions:" />
+            <TextArea fx:id="instructionsArea" editable="false" prefHeight="280" prefWidth="220" style="-fx-background-radius:8;-fx-control-inner-background:#ffffff;-fx-padding:6;" wrapText="true" VBox.vgrow="ALWAYS" />
         </VBox>
     </right>
 
@@ -94,23 +67,15 @@
     <bottom>
         <HBox alignment="CENTER_RIGHT" spacing="14" style="-fx-padding:16;">
             <!-- Like elements -->
-            <Label text="Likes:" style="-fx-font-size:16; -fx-font-weight:bold;"/>
-            <Label fx:id="likeCountLabel" text="0"
-                   style="-fx-font-size:16; -fx-font-weight:bold;"/>
-            <Button fx:id="likeBtn" text="👍 Like" onAction="#onLike"
-                    style="-fx-font-size:16; -fx-background-color:#0d3b66; -fx-text-fill:#ffffff;
-                           -fx-font-weight:bold; -fx-background-radius:20; -fx-padding:8 26;"/>
+            <Label style="-fx-font-size:16; -fx-font-weight:bold;" text="Likes:" />
+            <Label fx:id="likeCountLabel" style="-fx-font-size:16; -fx-font-weight:bold;" text="0" />
+            <Button fx:id="likeBtn" onAction="#onLike" style="-fx-font-size:16; -fx-background-color:#0d3b66; -fx-text-fill:#ffffff;                            -fx-font-weight:bold; -fx-background-radius:20; -fx-padding:8 26;" text="👍 Like" />
 
-            <Region HBox.hgrow="ALWAYS"/>
+            <Region HBox.hgrow="ALWAYS" />
 
-            <TextField fx:id="commentField" promptText="Add a comment..."
-                       prefWidth="380" prefHeight="36"
-                       style="-fx-font-size:16; -fx-background-radius:20;
-                              -fx-padding:8 14;"/>
+            <TextField fx:id="commentField" prefHeight="36" prefWidth="380" promptText="Add a comment..." style="-fx-font-size:16; -fx-background-radius:20;                               -fx-padding:8 14;" />
 
-            <Button fx:id="addCommentBtn" text="Add" onAction="#onAddComment"
-                    style="-fx-font-size:16; -fx-background-color:#0d3b66; -fx-text-fill:#ffffff;
-                           -fx-font-weight:bold; -fx-background-radius:20; -fx-padding:8 28;"/>
+            <Button fx:id="addCommentBtn" onAction="#onAddComment" style="-fx-font-size:16; -fx-background-color:#0d3b66; -fx-text-fill:#ffffff;                            -fx-font-weight:bold; -fx-background-radius:20; -fx-padding:8 28;" text="Add" />
         </HBox>
     </bottom>
 </BorderPane>

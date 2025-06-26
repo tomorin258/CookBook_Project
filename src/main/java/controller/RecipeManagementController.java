@@ -4,7 +4,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import service.RecipeService;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -12,6 +11,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import model.Recipes;
+import service.RecipeService;
 
 public class RecipeManagementController {
 
@@ -22,6 +22,9 @@ public class RecipeManagementController {
     @FXML private Button nextPageBtn;
     @FXML private Label pageInfoLabel;
     @FXML private Button backBtn;
+    @FXML private Button addRecipeBtn;
+    @FXML private Button searchBtn;
+    @FXML private Button sortLikeBtn;
 
     private int currentPage = 1;
     private int pageSize = 10;
@@ -51,33 +54,50 @@ public class RecipeManagementController {
         return recipeService.searchRecipes(keyword);
     }
 
-    // search recipes by keyword
-    @FXML
-    public void onSearch() {
-        String keyword = keywordField.getText();
-        List<Recipes> result = searchRecipes(keyword);
-        recipeListView.getItems().setAll(result);
-    }
-
-    // sort recipes by likes
-    public List<Recipes> getRecipesSortedByLikes() {
+    // 加载所有配方（初始化或搜索为空时调用）
+    private void loadAllRecipes() {
         List<Recipes> all = recipeService.searchRecipes(null);
-        return all.stream()
+        sortedRecipes = all.stream()
                 .sorted(Comparator.comparingInt(Recipes::getLikeCount).reversed())
                 .collect(Collectors.toList());
+        totalPage = (int) Math.ceil((double) sortedRecipes.size() / pageSize);
+        currentPage = 1;
+        showSortedPage(currentPage);
     }
 
+    // 分页显示（显示到 recipeListView）
+    @FXML
+    private void showSortedPage(int page) {
+        recipeListView.getItems().clear();
+        if (sortedRecipes == null || sortedRecipes.isEmpty()) {
+            pageInfoLabel.setText("No recipes found.");
+            return;
+        }
+        int from = (page - 1) * pageSize;
+        int to = Math.min(from + pageSize, sortedRecipes.size());
+        List<Recipes> pageList = sortedRecipes.subList(from, to);
+        recipeListView.getItems().addAll(pageList);
+        pageInfoLabel.setText("Page " + page + " / " + totalPage);
+        prevPageBtn.setDisable(page == 1);
+        nextPageBtn.setDisable(page == totalPage);
+    }
+
+    // initialize方法
     @FXML
     public void initialize() {
-        if (sortedListVBox != null) {
-            sortedRecipes = getRecipesSortedByLikes();
+        if (sortedListVBox != null) { //only when sortedListVBox is present
+            sortedRecipes = recipeService.getRecipesSortedByLikes();
             totalPage = (int) Math.ceil((double) sortedRecipes.size() / pageSize);
-            showSortedPage(currentPage);
+            currentPage = 1;
+            showSortedPageByLikes(currentPage);
+        } else {
+            loadAllRecipes(); // load all recipes if sortedListVBox is not present
         }
     }
 
+    // showSortedPageByLikes
     @FXML
-    private void showSortedPage(int page) {
+    private void showSortedPageByLikes(int page) {
         sortedListVBox.getChildren().clear();
         if (sortedRecipes == null || sortedRecipes.isEmpty()) {
             pageInfoLabel.setText("No recipes found.");
@@ -88,11 +108,76 @@ public class RecipeManagementController {
         List<Recipes> pageList = sortedRecipes.subList(from, to);
         for (Recipes recipe : pageList) {
             Label label = new Label(recipe.getTitle() + "  👍" + recipe.getLikeCount());
-            label.setStyle("-fx-font-size:18;-fx-padding:8 0;");
+            label.setStyle("-fx-font-size:18;-fx-text-fill:#0d3b66;-fx-background-color:#fff;-fx-padding:8 12 8 12;-fx-background-radius:8;");
             sortedListVBox.getChildren().add(label);
         }
         pageInfoLabel.setText("Page " + page + " / " + totalPage);
         prevPageBtn.setDisable(page == 1);
         nextPageBtn.setDisable(page == totalPage);
+    }
+
+    // previous page
+    @FXML
+    private void onPrevPage() {
+        if (currentPage > 1) {
+            currentPage--;
+            showSortedPageByLikes(currentPage);
+        }
+    }
+
+    // next page
+    @FXML
+    private void onNextPage() {
+        if (currentPage < totalPage) {
+            currentPage++;
+            showSortedPageByLikes(currentPage);
+        }
+    }
+
+    @FXML
+    private void onBack() {
+        backBtn.getScene().getWindow().hide();
+    }
+
+    @FXML
+    private void onAddRecipe() {
+        try {
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/fxml/recipe_edit_add.fxml"));
+            javafx.scene.Parent root = loader.load();
+            javafx.stage.Stage stage = new javafx.stage.Stage();
+            stage.setTitle("Add Recipe");
+            stage.setScene(new javafx.scene.Scene(root));
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // onSearch
+    @FXML
+    public void onSearch() {
+        String keyword = keywordField.getText();
+        List<Recipes> result = searchRecipes(keyword);
+        sortedRecipes = result.stream()
+                .sorted(Comparator.comparingInt(Recipes::getLikeCount).reversed())
+                .collect(Collectors.toList());
+        totalPage = (int) Math.ceil((double) sortedRecipes.size() / pageSize);
+        currentPage = 1;
+        showSortedPage(currentPage);
+    }
+
+    // onSortByLikes
+    @FXML
+    private void onSortByLikes() {
+        try {
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/fxml/recipe_sortbylikes.fxml"));
+            javafx.scene.Parent root = loader.load();
+            javafx.stage.Stage stage = new javafx.stage.Stage();
+            stage.setTitle("Recipes Sorted by Likes");
+            stage.setScene(new javafx.scene.Scene(root));
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

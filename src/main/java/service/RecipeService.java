@@ -1,12 +1,14 @@
 package service;
 
-import dao.mappers.RecipesMapper;
-import model.Recipes;
-import resources.MyBatisUtil;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.ibatis.session.SqlSession;
 
-import java.util.List;
+import config.MyBatisUtil;
+import dao.mappers.RecipesMapper;
+import model.Recipes;
 
 public class RecipeService {
     public boolean addRecipe(Recipes recipe) {
@@ -40,10 +42,24 @@ public class RecipeService {
         }
     }
 
-        public boolean updateRecipe(Recipes recipe) {
+    public boolean updateRecipe(Recipes recipe) {
         try (SqlSession session = MyBatisUtil.getSqlSession(true)) {
             RecipesMapper mapper = session.getMapper(RecipesMapper.class);
             return mapper.updateRecipes(recipe);
+        }
+    }
+
+    public List<Recipes> getRecipesSortedByLikes() {
+        List<Recipes> all = getAllRecipes(); // 或从数据库查
+        return all.stream()
+            .sorted(Comparator.comparingInt(Recipes::getLikeCount).reversed())
+            .collect(Collectors.toList());
+    }
+
+    public List<Recipes> getAllRecipes() {
+        try (SqlSession session = MyBatisUtil.getSqlSession()) {
+            RecipesMapper mapper = session.getMapper(RecipesMapper.class);
+            return mapper.getAllRecipes();
         }
     }
 }
