@@ -1,6 +1,6 @@
 package view;
 
-import controller.RecipeManagementController;
+import controller.RecipeEditAddController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
@@ -9,7 +9,7 @@ import model.Recipes;
 
 public class RecipeCreateView extends Stage {
 
-    private final RecipeManagementController controller;
+    private final RecipeEditAddController controller;
 
     public RecipeCreateView() throws Exception {
         this(null);
@@ -34,7 +34,7 @@ public class RecipeCreateView extends Stage {
         setScene(scene);
     }
 
-    public RecipeManagementController getController() {
+    public RecipeEditAddController getController() {
         return controller;
     }
 }

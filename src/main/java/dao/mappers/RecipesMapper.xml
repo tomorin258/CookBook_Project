@@ -6,7 +6,7 @@
 <mapper namespace="dao.mappers.RecipesMapper">
 
     <!-- Add a new recipes entry -->
-    <insert id="addRecipes" parameterType="Recipes">
+    <insert id="addRecipes" parameterType="Recipes" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO recipes (user_id, title, description, instructions, cook_time, servings, like_count, image_url)
         VALUES (#{userId}, #{title}, #{description}, #{instructions}, #{cookTime}, #{servings}, #{likeCount}, #{imageUrl})
     </insert>

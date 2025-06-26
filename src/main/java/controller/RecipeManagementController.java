@@ -8,13 +8,17 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import model.Recipes;
 import service.RecipeService;
 
 public class RecipeManagementController {
 
+    @FXML private Button saveBtn;
     @FXML private TextField keywordField;
     @FXML private ListView<Recipes> recipeListView;
     @FXML private VBox sortedListVBox;
@@ -25,6 +29,14 @@ public class RecipeManagementController {
     @FXML private Button addRecipeBtn;
     @FXML private Button searchBtn;
     @FXML private Button sortLikeBtn;
+
+    // 你需要在类字段区添加这些控件的 @FXML 声明（如未声明）：
+    @FXML private TextField titleField;
+    @FXML private Spinner<Integer> serveSpinner;
+    @FXML private TextField cookTimeField;
+    @FXML private TextArea instructionsArea;
+    @FXML private ImageView recipeImageView;
+    // 其它如 descriptionField、prepTimeField、ingredientsTable 等，按实际 FXML 控件补充
 
     private int currentPage = 1;
     private int pageSize = 10;
@@ -93,6 +105,26 @@ public class RecipeManagementController {
         } else {
             loadAllRecipes(); // load all recipes if sortedListVBox is not present
         }
+
+        recipeListView.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) { // 双击
+                Recipes selected = recipeListView.getSelectionModel().getSelectedItem();
+                if (selected != null) {
+                    try {
+                        javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/fxml/recipe_detail.fxml"));
+                        javafx.scene.Parent root = loader.load();
+                        controller.RecipeInteractionController detailController = loader.getController();
+                        detailController.setRecipe(selected); // 你需要在RecipeInteractionController中实现setRecipe方法
+                        javafx.stage.Stage stage = new javafx.stage.Stage();
+                        stage.setTitle("Recipe Detail");
+                        stage.setScene(new javafx.scene.Scene(root));
+                        stage.show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
     }
 
     // showSortedPageByLikes
@@ -178,6 +210,12 @@ public class RecipeManagementController {
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public void setKeyword(String keyword) {
+        if (keywordField != null) {
+            keywordField.setText(keyword);
         }
     }
 }
