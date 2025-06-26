@@ -71,11 +71,9 @@ public class RecipeInteractionController {
                 java.math.BigDecimal newAmount = oldAmount.multiply(java.math.BigDecimal.valueOf(ratio));
                 ri.setAmount(newAmount.stripTrailingZeros().toPlainString());
             } catch (Exception e) {
-                // 如果amount不是数字，保持原样
+
             }
         }
-        // 不要 setItems，不要 setAll
-        // ingredientsTable.refresh(); // 如需刷新显示
     }
 
     @FXML
@@ -95,13 +93,12 @@ public class RecipeInteractionController {
     private void onAddComment() {
         String commentText = commentField.getText();
         if (commentText == null || commentText.trim().isEmpty()) {
-            showAlert("评论不能为空！");
+            showAlert("Comments shound not be empty!");
             return;
         }
         Comments comment = new Comments();
         comment.setRecipeId(currentRecipe.getId());
-        // 你需要获取当前登录用户的 userId
-        comment.setUserId(getCurrentUserId()); // 实现此方法或替换为实际用户id
+        comment.setUserId(getCurrentUserId());
         comment.setContent(commentText);
 
         boolean success = commentService.addComment(comment);
@@ -109,39 +106,32 @@ public class RecipeInteractionController {
             commentField.clear();
             loadComments();
         } else {
-            showAlert("评论添加失败，请重试！");
+            showAlert("Fail to load comments, please try again!");
         }
     }
 
-    // 加载评论列表
     private void loadComments() {
         if (currentRecipe == null) return;
         List<Comments> comments = commentService.getCommentsByRecipeId(currentRecipe.getId());
         commentListView.getItems().clear();
         for (Comments c : comments) {
-            // 你可以根据 userId 查询用户名，这里假设只显示内容
-            commentListView.getItems().add("用户" + c.getUserId() + ": " + c.getContent());
+            commentListView.getItems().add("User" + c.getUserId() + ": " + c.getContent());
         }
     }
 
-    // 辅助弹窗方法
     private void showAlert(String msg) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("提示");
+        alert.setTitle("Tipps");
         alert.setHeaderText(null);
         alert.setContentText(msg);
         alert.showAndWait();
     }
 
-    // 示例：获取当前登录用户id（你需要根据实际登录逻辑实现）
     private int getCurrentUserId() {
         // TODO: 返回当前登录用户的id
         return 1;
     }
 
-    /**
-     * 设置当前要显示的菜谱，并刷新界面内容
-     */
     public void setRecipe(Recipes recipe) {
         this.currentRecipe = recipe;
         if (recipe != null) {
@@ -150,7 +140,6 @@ public class RecipeInteractionController {
             serveSpinner.getValueFactory().setValue(baseServings);
             updateIngredientsTable(baseServings);
             loadComments();
-            // 你可以根据需要补充其它控件的赋值，如标题、图片等
         }
     }
 }

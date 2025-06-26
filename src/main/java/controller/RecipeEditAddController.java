@@ -55,7 +55,6 @@ public class RecipeEditAddController {
         if (cookTimeField != null) cookTimeField.clear();
         if (instructionsArea != null) instructionsArea.clear();
         if (recipeImageView != null) recipeImageView.setImage(null);
-        // 只在用户点击“清空”时清空配料表
         ingredientsTable.getItems().clear();
     }
 
@@ -82,22 +81,20 @@ public class RecipeEditAddController {
     @FXML
     private void onAddRow() {
         RecipeIngredients newRow = new RecipeIngredients();
-        newRow.setAmount("0"); // 传递字符串，而不是 BigDecimal
+        newRow.setAmount("0");
         newRow.setUnit("");
-        newRow.setIngredientName(""); // 允许用户输入
-        ingredientsTable.getItems().add(newRow); // 只add，不setItems
+        newRow.setIngredientName(""); 
+        ingredientsTable.getItems().add(newRow);
     }
 
     @FXML
     private void onDeleteRow() {
-        // 获取选中的行
         model.RecipeIngredients selected = ingredientsTable.getSelectionModel().getSelectedItem();
         if (selected != null) {
             ingredientsTable.getItems().remove(selected);
         } else {
-            // 可选：弹窗提示未选中
             javafx.scene.control.Alert alert = new javafx.scene.control.Alert(
-                javafx.scene.control.Alert.AlertType.WARNING, "请先选择要删除的配料行！");
+                javafx.scene.control.Alert.AlertType.WARNING, "Please choose the row to delete!");
             alert.showAndWait();
         }
     }
@@ -105,7 +102,7 @@ public class RecipeEditAddController {
     @FXML
     private void onUpload() {
         javafx.stage.FileChooser fileChooser = new javafx.stage.FileChooser();
-        fileChooser.setTitle("选择图片");
+        fileChooser.setTitle("Choose Image");
         fileChooser.getExtensionFilters().addAll(
             new javafx.stage.FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg", "*.gif")
         );
@@ -113,13 +110,11 @@ public class RecipeEditAddController {
         if (file != null) {
             javafx.scene.image.Image image = new javafx.scene.image.Image(file.toURI().toString());
             recipeImageView.setImage(image);
-            // 如需保存图片路径，可在此处记录 file.toURI().toString() 到 Recipes 对象
         }
     }
 
     @FXML
     private void onBack() {
-        // 关闭当前窗口
         backBtn.getScene().getWindow().hide();
     }
 
@@ -147,11 +142,10 @@ public class RecipeEditAddController {
         });
 
         ingredientDescCol.setCellValueFactory(data -> 
-            new SimpleStringProperty("") // 你的实体没有desc字段，可留空或自定义
+            new SimpleStringProperty("") 
         );
         ingredientDescCol.setCellFactory(tc -> new javafx.scene.control.cell.TextFieldTableCell<>());
         ingredientDescCol.setOnEditCommit(event -> {
-            // 如有desc字段可设置
         });
     }
 }
