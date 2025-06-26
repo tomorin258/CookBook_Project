@@ -13,7 +13,6 @@ public class Recipes implements Serializable {
     private int id;
     private int userId;
     private String title;
-    private String description;
     private String instructions;
     private int cookTime;
     private int servings;
@@ -33,18 +32,16 @@ public class Recipes implements Serializable {
      * @param id            The ID of the recipe (primary key).
      * @param userId        The ID of the user who created the recipe.
      * @param title         The title of the recipe.
-     * @param description   The description of the recipe.
      * @param instructions  The cooking instructions.
      * @param cookTime      The cooking time in minutes.
      * @param servings      The number of servings.
      * @param likeCount     The number of likes this recipe has received.
      * @param imageUrl      The URL of the recipe image (optional).
      */
-    public Recipes(int id, int userId, String title, String description, String instructions, int cookTime, int servings, int likeCount) {
+    public Recipes(int id, int userId, String title, String instructions, int cookTime, int servings, int likeCount) {
         this.id = id;
         this.userId = userId;
         this.title = title;
-        this.description = description;
         this.instructions = instructions;
         this.cookTime = cookTime;
         this.servings = servings;
@@ -74,14 +71,6 @@ public class Recipes implements Serializable {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public String getInstructions() {
@@ -134,7 +123,6 @@ public class Recipes implements Serializable {
                 "id=" + id +
                 ", userId=" + userId +
                 ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
                 ", instructions='" + instructions + '\'' +
                 ", cookTime=" + cookTime +
                 ", servings=" + servings +

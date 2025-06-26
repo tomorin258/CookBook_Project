@@ -5,23 +5,34 @@
 
 <mapper namespace="dao.mappers.RecipesMapper">
 
+    <resultMap id="RecipesResultMap" type="model.Recipes">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="title" column="title"/>
+        <!-- <result property="description" column="description"/>  // 已删除 -->
+        <result property="instructions" column="instructions"/>
+        <result property="cookTime" column="cook_time"/>
+        <result property="servings" column="servings"/>
+        <result property="likeCount" column="like_count"/>
+        <result property="imageUrl" column="image_url"/>
+    </resultMap>
+
     <!-- Add a new recipes entry -->
-    <insert id="addRecipes" parameterType="Recipes" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO recipes (user_id, title, description, instructions, cook_time, servings, like_count, image_url)
-        VALUES (#{userId}, #{title}, #{description}, #{instructions}, #{cookTime}, #{servings}, #{likeCount}, #{imageUrl})
+    <insert id="addRecipes" parameterType="model.Recipes" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO recipes (user_id, title, instructions, cook_time, servings, like_count, image_url)
+        VALUES (#{userId}, #{title}, #{instructions}, #{cookTime}, #{servings}, #{likeCount}, #{imageUrl})
     </insert>
 
     <!-- Delete a recipes entry by ID -->
-    <delete id="deleteRecipes" parameterType="Integer">
-        DELETE FROM recipes WHERE id = #{recipesId}
+    <delete id="deleteRecipes" parameterType="int">
+        DELETE FROM recipes WHERE id = #{id}
     </delete>
 
     <!-- Update a recipes entry -->
-    <update id="updateRecipes" parameterType="Recipes">
+    <update id="updateRecipes" parameterType="model.Recipes">
         UPDATE recipes
         SET user_id = #{userId},
             title = #{title},
-            description = #{description},
             instructions = #{instructions},
             cook_time = #{cookTime},
             servings = #{servings},
@@ -31,28 +42,24 @@
     </update>
 
     <!-- Select a recipes entry by ID -->
-    <select id="getRecipesById" parameterType="int" resultType="Recipes">
-        SELECT id, user_id AS userId, title, description, instructions,
-               cook_time AS cookTime, servings, like_count AS likeCount, image_url AS imageUrl
+    <select id="getRecipesById" parameterType="int" resultMap="RecipesResultMap">
+        SELECT id, user_id, title, instructions, cook_time, servings, like_count, image_url
         FROM recipes
         WHERE id = #{id}
     </select>
 
     <!-- Select recipes entries by title (fuzzy match) -->
-    <select id="getRecipesByTitle" parameterType="String" resultType="Recipes">
-        SELECT id, user_id AS userId, title, description, instructions,
-               cook_time AS cookTime, servings, like_count AS likeCount, image_url AS imageUrl
+    <select id="getRecipesByTitle" parameterType="string" resultMap="RecipesResultMap">
+        SELECT id, user_id, title, instructions, cook_time, servings, like_count, image_url
         FROM recipes
         WHERE title LIKE CONCAT('%', #{title}, '%')
     </select>
 
     <!-- Select the newest recipes entry -->
-    <select id="getNewestRecipes" resultType="Recipes">
-        SELECT id, user_id AS userId, title, description, instructions,
-               cook_time AS cookTime, servings, like_count AS likeCount, image_url AS imageUrl
+    <select id="getNewestRecipes" resultMap="RecipesResultMap">
+        SELECT id, user_id, title, instructions, cook_time, servings, like_count, image_url
         FROM recipes
-        ORDER BY id DESC
-        LIMIT 1
+        ORDER BY id DESC LIMIT 1
     </select>
 
     <!-- Select  recipes entries by likeCount -->
@@ -64,11 +71,9 @@
     </select>
 
     <!-- Select all recipes entries -->
-    <select id="getAllRecipes" resultType="Recipes">
-        SELECT id, user_id AS userId, title, description, instructions,
-               cook_time AS cookTime, servings, like_count AS likeCount, image_url AS imageUrl
+    <select id="getAllRecipes" resultMap="RecipesResultMap">
+        SELECT id, user_id, title, instructions, cook_time, servings, like_count, image_url
         FROM recipes
-        ORDER BY id ASC
     </select>
 
 </mapper>
