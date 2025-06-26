@@ -73,4 +73,11 @@ public class RecipeService {
             return null;
         }
     }
+
+    public Recipes getRecipesById(int id) {
+        try (org.apache.ibatis.session.SqlSession session = MyBatisUtil.getSqlSession()) {
+            RecipesMapper mapper = session.getMapper(RecipesMapper.class);
+            return mapper.getRecipesById(id);
+        }
+    }
 }

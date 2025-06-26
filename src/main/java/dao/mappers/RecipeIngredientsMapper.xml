@@ -13,8 +13,8 @@
     </resultMap>
 
     <insert id="addRecipeIngredients" parameterType="model.RecipeIngredients">
-        INSERT INTO recipe_ingredients (recipe_id, ingredient_id, amount, unit)
-        VALUES (#{recipeIngredients.recipeId}, #{recipeIngredients.ingredientId}, #{recipeIngredients.amount}, #{recipeIngredients.unit})
+        INSERT INTO recipe_ingredients (recipe_id, ingredient_id, amount, unit, description)
+        VALUES (#{recipeId}, #{ingredientId}, #{amount}, #{unit}, #{description})
     </insert>
 
     <delete id="deleteRecipeIngredients" parameterType="map">
@@ -24,26 +24,26 @@
 
     <update id="updateRecipeIngredients" parameterType="model.RecipeIngredients">
         UPDATE recipe_ingredients
-        SET amount = #{recipeIngredients.amount},
-            unit = #{recipeIngredients.unit}
-        WHERE recipe_id = #{recipeIngredients.recipeId}
-          AND ingredient_id = #{recipeIngredients.ingredientId}
+        SET amount = #{amount},
+            unit = #{unit},
+            description = #{description}
+        WHERE recipe_id = #{recipeId} AND ingredient_id = #{ingredientId}
     </update>
 
     <select id="getRecipeIngredientsById" resultMap="RecipeIngredientsResultMap">
-        SELECT recipe_id, ingredient_id, amount, unit
+        SELECT recipe_id, ingredient_id, amount, unit, description
         FROM recipe_ingredients
         WHERE recipe_id = #{recipeId} AND ingredient_id = #{ingredientId}
     </select>
 
     <select id="getRecipeIngredientsByRecipeId" resultMap="RecipeIngredientsResultMap">
-        SELECT recipe_id, ingredient_id, amount, unit
+        SELECT recipe_id, ingredient_id, amount, unit, description
         FROM recipe_ingredients
         WHERE recipe_id = #{recipeId}
     </select>
 
     <select id="getRecipeIngredientsByIngredientId" resultMap="RecipeIngredientsResultMap">
-        SELECT recipe_id, ingredient_id, amount, unit
+        SELECT recipe_id, ingredient_id, amount, unit, description
         FROM recipe_ingredients
         WHERE ingredient_id = #{ingredientId}
     </select>

@@ -1,14 +1,12 @@
 package controller;
 
-import java.util.List;
-
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -30,7 +28,8 @@ public class RecipeInteractionController {
     @FXML private Button commentBtn;
     @FXML private TextField commentField;
     @FXML private Button addCommentBtn;
-    @FXML private ListView<String> commentListView;
+    @FXML private Label cookTimeLabel;
+    @FXML private TextArea instructionsArea;
 
     private Recipes currentRecipe;
     private int baseServings = 1;
@@ -41,6 +40,11 @@ public class RecipeInteractionController {
 
     @FXML
     public void initialize() {
+        // 确保 Spinner 有 ValueFactory
+        if (serveSpinner.getValueFactory() == null) {
+            serveSpinner.setValueFactory(new javafx.scene.control.SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 1));
+        }
+
         if (currentRecipe != null) {
             baseServings = currentRecipe.getServings();
             likeCountLabel.setText(String.valueOf(currentRecipe.getLikeCount()));
@@ -115,13 +119,8 @@ public class RecipeInteractionController {
 
     // 加载评论列表
     private void loadComments() {
-        if (currentRecipe == null) return;
-        List<Comments> comments = commentService.getCommentsByRecipeId(currentRecipe.getId());
-        commentListView.getItems().clear();
-        for (Comments c : comments) {
-            // 你可以根据 userId 查询用户名，这里假设只显示内容
-            commentListView.getItems().add("用户" + c.getUserId() + ": " + c.getContent());
-        }
+        // 不做任何UI操作，如果需要可以留空或仅做日志
+        // List<Comments> comments = commentService.getCommentsByRecipeId(currentRecipe.getId());
     }
 
     // 辅助弹窗方法
@@ -148,9 +147,61 @@ public class RecipeInteractionController {
             baseServings = recipe.getServings();
             likeCountLabel.setText(String.valueOf(recipe.getLikeCount()));
             serveSpinner.getValueFactory().setValue(baseServings);
+            // 正确显示 cook_time 字段
+            cookTimeLabel.setText("Cooking Time: " + recipe.getCookTime() + " min");
+            instructionsArea.setText(recipe.getInstructions());
+            // 其它控件赋值...
             updateIngredientsTable(baseServings);
             loadComments();
-            // 你可以根据需要补充其它控件的赋值，如标题、图片等
+        }
+    }
+
+    @FXML
+    private void onBack(javafx.event.ActionEvent event) {
+        // 关闭窗口或返回上一页
+        ((javafx.stage.Stage)(((javafx.scene.Node)event.getSource()).getScene().getWindow())).close();
+    }
+
+    @FXML
+    private void onEdit(javafx.event.ActionEvent event) {
+        // 打开编辑窗口，传递当前菜谱对象
+        try {
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/fxml/recipe_edit_add.fxml"));
+            javafx.scene.Parent root = loader.load();
+            // 获取编辑窗口的控制器
+            RecipeEditAddController editController = loader.getController();
+            // 传递当前菜谱数据
+            editController.loadRecipe(currentRecipe);
+            // 显示编辑窗口（模态）
+            javafx.stage.Stage stage = new javafx.stage.Stage();
+            stage.setTitle("编辑菜谱");
+            stage.setScene(new javafx.scene.Scene(root));
+            stage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+            // 编辑完成后可刷新本页面内容
+            setRecipe(recipeService.getRecipesById(currentRecipe.getId()));
+        } catch (Exception e) {
+            showAlert("无法打开编辑窗口: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void onDelete(javafx.event.ActionEvent event) {
+        // 弹窗确认
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "确定要删除该菜谱吗？", ButtonType.YES, ButtonType.NO);
+        alert.setTitle("确认删除");
+        alert.setHeaderText(null);
+        alert.showAndWait();
+        if (alert.getResult() == ButtonType.YES) {
+            boolean success = recipeService.deleteRecipe(currentRecipe.getId());
+            if (success) {
+                showAlert("删除成功！");
+                // 关闭当前窗口
+                ((javafx.stage.Stage)(((javafx.scene.Node)event.getSource()).getScene().getWindow())).close();
+            } else {
+                showAlert("删除失败，请重试！");
+            }
         }
     }
 }

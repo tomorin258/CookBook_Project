@@ -6,7 +6,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import model.Users;
 import service.UserService;
+import util.CurrentUser; // 修改为Users
 
 public class RecipeLoginController {
 
@@ -26,8 +28,10 @@ public class RecipeLoginController {
     private void onLogin(ActionEvent event) {
         String userName = usernameField.getText();
         String password = passwordField.getText();
-        boolean success = userService.login(userName, password);
-        if (success) {
+        Users user = userService.login(userName, password); // 修改为Users
+        if (user != null) {
+            CurrentUser.setId(user.getUserId()); // 修改为getUserId()
+
             messageLabel.setText("Login successfully.");
             try {
                 javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/fxml/recipe_list.fxml"));

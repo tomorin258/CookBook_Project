@@ -18,6 +18,7 @@ public class RecipeIngredients implements Serializable {
     private final SimpleStringProperty amount = new SimpleStringProperty(""); // 用字符串存储数量，便于绑定
     private final SimpleStringProperty unit = new SimpleStringProperty("");
     private final SimpleStringProperty ingredientName = new SimpleStringProperty("");
+    private final SimpleStringProperty description = new SimpleStringProperty(""); // 新增字段：描述
 
     /**
      * Default constructor for the RecipeIngredients class.
@@ -91,6 +92,12 @@ public class RecipeIngredients implements Serializable {
     public SimpleStringProperty ingredientNameProperty() {
         return ingredientName;
     }
+
+    public String getDescription() { return description.get(); } // 新增：获取描述
+
+    public void setDescription(String desc) { description.set(desc); } // 新增：设置描述
+
+    public SimpleStringProperty descriptionProperty() { return description; } // 新增：描述属性
 
     @Override
     public String toString() {
