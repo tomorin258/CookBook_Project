@@ -2,7 +2,7 @@ package controller;
 
 import java.util.List;
 
-import config.MyBatisUtil; // 确保导入你的 Service
+import config.MyBatisUtil;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Spinner;
@@ -14,9 +14,9 @@ import javafx.util.converter.DefaultStringConverter;
 import model.RecipeIngredients;
 import model.Recipes;
 import service.IngredientService;
-import service.RecipeIngredientsService; // 确保有这行
-import service.RecipeService; // 确保导入
-import util.CurrentUser; // 假设你有这个工具类
+import service.RecipeIngredientsService; 
+import service.RecipeService; 
+import util.CurrentUser; 
 
 public class RecipeEditAddController {
 
@@ -37,14 +37,14 @@ public class RecipeEditAddController {
     @FXML private Button uploadBtn;
 
     private final RecipeIngredientsService recipeIngredientsService = new RecipeIngredientsService();
-    private final RecipeService recipeService = new RecipeService(); // 新增 RecipesService 实例
+    private final RecipeService recipeService = new RecipeService(); 
     private final IngredientService ingredientService = new IngredientService(MyBatisUtil.getSqlSessionFactory());
-    private java.io.File imageFile; // 用于保存上传的图片文件对象
-    private Recipes editingRecipe; // 当前编辑的菜谱（新增字段）
+    private java.io.File imageFile; 
+    private Recipes editingRecipe; 
 
     public void loadRecipe(Recipes recipe) {
         if (recipe == null) return;
-        editingRecipe = recipe; // 记录正在编辑的菜谱
+        editingRecipe = recipe; 
         if (titleField != null) titleField.setText(recipe.getTitle());
         if (serveSpinner != null && serveSpinner.getValueFactory() != null) {
             serveSpinner.getValueFactory().setValue(recipe.getServings());
@@ -52,7 +52,6 @@ public class RecipeEditAddController {
         if (cookTimeField != null) cookTimeField.setText(String.valueOf(recipe.getCookTime()));
         if (instructionsArea != null) instructionsArea.setText(recipe.getInstructions());
 
-        // 推荐将图片加载逻辑替换为如下
         if (recipeImageView != null && recipe.getImageUrl() != null) {
             try {
                 java.net.URL imgUrl = getClass().getResource("/" + recipe.getImageUrl());
@@ -66,7 +65,6 @@ public class RecipeEditAddController {
             }
         }
 
-        // ...其它字段赋值...
         List<RecipeIngredients> ingredientList = recipeIngredientsService.getByRecipeId(recipe.getId());
         ingredientsTable.setItems(javafx.collections.FXCollections.observableArrayList(ingredientList));
     }
@@ -89,14 +87,13 @@ public class RecipeEditAddController {
         Integer servings = serveSpinner.getValue();
         if (servings == null) {
             javafx.scene.control.Alert alert = new javafx.scene.control.Alert(
-                javafx.scene.control.Alert.AlertType.ERROR, "份数不能为空！");
+                javafx.scene.control.Alert.AlertType.ERROR, "Servings cannot be null!");
             alert.showAndWait();
             return;
         }
         String cookTime = cookTimeField.getText();
         String instructions = instructionsArea.getText();
 
-        // 判断是编辑还是新增
         boolean isEdit = (editingRecipe != null);
 
         Recipes recipe = isEdit ? editingRecipe : new Recipes();
@@ -110,12 +107,10 @@ public class RecipeEditAddController {
         int currentUserId = CurrentUser.getId();
         recipe.setUserId(currentUserId);
 
-        // 新建时点赞数为0，编辑时保持原有
         if (!isEdit) {
             recipe.setLikeCount(0);
         }
 
-        // 图片路径处理
         if (imageFile != null) {
             String projectRoot = System.getProperty("user.dir").replace("\\", "/");
             String imagesDir = projectRoot + "/src/main/resources/images";
@@ -131,22 +126,17 @@ public class RecipeEditAddController {
 
         Integer recipeId;
         if (isEdit) {
-            // 编辑：更新原有菜谱
             recipeService.updateRecipe(recipe);
             recipeId = recipe.getId();
-            // 先删除原有配料
             recipeIngredientsService.deleteByRecipeId(recipeId);
         } else {
-            // 新增
             recipeId = recipeService.addRecipeAndReturnId(recipe);
             if (recipeId == null) {
-                // 保存失败，弹窗提示
                 return;
             }
             recipe.setId(recipeId);
         }
 
-        // 保存配料
         for (RecipeIngredients ri : ingredientsTable.getItems()) {
             ri.setRecipeId(recipeId);
             Integer ingredientId = ingredientService.getIngredientIdByName(ri.getIngredientName());
@@ -157,7 +147,7 @@ public class RecipeEditAddController {
             recipeIngredientsService.addRecipeIngredients(ri);
         }
 
-        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION, "保存成功！");
+        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION, "Recipe saved successfully!");
         alert.showAndWait();
         saveBtn.getScene().getWindow().hide();
     }
@@ -192,7 +182,7 @@ public class RecipeEditAddController {
         );
         java.io.File file = fileChooser.showOpenDialog(uploadBtn.getScene().getWindow());
         if (file != null) {
-            this.imageFile = file; // 保存文件对象
+            this.imageFile = file; 
             javafx.scene.image.Image image = new javafx.scene.image.Image(file.toURI().toString());
             recipeImageView.setImage(image);
         }

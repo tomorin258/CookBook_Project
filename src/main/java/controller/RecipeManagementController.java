@@ -30,13 +30,11 @@ public class RecipeManagementController {
     @FXML private Button searchBtn;
     @FXML private Button sortLikeBtn;
 
-    // 你需要在类字段区添加这些控件的 @FXML 声明（如未声明）：
     @FXML private TextField titleField;
     @FXML private Spinner<Integer> serveSpinner;
     @FXML private TextField cookTimeField;
     @FXML private TextArea instructionsArea;
     @FXML private ImageView recipeImageView;
-    // 其它如 descriptionField、prepTimeField、ingredientsTable 等，按实际 FXML 控件补充
 
     private int currentPage = 1;
     private int pageSize = 10;
@@ -66,7 +64,6 @@ public class RecipeManagementController {
         return recipeService.searchRecipes(keyword);
     }
 
-    // 加载所有配方（初始化或搜索为空时调用）
     private void loadAllRecipes() {
         List<Recipes> all = recipeService.searchRecipes(null);
         sortedRecipes = all.stream()
@@ -77,7 +74,6 @@ public class RecipeManagementController {
         showSortedPage(currentPage);
     }
 
-    // 分页显示（显示到 recipeListView）
     @FXML
     private void showSortedPage(int page) {
         recipeListView.getItems().clear();
@@ -94,27 +90,26 @@ public class RecipeManagementController {
         nextPageBtn.setDisable(page == totalPage);
     }
 
-    // initialize方法
     @FXML
     public void initialize() {
-        if (sortedListVBox != null) { //only when sortedListVBox is present
+        if (sortedListVBox != null) { 
             sortedRecipes = recipeService.getRecipesSortedByLikes();
             totalPage = (int) Math.ceil((double) sortedRecipes.size() / pageSize);
             currentPage = 1;
             showSortedPageByLikes(currentPage);
         } else {
-            loadAllRecipes(); // load all recipes if sortedListVBox is not present
+            loadAllRecipes(); 
         }
 
         recipeListView.setOnMouseClicked(event -> {
-            if (event.getClickCount() == 2) { // 双击
+            if (event.getClickCount() == 2) {
                 Recipes selected = recipeListView.getSelectionModel().getSelectedItem();
                 if (selected != null) {
                     try {
                         javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/fxml/recipe_detail.fxml"));
                         javafx.scene.Parent root = loader.load();
                         controller.RecipeInteractionController detailController = loader.getController();
-                        detailController.setRecipe(selected); // 你需要在RecipeInteractionController中实现setRecipe方法
+                        detailController.setRecipe(selected);
                         javafx.stage.Stage stage = new javafx.stage.Stage();
                         stage.setTitle("Recipe Detail");
                         stage.setScene(new javafx.scene.Scene(root));
@@ -127,7 +122,6 @@ public class RecipeManagementController {
         });
     }
 
-    // showSortedPageByLikes
     @FXML
     private void showSortedPageByLikes(int page) {
         sortedListVBox.getChildren().clear();

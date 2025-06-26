@@ -8,7 +8,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import model.Users;
 import service.UserService;
-import util.CurrentUser; // 修改为Users
+import util.CurrentUser;
 
 public class RecipeLoginController {
 
@@ -28,9 +28,9 @@ public class RecipeLoginController {
     private void onLogin(ActionEvent event) {
         String userName = usernameField.getText();
         String password = passwordField.getText();
-        Users user = userService.login(userName, password); // 修改为Users
+        Users user = userService.login(userName, password); 
         if (user != null) {
-            CurrentUser.setId(user.getUserId()); // 修改为getUserId()
+            CurrentUser.setId(user.getUserId());
 
             messageLabel.setText("Login successfully.");
             try {
