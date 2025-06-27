@@ -2,19 +2,20 @@ package controller;
 
 import java.util.List;
 
-import config.MyBatisUtil;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.stage.Stage;
 import javafx.util.converter.DefaultStringConverter;
 import model.RecipeIngredients;
 import model.Recipes;
 import service.IngredientService;
-import service.RecipeIngredientsService; 
+import service.RecipeIngredientsService;
 import service.RecipeService; 
 import util.CurrentUser; 
 
@@ -38,12 +39,16 @@ public class RecipeEditAddController {
 
     private final RecipeIngredientsService recipeIngredientsService = new RecipeIngredientsService();
     private final RecipeService recipeService = new RecipeService(); 
-    private final IngredientService ingredientService = new IngredientService(MyBatisUtil.getSqlSessionFactory());
+    // 使用默认的无参数构造函数
+    private final IngredientService ingredientService = new IngredientService();
     private java.io.File imageFile; 
     private Recipes editingRecipe; 
 
     public void loadRecipe(Recipes recipe) {
-        if (recipe == null) return;
+        if (recipe == null) {
+            System.out.println("loadRecipe 接收到的 recipe 对象为 null，操作中止。");
+            return;
+        }
         editingRecipe = recipe; 
         if (titleField != null) titleField.setText(recipe.getTitle());
         if (serveSpinner != null && serveSpinner.getValueFactory() != null) {
@@ -52,6 +57,24 @@ public class RecipeEditAddController {
         if (cookTimeField != null) cookTimeField.setText(String.valueOf(recipe.getCookTime()));
         if (instructionsArea != null) instructionsArea.setText(recipe.getInstructions());
 
+        // **** 在这里加入下面的调试代码 ****
+        System.out.println("--- 开始调试 Edit/Add 界面配料 ---");
+        System.out.println("正在为 Recipe ID: " + recipe.getId() + " 查询配料...");
+        List<RecipeIngredients> ingredientList = recipeIngredientsService.getByRecipeId(recipe.getId());
+        System.out.println("获取到的配料数量: " + ingredientList.size());
+        for (RecipeIngredients ri : ingredientList) {
+            // 打印所有关键字段
+            System.out.println(
+                "配料名: '" + ri.getIngredientName() + 
+                "', 数量: '" + ri.getAmount() + 
+                "', 单位: '" + ri.getUnit() + "'"
+            );
+        }
+        System.out.println("--- 调试结束 ---");
+        // **** 调试代码结束 ****
+
+        ingredientsTable.setItems(javafx.collections.FXCollections.observableArrayList(ingredientList));
+        
         if (recipeImageView != null && recipe.getImageUrl() != null) {
             try {
                 java.net.URL imgUrl = getClass().getResource("/" + recipe.getImageUrl());
@@ -64,9 +87,6 @@ public class RecipeEditAddController {
                 recipeImageView.setImage(null);
             }
         }
-
-        List<RecipeIngredients> ingredientList = recipeIngredientsService.getByRecipeId(recipe.getId());
-        ingredientsTable.setItems(javafx.collections.FXCollections.observableArrayList(ingredientList));
     }
 
     @FXML
@@ -86,16 +106,13 @@ public class RecipeEditAddController {
         String title = titleField.getText();
         Integer servings = serveSpinner.getValue();
         if (servings == null) {
-            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(
-                javafx.scene.control.Alert.AlertType.ERROR, "Servings cannot be null!");
-            alert.showAndWait();
+            new Alert(Alert.AlertType.ERROR, "Servings cannot be null!").showAndWait();
             return;
         }
         String cookTime = cookTimeField.getText();
         String instructions = instructionsArea.getText();
 
         boolean isEdit = (editingRecipe != null);
-
         Recipes recipe = isEdit ? editingRecipe : new Recipes();
 
         recipe.setTitle(title);
@@ -104,12 +121,7 @@ public class RecipeEditAddController {
             recipe.setCookTime(Integer.parseInt(cookTime));
         }
         recipe.setInstructions(instructions);
-        int currentUserId = CurrentUser.getId();
-        recipe.setUserId(currentUserId);
-
-        if (!isEdit) {
-            recipe.setLikeCount(0);
-        }
+        recipe.setUserId(CurrentUser.getId());
 
         if (imageFile != null) {
             String projectRoot = System.getProperty("user.dir").replace("\\", "/");
@@ -124,32 +136,39 @@ public class RecipeEditAddController {
             }
         }
 
-        Integer recipeId;
+        // 保存或更新菜谱，获取 recipeId
         if (isEdit) {
             recipeService.updateRecipe(recipe);
-            recipeId = recipe.getId();
-            recipeIngredientsService.deleteByRecipeId(recipeId);
         } else {
-            recipeId = recipeService.addRecipeAndReturnId(recipe);
-            if (recipeId == null) {
-                return;
-            }
-            recipe.setId(recipeId);
+            recipeService.addRecipe(recipe);
+        }
+        int recipeId = recipe.getId();
+
+        // 如果是编辑模式，先删除所有旧的配料
+        if (isEdit) {
+            recipeIngredientsService.deleteByRecipeId(recipeId);
         }
 
+        // 循环遍历 TableView 中的每一行，保存配料
         for (RecipeIngredients ri : ingredientsTable.getItems()) {
             ri.setRecipeId(recipeId);
+            
+            // 查找或创建配料ID
             Integer ingredientId = ingredientService.getIngredientIdByName(ri.getIngredientName());
             if (ingredientId == null) {
-                ingredientId = ingredientService.addIngredient(ri.getIngredientName());
+                // 确保 ingredientName 不为空
+                if (ri.getIngredientName() != null && !ri.getIngredientName().trim().isEmpty()) {
+                    ingredientId = ingredientService.addIngredient(ri.getIngredientName());
+                }
             }
             ri.setIngredientId(ingredientId);
+
+            // 保存这行配料数据
             recipeIngredientsService.addRecipeIngredients(ri);
         }
 
-        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION, "Recipe saved successfully!");
-        alert.showAndWait();
-        saveBtn.getScene().getWindow().hide();
+        new Alert(Alert.AlertType.INFORMATION, "Recipe saved successfully!").showAndWait();
+        ((Stage) titleField.getScene().getWindow()).close();
     }
 
     @FXML
