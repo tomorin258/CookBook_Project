@@ -42,7 +42,6 @@ CREATE TABLE `comments` (
 
 LOCK TABLES `comments` WRITE;
 /*!40000 ALTER TABLE `comments` DISABLE KEYS */;
-INSERT INTO `comments` VALUES (2,7,1,'sehr gut','2025-06-27 15:03:37');
 /*!40000 ALTER TABLE `comments` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -58,7 +57,7 @@ CREATE TABLE `ingredients` (
   `name` varchar(100) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -67,7 +66,7 @@ CREATE TABLE `ingredients` (
 
 LOCK TABLES `ingredients` WRITE;
 /*!40000 ALTER TABLE `ingredients` DISABLE KEYS */;
-INSERT INTO `ingredients` VALUES (1,'pork');
+INSERT INTO `ingredients` VALUES (6,'dark soy sauce'),(10,'fruit jam'),(3,'garlic'),(2,'ginger'),(5,'light soy sauce'),(1,'pork'),(4,'scallion'),(7,'Shaoxing wine'),(8,'sugar'),(9,'water');
 /*!40000 ALTER TABLE `ingredients` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -98,7 +97,7 @@ CREATE TABLE `recipe_ingredients` (
 
 LOCK TABLES `recipe_ingredients` WRITE;
 /*!40000 ALTER TABLE `recipe_ingredients` DISABLE KEYS */;
-INSERT INTO `recipe_ingredients` VALUES (7,1,500.00,'g','pork belly',NULL);
+INSERT INTO `recipe_ingredients` VALUES (9,1,500.00,'g','pork belly','pork'),(9,2,4.00,'slice','','ginger'),(9,3,6.00,'clove','','garlic'),(9,4,1.00,'stalk','','scallion'),(9,5,2.00,'spoon','','light soy sauce'),(9,6,3.00,'spoon','adjust for desired color','dark soy sauce'),(9,7,3.00,'spoon','','Shaoxing wine'),(9,8,2.00,'spoon','brown sugar or rock sugar','sugar'),(9,9,250.00,'ml','warm water','water'),(9,10,1.00,'spoon','(optional)','fruit jam');
 /*!40000 ALTER TABLE `recipe_ingredients` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -121,7 +120,7 @@ CREATE TABLE `recipes` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `recipes_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -130,7 +129,7 @@ CREATE TABLE `recipes` (
 
 LOCK TABLES `recipes` WRITE;
 /*!40000 ALTER TABLE `recipes` DISABLE KEYS */;
-INSERT INTO `recipes` VALUES (7,1,'Hong Shao Rou','1.Blanch the Pork: Bring a pot of water to boil. Add pork belly chunks, ginger slices, scallion, and garlic. Boil for 4–5 minutes, then remove and drain.\n\n2.Caramelize Sugar: In a clean pan, add a small amount of oil and the sugar. Melt over low heat until it turns golden brown.\n\n3.Sear the Pork: Add the pork pieces and toss to coat evenly with the caramelized sugar.\n\n4.Simmer with Seasoning: Add Shaoxing wine, light soy sauce, and dark soy sauce. Stir-fry for 5 minutes, then pour in the warm water. Reduce heat and simmer for about 45 minutes, stirring occasionally.\n\n5.Reduce to Thicken: Optionally, add a touch of fruit jam or extra sugar. Uncover and reduce the sauce until thick and glossy.',60,2,3,'images/hongshaorou.png');
+INSERT INTO `recipes` VALUES (9,1,'Hong Shao Rou','1.Blanch the Pork: Bring a pot of water to boil. Add pork belly chunks, ginger slices, scallion, and garlic. Boil for 4–5 minutes, then remove and drain.\n\n2.Caramelize Sugar: In a clean pan, add a small amount of oil and the sugar. Melt over low heat until it turns golden brown.\n\n3.Sear the Pork: Add the pork pieces and toss to coat evenly with the caramelized sugar.\n\n4.Simmer with Seasoning: Add Shaoxing wine, light soy sauce, and dark soy sauce. Stir-fry for 5 minutes, then pour in the warm water. Reduce heat and simmer for about 45 minutes, stirring occasionally.\n\n5.Reduce to Thicken: Optionally, add a touch of fruit jam or extra sugar. Uncover and reduce the sauce until thick and glossy.',60,2,3,'images/hongshaorou.png');
 /*!40000 ALTER TABLE `recipes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -169,4 +168,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-06-27 15:40:01
+-- Dump completed on 2025-06-27 17:06:42
