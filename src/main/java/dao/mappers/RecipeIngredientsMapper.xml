@@ -5,22 +5,21 @@
 
 <mapper namespace="dao.mappers.RecipeIngredientsMapper">
 
+    <!-- 1. 定义一个完整、正确的 ResultMap -->
     <resultMap id="RecipeIngredientsResultMap" type="model.RecipeIngredients">
-        <id property="recipeId" column="recipe_id" />
-        <id property="ingredientId" column="ingredient_id" />
-        <result property="amount" column="amount" />
-        <result property="unit" column="unit" />
+        <id property="recipeId" column="recipe_id"/>
+        <id property="ingredientId" column="ingredient_id"/>
+        <result property="amount" column="amount"/>
+        <result property="unit" column="unit"/>
+        <result property="description" column="description"/>
+        <!-- 这是最关键的一行，确保 ingredient_name 被正确映射 -->
+        <result property="ingredientName" column="ingredient_name"/>
     </resultMap>
 
     <insert id="addRecipeIngredients" parameterType="model.RecipeIngredients">
-        INSERT INTO recipe_ingredients (recipe_id, ingredient_id, amount, unit, description)
-        VALUES (#{recipeId}, #{ingredientId}, #{amount}, #{unit}, #{description})
+        INSERT INTO recipe_ingredients (recipe_id, ingredient_id, amount, unit, description, ingredient_name)
+        VALUES (#{recipeId}, #{ingredientId}, #{amount}, #{unit}, #{description}, #{ingredientName})
     </insert>
-
-    <delete id="deleteRecipeIngredients" parameterType="map">
-        DELETE FROM recipe_ingredients
-        WHERE recipe_id = #{recipeId} AND ingredient_id = #{ingredientId}
-    </delete>
 
     <delete id="deleteByRecipeId" parameterType="int">
         DELETE FROM recipe_ingredients WHERE recipe_id = #{recipeId}
@@ -30,33 +29,16 @@
         UPDATE recipe_ingredients
         SET amount = #{amount},
             unit = #{unit},
-            description = #{description}
+            description = #{description},
+            ingredient_name = #{ingredientName}
         WHERE recipe_id = #{recipeId} AND ingredient_id = #{ingredientId}
     </update>
 
-    <select id="getRecipeIngredientsById" resultMap="RecipeIngredientsResultMap">
-        SELECT recipe_id, ingredient_id, amount, unit, description
-        FROM recipe_ingredients
-        WHERE recipe_id = #{recipeId} AND ingredient_id = #{ingredientId}
-    </select>
-
-    <select id="getRecipeIngredientsByRecipeId" resultMap="RecipeIngredientsResultMap">
-        SELECT recipe_id, ingredient_id, amount, unit, description
+    <!-- 2. 让所有查询都使用这个 ResultMap -->
+    <select id="getByRecipeId" resultMap="RecipeIngredientsResultMap">
+        SELECT recipe_id, ingredient_id, amount, unit, description, ingredient_name
         FROM recipe_ingredients
         WHERE recipe_id = #{recipeId}
-    </select>
-
-    <select id="getRecipeIngredientsByIngredientId" resultMap="RecipeIngredientsResultMap">
-        SELECT recipe_id, ingredient_id, amount, unit, description
-        FROM recipe_ingredients
-        WHERE ingredient_id = #{ingredientId}
-    </select>
-
-    <select id="getByRecipeId" resultType="model.RecipeIngredients">
-        SELECT ri.*, i.name AS ingredient_name
-        FROM recipe_ingredients ri
-        LEFT JOIN ingredients i ON ri.ingredient_id = i.id
-        WHERE ri.recipe_id = #{recipeId}
     </select>
 
 </mapper>
