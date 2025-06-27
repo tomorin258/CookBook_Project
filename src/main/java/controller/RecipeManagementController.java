@@ -1,9 +1,7 @@
 package controller;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;           
@@ -36,7 +34,7 @@ public class RecipeManagementController {
     @FXML private TextArea instructionsArea;
     @FXML private ImageView recipeImageView;
     private int currentPage = 1;
-    private final int pageSize = 10;
+    private final int pageSize = 5;
     private int totalPage = 1;
     private List<Recipes> sortedRecipes;
     private final RecipeService recipeService = new RecipeService();
@@ -91,9 +89,7 @@ public class RecipeManagementController {
     }
     private void loadAllRecipes() {
         List<Recipes> all = recipeService.searchRecipes(null);
-        sortedRecipes = all.stream()
-                .sorted(Comparator.comparingInt(Recipes::getLikeCount).reversed())
-                .collect(Collectors.toList());
+        sortedRecipes = all; 
         totalPage = (int) Math.ceil((double) sortedRecipes.size() / pageSize);
         currentPage = 1;
         showSortedPage(currentPage);
@@ -143,9 +139,7 @@ public class RecipeManagementController {
     @FXML
     public void onSearch() {
         String keyword = keywordField.getText();
-        sortedRecipes = searchRecipes(keyword).stream()
-                .sorted(Comparator.comparingInt(Recipes::getLikeCount).reversed())
-                .collect(Collectors.toList());
+        sortedRecipes = searchRecipes(keyword);
         totalPage = (int) Math.ceil((double) sortedRecipes.size() / pageSize);
         currentPage = 1;
         showSortedPage(currentPage);

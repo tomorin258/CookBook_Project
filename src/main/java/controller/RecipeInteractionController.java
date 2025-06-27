@@ -121,7 +121,7 @@ public class RecipeInteractionController {
 
     private void showAlert(String msg) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Tipps");
+        alert.setTitle("Achtung");
         alert.setHeaderText(null);
         alert.setContentText(msg);
         alert.showAndWait();
@@ -192,7 +192,6 @@ public class RecipeInteractionController {
             boolean success = recipeService.deleteRecipe(currentRecipe.getId());
             if (success) {
                 showAlert("Recipe deleted successfully!");
-                // 关闭当前窗口
                 ((javafx.stage.Stage)(((javafx.scene.Node)event.getSource()).getScene().getWindow())).close();
             } else {
                 showAlert("Failed to delete the recipe, please try again!");

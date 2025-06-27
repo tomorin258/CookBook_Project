@@ -149,7 +149,15 @@ public class RecipeEditAddController {
 
         javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION, "Recipe saved successfully!");
         alert.showAndWait();
-        saveBtn.getScene().getWindow().hide();
+
+        try {
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/fxml/recipe_list.fxml"));
+            javafx.scene.Parent root = loader.load();
+            javafx.stage.Stage stage = (javafx.stage.Stage) saveBtn.getScene().getWindow();
+            stage.setScene(new javafx.scene.Scene(root));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
