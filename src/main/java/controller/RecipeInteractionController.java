@@ -1,17 +1,28 @@
 package controller;
 
 import java.io.IOException;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.List; // <-- 添加 import
 
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.control.*;
-import javafx.scene.image.ImageView;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory; // <-- 添加 import
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea; // <-- 添加 import
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.image.ImageView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.converter.DefaultStringConverter;
@@ -28,6 +39,7 @@ public class RecipeInteractionController {
     @FXML private Spinner<Integer> serveSpinner;
     @FXML private Label likeCountLabel;
     @FXML private Button likeBtn;
+    @FXML private ListView<Comments> commentsListView; // <-- 添加 FXML 注入
 
     @FXML private TableView<RecipeIngredients> ingredientsTable;
     @FXML private TableColumn<RecipeIngredients, String> ingredientNameCol;
@@ -42,12 +54,11 @@ public class RecipeInteractionController {
     /* ---------- Comment area ---------- */
     @FXML private TextField commentField;           // 输入框
     @FXML private Button addCommentBtn;             // “Add” 按钮
-    @FXML private ListView<String> commentsListView; // 新增：显示评论列表
 
     /* ---------- Services ---------- */
     private final RecipeService recipeService = new RecipeService();
-    private final CommentService commentService = new CommentService();
     private final RecipeIngredientsService recipeIngredientsService = new RecipeIngredientsService();
+    private final CommentService commentService = new CommentService(); // <-- 添加 Service 实例
 
     /* ---------- Runtime state ---------- */
     private Recipes currentRecipe;
@@ -81,6 +92,28 @@ public class RecipeInteractionController {
 
         /* 份量调整监听 */
         serveSpinner.valueProperty().addListener((obs, o, n) -> updateIngredientsTable(n));
+
+        // 为评论列表设置自定义单元格格式
+        commentsListView.setCellFactory(param -> new ListCell<Comments>() {
+            private final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+            @Override
+            protected void updateItem(Comments item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    // 增加一个 null 检查，防止程序崩溃
+                    if (item.getCreatedAt() != null) {
+                        String formattedTime = formatter.format(item.getCreatedAt());
+                        setText(item.getContent() + ", " + formattedTime);
+                    } else {
+                        // 如果日期为 null，则只显示内容
+                        setText(item.getContent());
+                    }
+                }
+            }
+        });
     }
 
     /* =====================================================================
@@ -110,11 +143,14 @@ public class RecipeInteractionController {
         cmt.setRecipeId(currentRecipe.getId());
         cmt.setUserId(getCurrentUserId());
         cmt.setContent(txt);
+        // 在保存前设置当前时间，确保UI不会因为null而崩溃
+        cmt.setCreatedAt(new java.util.Date()); 
+
         boolean ok = commentService.addComment(cmt);
 
         /* 2. 更新 UI */
         if (ok) {
-            commentsListView.getItems().add(txt); // 立即刷新
+            commentsListView.getItems().add(cmt); // 立即刷新
             commentField.clear();
         } else {
             showAlert("Fail to save comment, please try again!");
@@ -126,9 +162,7 @@ public class RecipeInteractionController {
      * =================================================================== */
     private void loadComments() {
         List<Comments> list = commentService.getCommentsByRecipeId(currentRecipe.getId());
-        ObservableList<String> uiList = FXCollections.observableArrayList();
-        for (Comments c : list) uiList.add(c.getContent());
-        commentsListView.setItems(uiList);
+        commentsListView.setItems(FXCollections.observableArrayList(list));
     }
 
     /* =====================================================================
@@ -163,6 +197,10 @@ public class RecipeInteractionController {
         ingredientsTable.setItems(FXCollections.observableArrayList(list));
         updateIngredientsTable(baseServings);
 
+        /* 加载评论列表 */
+        List<Comments> comments = commentService.getCommentsByRecipeId(recipe.getId());
+        commentsListView.setItems(FXCollections.observableArrayList(comments));
+
         /* 图片 */
         if (recipeImageView != null && recipe.getImageUrl() != null) {
             try {
@@ -170,9 +208,6 @@ public class RecipeInteractionController {
                 recipeImageView.setImage(url != null ? new javafx.scene.image.Image(url.toString()) : null);
             } catch (Exception ex) { recipeImageView.setImage(null); }
         }
-
-        /* 评论 */
-        loadComments();
     }
 
     /* =====================================================================
