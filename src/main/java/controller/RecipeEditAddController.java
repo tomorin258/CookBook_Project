@@ -93,7 +93,6 @@ public class RecipeEditAddController {
         Integer servings    = serveSpinner.getValue();
         String cookTimeStr  = cookTimeField.getText();
         String instructions = instructionsArea.getText();
-        String comments     = commentsArea.getText();    //  NEW
 
         if (servings == null) {
             new Alert(Alert.AlertType.ERROR, "Servings cannot be null!").showAndWait();

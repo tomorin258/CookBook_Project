@@ -148,14 +148,6 @@ public class RecipeInteractionController {
     }
 
     /* =====================================================================
-     *  Load comments into ListView
-     * =================================================================== */
-    private void loadComments() {
-        List<Comments> list = commentService.getCommentsByRecipeId(currentRecipe.getId());
-        commentsListView.setItems(FXCollections.observableArrayList(list));
-    }
-
-    /* =====================================================================
      *  Ingredient table helper
      * =================================================================== */
     private void updateIngredientsTable(int newServings) {
