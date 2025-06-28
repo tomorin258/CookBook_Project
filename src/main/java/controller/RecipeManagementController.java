@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Objects;
 
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;           
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;              
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -13,8 +13,8 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;         
-import javafx.scene.image.ImageView;     
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;        
 import javafx.scene.layout.VBox;
 import model.Recipes;
@@ -25,7 +25,7 @@ public class RecipeManagementController {
     @FXML private Button saveBtn;
     @FXML private TextField keywordField;
     @FXML private ListView<Recipes> recipeListView;
-    @FXML private VBox sortedListVBox;
+    @FXML private VBox sortedListVBox; // 这是 recipe_sortbylikes.fxml 中的 VBox
     @FXML private Button prevPageBtn, nextPageBtn;
     @FXML private Label pageInfoLabel;
     @FXML private Button backBtn, addRecipeBtn, searchBtn, sortLikeBtn;
@@ -109,6 +109,8 @@ public class RecipeManagementController {
         prevPageBtn.setDisable(page == 1);
         nextPageBtn.setDisable(page == totalPage);
     }
+
+    // 用这个版本替换你现有的 showSortedPageByLikes 方法
     private void showSortedPageByLikes(int page) {
         sortedListVBox.getChildren().clear();
         if (sortedRecipes == null || sortedRecipes.isEmpty()) {
@@ -117,19 +119,62 @@ public class RecipeManagementController {
         }
         int from = (page - 1) * pageSize;
         int to   = Math.min(from + pageSize, sortedRecipes.size());
-        sortedRecipes.subList(from, to).forEach(rec -> {
-            Label lbl = new Label(rec.getTitle() + "  👍" + rec.getLikeCount());
-            lbl.setStyle("-fx-font-size:18; -fx-text-fill:#0d3b66; -fx-background-color:#fff;"
-                    + "-fx-padding:8 12; -fx-background-radius:8;");
-            sortedListVBox.getChildren().add(lbl);
-        });
+
+        // 遍历当前页的菜谱
+        for (Recipes rec : sortedRecipes.subList(from, to)) {
+            // 1. 创建卡片UI (这里我们直接创建，不需要单独的方法)
+            HBox card = new HBox(15);
+            card.setAlignment(Pos.CENTER_LEFT);
+            card.setPadding(new Insets(10));
+            card.setStyle("-fx-background-color: #ffffff; -fx-border-color: #cccccc; -fx-border-radius: 8; -fx-background-radius: 8;");
+
+            ImageView imageView = new ImageView(loadImageSafe(rec.getImageUrl()));
+            imageView.setFitHeight(80);
+            imageView.setFitWidth(80);
+
+            Label titleLabel = new Label(rec.getTitle());
+            titleLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+
+            // 使用正确的 getLikesCount() 方法
+            Label likesLabel = new Label("👍 " + (rec.getLikesCount() != null ? rec.getLikesCount() : 0));
+            likesLabel.setStyle("-fx-font-size: 14px;");
+
+            VBox titleAndLikes = new VBox(5, titleLabel, likesLabel);
+            card.getChildren().addAll(imageView, titleAndLikes);
+
+            // 2. 【核心】为卡片添加点击事件
+            card.setOnMouseClicked(event -> openDetail(rec));
+
+            // 3. 将卡片添加到VBox
+            sortedListVBox.getChildren().add(card);
+        }
 
         pageInfoLabel.setText("Page " + page + " / " + totalPage);
         prevPageBtn.setDisable(page == 1);
         nextPageBtn.setDisable(page == totalPage);
     }
-    @FXML private void onPrevPage() { if (currentPage > 1) showSortedPageByLikes(--currentPage); }
-    @FXML private void onNextPage() { if (currentPage < totalPage) showSortedPageByLikes(++currentPage); }
+
+    @FXML private void onPrevPage() { 
+        if (currentPage > 1) {
+            --currentPage;
+            // 根据当前在哪个VBox上操作，调用对应的方法
+            if (sortedListVBox != null && sortedListVBox.isVisible()) {
+                showSortedPageByLikes(currentPage);
+            } else {
+                showSortedPage(currentPage);
+            }
+        }
+    }
+    @FXML private void onNextPage() { 
+        if (currentPage < totalPage) {
+            ++currentPage;
+            if (sortedListVBox != null && sortedListVBox.isVisible()) {
+                showSortedPageByLikes(currentPage);
+            } else {
+                showSortedPage(currentPage);
+            }
+        }
+    }
     @FXML private void onBack()     { backBtn.getScene().getWindow().hide(); }
 
     @FXML private void onAddRecipe() {
@@ -162,8 +207,14 @@ public class RecipeManagementController {
         }
     }
 
-    private void openDetail(Recipes selected) {
-        openWindowWithRecipe("/fxml/recipe_detail.fxml", "Recipe Detail", selected);
+    /**
+     * 这是你已经有的、用来打开详情页的方法
+     * @param recipe 要在详情页中显示的菜谱
+     */
+    private void openDetail(Recipes recipe) {
+        // 你的代码中应该已经有这个方法的实现了
+        // 它会加载 recipe_detail.fxml 并将 recipe 对象传递过去
+        openWindowWithRecipe("/fxml/recipe_detail.fxml", "Recipe Detail", recipe);
     }
 
     private void openWindow(String fxml, String title) {
