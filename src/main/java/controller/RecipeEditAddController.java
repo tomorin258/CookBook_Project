@@ -11,6 +11,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.util.converter.DefaultStringConverter;
+import model.Comments;//new
 import model.RecipeIngredients;
 import model.Recipes;
 import service.IngredientService;
@@ -35,6 +36,7 @@ public class RecipeEditAddController {
     @FXML private Button addRowBtn;
     @FXML private Button delRowBtn;
     @FXML private Button uploadBtn;
+    @FXML private TextArea commentsArea;//new
 
     private final RecipeIngredientsService recipeIngredientsService = new RecipeIngredientsService();
     private final RecipeService recipeService = new RecipeService(); 
