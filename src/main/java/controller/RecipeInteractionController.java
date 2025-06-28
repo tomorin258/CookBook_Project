@@ -1,16 +1,23 @@
 package controller;
 
+import java.io.IOException;
+
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import model.Comments;
 import model.RecipeIngredients;
 import model.Recipes;
@@ -32,6 +39,15 @@ public class RecipeInteractionController {
     @FXML private TextArea instructionsArea;
     @FXML private javafx.scene.image.ImageView recipeImageView;
 
+    @FXML
+    private TableColumn<RecipeIngredients, String> ingredientNameCol;
+    @FXML
+    private TableColumn<RecipeIngredients, String> quantityCol;
+    @FXML
+    private TableColumn<RecipeIngredients, String> unitsCol;
+    @FXML
+    private TableColumn<RecipeIngredients, String> ingredientDescCol;
+
     private Recipes currentRecipe;
     private int baseServings = 1;
 
@@ -41,6 +57,7 @@ public class RecipeInteractionController {
 
     @FXML
     public void initialize() {
+        System.out.println("111");
         if (serveSpinner.getValueFactory() == null) {
             serveSpinner.setValueFactory(new javafx.scene.control.SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 1));
         }
@@ -56,6 +73,13 @@ public class RecipeInteractionController {
         serveSpinner.valueProperty().addListener((obs, oldVal, newVal) -> {
             updateIngredientsTable(newVal);
         });
+
+        // **** 在这里加入或替换为下面的绑定代码 ****
+        // 这会告诉每一列如何从 RecipeIngredients 对象中获取数据
+        ingredientNameCol.setCellValueFactory(cellData -> cellData.getValue().ingredientNameProperty());
+        quantityCol.setCellValueFactory(cellData -> cellData.getValue().amountProperty());
+        unitsCol.setCellValueFactory(cellData -> cellData.getValue().unitProperty());
+        ingredientDescCol.setCellValueFactory(cellData -> cellData.getValue().descriptionProperty());
     }
 
     @FXML
@@ -121,7 +145,7 @@ public class RecipeInteractionController {
 
     private void showAlert(String msg) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Tipps");
+        alert.setTitle("Achtung");
         alert.setHeaderText(null);
         alert.setContentText(msg);
         alert.showAndWait();
@@ -139,7 +163,18 @@ public class RecipeInteractionController {
             serveSpinner.getValueFactory().setValue(baseServings);
             cookTimeLabel.setText("Cooking Time: " + recipe.getCookTime() + " min");
             instructionsArea.setText(recipe.getInstructions());
+            
+            // **** 修改你的调试代码 ****
+            System.out.println("--- 开始调试Detail界面配料 ---");
+            System.out.println("正在为 Recipe ID: " + recipe.getId() + " 查询配料..."); // <-- 增加这一行
             java.util.List<RecipeIngredients> ingredientList = recipeIngredientsService.getByRecipeId(recipe.getId());
+            System.out.println("获取到的配料数量: " + ingredientList.size());
+            for (RecipeIngredients ri : ingredientList) {
+                System.out.println("配料ID: " + ri.getIngredientId() + ", 配料名: '" + ri.getIngredientName() + "'");
+            }
+            System.out.println("--- 调试结束 ---");
+            // **** 调试代码结束 ****
+
             ingredientsTable.setItems(javafx.collections.FXCollections.observableArrayList(ingredientList));
             if (recipeImageView != null && recipe.getImageUrl() != null) {
                 try {
@@ -164,21 +199,34 @@ public class RecipeInteractionController {
     }
 
     @FXML
-    private void onEdit(javafx.event.ActionEvent event) {
+    private void onEdit() {
         try {
-            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/fxml/recipe_edit_add.fxml"));
-            javafx.scene.Parent root = loader.load();
-            RecipeEditAddController editController = loader.getController();
-            editController.loadRecipe(currentRecipe);
-            javafx.stage.Stage stage = new javafx.stage.Stage();
+            // 1. 创建 FXMLLoader
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/recipe_edit_add.fxml"));
+            
+            // 2. 加载 FXML 并获取根节点
+            Parent root = loader.load();
+            
+            // 3. 【关键】获取新窗口的控制器实例
+            RecipeEditAddController controller = loader.getController();
+            
+            // 4. 【关键】调用 loadRecipe 方法，将当前菜谱数据传递过去
+            controller.loadRecipe(this.currentRecipe);
+            
+            // 5. 创建并显示新窗口
+            Stage stage = new Stage();
             stage.setTitle("Edit Recipe");
             stage.setScene(new javafx.scene.Scene(root));
-            stage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
-            stage.showAndWait();
-            setRecipe(recipeService.getRecipesById(currentRecipe.getId()));
-        } catch (Exception e) {
-            showAlert("Cannot open the edit page" + e.getMessage());
+            stage.initModality(Modality.APPLICATION_MODAL); // 阻塞父窗口
+            stage.showAndWait(); // 等待编辑窗口关闭
+
+            // 可选：编辑完成后刷新详情页数据
+            // refreshRecipeDetails(); 
+
+        } catch (IOException e) {
             e.printStackTrace();
+            // 显示一个错误弹窗
+            new Alert(Alert.AlertType.ERROR, "Could not open the edit window.").showAndWait();
         }
     }
 
@@ -192,7 +240,6 @@ public class RecipeInteractionController {
             boolean success = recipeService.deleteRecipe(currentRecipe.getId());
             if (success) {
                 showAlert("Recipe deleted successfully!");
-                // 关闭当前窗口
                 ((javafx.stage.Stage)(((javafx.scene.Node)event.getSource()).getScene().getWindow())).close();
             } else {
                 showAlert("Failed to delete the recipe, please try again!");

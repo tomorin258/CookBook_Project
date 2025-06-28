@@ -6,9 +6,8 @@
 <mapper namespace="dao.mappers.IngredientsMapper">
 
     <!-- add a new Ingredients entry -->
-    <insert id="addIngredients" parameterType="Ingredients">
-        INSERT INTO ingredients (name)
-        VALUES (#{name})
+    <insert id="addIngredients" parameterType="model.Ingredients" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO ingredients (name) VALUES (#{name})
     </insert>
 
     <!-- delete an Ingredients entry by ID -->
