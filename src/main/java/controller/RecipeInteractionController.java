@@ -1,8 +1,7 @@
 package controller;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.List; // <-- 添加 import
+import java.util.List; 
 
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -16,10 +15,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Spinner;
-import javafx.scene.control.SpinnerValueFactory; // <-- 添加 import
+import javafx.scene.control.SpinnerValueFactory; 
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea; // <-- 添加 import
+import javafx.scene.control.TextArea; 
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.ImageView;
@@ -93,24 +92,15 @@ public class RecipeInteractionController {
         /* 份量调整监听 */
         serveSpinner.valueProperty().addListener((obs, o, n) -> updateIngredientsTable(n));
 
-        // 为评论列表设置自定义单元格格式
+        // 2. 简化 CellFactory，只显示评论内容
         commentsListView.setCellFactory(param -> new ListCell<Comments>() {
-            private final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-
             @Override
             protected void updateItem(Comments item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || item == null) {
                     setText(null);
                 } else {
-                    // 增加一个 null 检查，防止程序崩溃
-                    if (item.getCreatedAt() != null) {
-                        String formattedTime = formatter.format(item.getCreatedAt());
-                        setText(item.getContent() + ", " + formattedTime);
-                    } else {
-                        // 如果日期为 null，则只显示内容
-                        setText(item.getContent());
-                    }
+                    setText(item.getContent());
                 }
             }
         });
