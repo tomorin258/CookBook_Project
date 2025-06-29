@@ -83,6 +83,7 @@ CREATE TABLE `recipe_ingredients` (
   `amount` decimal(10,2) DEFAULT NULL,
   `unit` varchar(20) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
+  `ingredient_name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`recipe_id`,`ingredient_id`),
   KEY `ingredient_id` (`ingredient_id`),
   CONSTRAINT `recipe_ingredients_ibfk_1` FOREIGN KEY (`recipe_id`) REFERENCES `recipes` (`id`) ON DELETE CASCADE,
