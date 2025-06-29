@@ -18,7 +18,6 @@ public class Recipes implements Serializable {
     private int servings;
     private int likeCount;
     private String imageUrl;
-    private Integer likesCount; // 假设你有点赞数字段
 
     /**
      * Default constructor for the Recipes class.
@@ -113,13 +112,13 @@ public class Recipes implements Serializable {
         this.imageUrl = imageUrl;
     }
 
-    // 在这里添加 getLikesCount() 方法
+    // 统一使用 getLikeCount() 方法，为了兼容性也提供 getLikesCount() 方法
     public Integer getLikesCount() {
-        return likesCount;
+        return likeCount;
     }
 
     public void setLikesCount(Integer likesCount) {
-        this.likesCount = likesCount;
+        this.likeCount = likesCount != null ? likesCount : 0;
     }
 
     /**

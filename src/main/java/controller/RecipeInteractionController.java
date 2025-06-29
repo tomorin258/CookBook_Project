@@ -7,7 +7,9 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -22,7 +24,6 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.ImageView;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.converter.DefaultStringConverter;
 import model.Comments;
@@ -195,36 +196,52 @@ public class RecipeInteractionController {
     /* =====================================================================
      *  Navigation buttons (back / edit / delete) — unchanged
      * =================================================================== */
-    @FXML private void onBack(ActionEvent e) { ((Stage)((Button)e.getSource()).getScene().getWindow()).close(); }
-
-    @FXML
-    private void onEdit() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/recipe_edit_add.fxml"));
-            Parent root = loader.load();
-            RecipeEditAddController ctrl = loader.getController();
-            ctrl.loadRecipe(this.currentRecipe);
-
-            Stage st = new Stage();
-            st.setTitle("Edit Recipe");
-            st.setScene(new javafx.scene.Scene(root));
-            st.initModality(Modality.APPLICATION_MODAL);
-            st.showAndWait();
-            // 可选：编辑后刷新详情
-            // setRecipe(recipeService.getById(currentRecipe.getId()));
-        } catch (IOException ex) {
-            new Alert(Alert.AlertType.ERROR, "Could not open the edit window.").showAndWait();
-        }
+    @FXML private void onBack(ActionEvent e) { 
+        switchScene(e, "/fxml/recipe_list.fxml", null);
     }
 
     @FXML
-    private void onDelete(ActionEvent e) {
-        Alert a = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure to DELETE the recipe?", ButtonType.YES, ButtonType.NO);
-        a.setTitle("Delete Confirm");
-        a.showAndWait();
-        if (a.getResult() == ButtonType.YES && recipeService.deleteRecipe(currentRecipe.getId())) {
-            showAlert("Recipe deleted successfully!");
-            ((Stage)((Button)e.getSource()).getScene().getWindow()).close();
+    private void onEdit(ActionEvent event) {
+        switchScene(event, "/fxml/recipe_edit_add.fxml", currentRecipe);
+    }
+
+    @FXML
+    private void onDelete(ActionEvent event) {
+        new Alert(Alert.AlertType.CONFIRMATION, "Are you sure to delete this recipe?", ButtonType.YES, ButtonType.NO)
+            .showAndWait()
+            .ifPresent(response -> {
+                if (response == ButtonType.YES) {
+                    recipeService.deleteRecipe(currentRecipe.getId());
+                    showAlert("Recipe deleted successfully!");
+                    switchScene(event, "/fxml/recipe_list.fxml", null);
+                }
+            });
+    }
+
+    private void switchScene(ActionEvent e, String fxml, Recipes data) {
+        try {
+            Node source = (Node) e.getSource();
+            Stage stage = (Stage) source.getScene().getWindow();
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
+            Parent root = loader.load();
+
+            // 根据目标 FXML 文件，获取控制器并传递数据
+            if (fxml.contains("recipe_edit_add.fxml")) {
+                RecipeEditAddController controller = loader.getController();
+                controller.loadRecipe(data);
+                // Set the return target to the detail view
+                controller.setReturnTarget("/fxml/recipe_detail.fxml", data);
+            } else if (fxml.contains("recipe_detail.fxml")) {
+                RecipeInteractionController controller = loader.getController();
+                controller.setRecipe(data);
+            }
+            // 对于 recipe_list.fxml，通常不需要传递特定数据
+
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
     }
 

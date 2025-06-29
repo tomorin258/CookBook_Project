@@ -1,11 +1,17 @@
 package controller;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;              
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;    
@@ -17,6 +23,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;        
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import model.Recipes;
 import service.RecipeService;
 
@@ -75,7 +82,9 @@ public class RecipeManagementController {
             recipeListView.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2) {
                     Recipes selected = recipeListView.getSelectionModel().getSelectedItem();
-                    if (selected != null) openDetail(selected);
+                    if (selected != null) {
+                        switchScene(event.getSource(), "/fxml/recipe_detail.fxml", selected);
+                    }
                 }
             });
             loadAllRecipes();
@@ -135,15 +144,19 @@ public class RecipeManagementController {
             Label titleLabel = new Label(rec.getTitle());
             titleLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
 
-            // 使用正确的 getLikesCount() 方法
-            Label likesLabel = new Label("👍 " + (rec.getLikesCount() != null ? rec.getLikesCount() : 0));
+            // 使用正确的 getLikeCount() 方法
+            Label likesLabel = new Label("👍 " + rec.getLikeCount());
             likesLabel.setStyle("-fx-font-size: 14px;");
 
             VBox titleAndLikes = new VBox(5, titleLabel, likesLabel);
             card.getChildren().addAll(imageView, titleAndLikes);
 
             // 2. 【核心】为卡片添加点击事件
-            card.setOnMouseClicked(event -> openDetail(rec));
+            card.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2) {
+                    switchScene(event.getSource(), "/fxml/recipe_detail.fxml", rec);
+                }
+            });
 
             // 3. 将卡片添加到VBox
             sortedListVBox.getChildren().add(card);
@@ -175,14 +188,17 @@ public class RecipeManagementController {
             }
         }
     }
-    @FXML private void onBack()     { backBtn.getScene().getWindow().hide(); }
-
-    @FXML private void onAddRecipe() {
-        openWindow("/fxml/recipe_edit_add.fxml", "Add Recipe");
+    @FXML private void onBack(ActionEvent event)     { 
+        // 从排序页面返回列表页
+        switchScene(event.getSource(), "/fxml/recipe_list.fxml", null);
     }
 
-    @FXML
-    public void onSearch() {
+    @FXML private void onAddRecipe(ActionEvent event) {
+        // 跳转到添加页面，并设置返回目标为列表页
+        switchScene(event.getSource(), "/fxml/recipe_edit_add.fxml", null);
+    }
+
+    @FXML public void onSearch() {
         String keyword = keywordField.getText();
         sortedRecipes = searchRecipes(keyword);
         totalPage = (int) Math.ceil((double) sortedRecipes.size() / pageSize);
@@ -191,17 +207,46 @@ public class RecipeManagementController {
     }
 
     @FXML
-    private void onSortByLikes() {
-        openWindow("/fxml/recipe_sortbylikes.fxml", "Recipes Sorted by Likes");
+    private void onSortByLikes(ActionEvent event) {
+        // 跳转到排序页面
+        switchScene(event.getSource(), "/fxml/recipe_sortbylikes.fxml", null);
     }
 
     public void setKeyword(String keyword) {
-        if (keywordField != null) keywordField.setText(keyword);
+        keywordField.setText(keyword);
     }
-    private Image loadImageSafe(String relPath) {
+
+    private void switchScene(Object eventSource, String fxml, Recipes data) {
+        try {
+            Node source = (Node) eventSource;
+            Stage stage = (Stage) source.getScene().getWindow();
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
+            Parent root = loader.load();
+
+            if (fxml.equals("/fxml/recipe_detail.fxml")) {
+                RecipeInteractionController controller = loader.getController();
+                controller.setRecipe(data);
+            } else if (fxml.equals("/fxml/recipe_edit_add.fxml")) {
+                RecipeEditAddController controller = loader.getController();
+                if (data != null) { // Editing existing recipe
+                    controller.loadRecipe(data);
+                }
+                // When adding a new recipe or editing, set the return path to the list view
+                controller.setReturnTarget("/fxml/recipe_list.fxml", null);
+            }
+
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private Image loadImageSafe(String url) {
         try {
             return new Image(Objects.requireNonNull(
-                    getClass().getResource("/" + relPath)).toExternalForm());
+                    getClass().getResource("/" + url)).toExternalForm());
         } catch (Exception e) {
             return new Image(getClass().getResource("/images/placeholder.png").toExternalForm());
         }
@@ -212,32 +257,18 @@ public class RecipeManagementController {
      * @param recipe 要在详情页中显示的菜谱
      */
     private void openDetail(Recipes recipe) {
-        // 你的代码中应该已经有这个方法的实现了
-        // 它会加载 recipe_detail.fxml 并将 recipe 对象传递过去
-        openWindowWithRecipe("/fxml/recipe_detail.fxml", "Recipe Detail", recipe);
-    }
-
-    private void openWindow(String fxml, String title) {
+        // 此方法现在可以被 switchScene 替代，但为保持兼容性，我们让它也调用 switchScene
+        Node node = recipeListView; // 获取一个有效的Node
         try {
-            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource(fxml));
-            javafx.scene.Parent root = loader.load();
-            javafx.stage.Stage stage = new javafx.stage.Stage();
-            stage.setTitle(title);
-            stage.setScene(new javafx.scene.Scene(root));
+            Stage stage = (Stage) node.getScene().getWindow();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/recipe_detail.fxml"));
+            Parent root = loader.load();
+            RecipeInteractionController controller = loader.getController();
+            controller.setRecipe(recipe);
+            stage.setScene(new Scene(root));
             stage.show();
-        } catch (Exception e) { e.printStackTrace(); }
-    }
-
-    private void openWindowWithRecipe(String fxml, String title, Recipes rec) {
-        try {
-            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource(fxml));
-            javafx.scene.Parent root = loader.load();
-            controller.RecipeInteractionController c = loader.getController();
-            c.setRecipe(rec);
-            javafx.stage.Stage stage = new javafx.stage.Stage();
-            stage.setTitle(title);
-            stage.setScene(new javafx.scene.Scene(root));
-            stage.show();
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

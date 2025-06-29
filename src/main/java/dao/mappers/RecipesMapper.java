@@ -36,12 +36,12 @@ public interface RecipesMapper {
     boolean updateRecipes(Recipes recipes);
 
     /**
-     * Get recipes by id.
+     * Gets recipe by id.
      *
-     * @param recipesId the recipes id
-     * @return the recipes
+     * @param recipeId the recipe id
+     * @return the recipe by id
      */
-    Recipes getRecipesById(int id);
+    Recipes getRecipeById(int recipeId);
 
     /**
      * Get recipes by title.
@@ -64,4 +64,11 @@ public interface RecipesMapper {
      * @return the list of all recipes
      */
     ArrayList<Recipes> getAllRecipes();
+
+    /**
+     * Get recipes sorted by likes count in descending order.
+     *
+     * @return the list of recipes sorted by likes
+     */
+    ArrayList<Recipes> getRecipesSortedByLikes();
 }

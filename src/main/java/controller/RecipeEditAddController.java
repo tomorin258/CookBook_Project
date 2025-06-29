@@ -1,8 +1,14 @@
 package controller;
 
+import java.io.IOException;
 import java.util.List;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Spinner;
@@ -48,6 +54,16 @@ public class RecipeEditAddController {
     /* ---------- State ---------- */
     private java.io.File imageFile;
     private Recipes editingRecipe;
+    private String returnFxmlPath = "/fxml/recipe_list.fxml"; // Default return path
+    private Recipes returnRecipe; // Data for the return scene (e.g., for detail view)
+
+    /* =====================================================================
+     *  Set the scene to return to after saving or cancelling
+     * =================================================================== */
+    public void setReturnTarget(String fxmlPath, Recipes recipe) {
+        this.returnFxmlPath = fxmlPath;
+        this.returnRecipe = recipe;
+    }
 
     /* =====================================================================
      *  加载已有菜谱
@@ -88,7 +104,7 @@ public class RecipeEditAddController {
     }
 
     @FXML
-    private void onSave() {
+    private void onSave(ActionEvent event) {
         String title        = titleField.getText();
         Integer servings    = serveSpinner.getValue();
         String cookTimeStr  = cookTimeField.getText();
@@ -141,13 +157,9 @@ public class RecipeEditAddController {
 
         new Alert(Alert.AlertType.INFORMATION, "Recipe saved successfully!").showAndWait();
 
-        try {
-            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(
-                    getClass().getResource("/fxml/recipe_list.fxml"));
-            javafx.scene.Parent root = loader.load();
-            javafx.stage.Stage stage = (javafx.stage.Stage) saveBtn.getScene().getWindow();
-            stage.setScene(new javafx.scene.Scene(root));
-        } catch (Exception e) { e.printStackTrace(); }
+        // After saving, get the updated recipe object to refresh the detail view correctly
+        Recipes updatedRecipe = recipeService.getRecipeById(recipeId);
+        switchScene(event, returnFxmlPath, updatedRecipe);
     }
 
     @FXML private void onAddRow()     { ingredientsTable.getItems().add(new RecipeIngredients()); }
@@ -158,19 +170,23 @@ public class RecipeEditAddController {
     }
 
     @FXML
-    private void onUpload() {
+    private void onUpload(ActionEvent event) {
         javafx.stage.FileChooser fc = new javafx.stage.FileChooser();
         fc.setTitle("Choose Image");
         fc.getExtensionFilters().add(new javafx.stage.FileChooser.ExtensionFilter(
                 "Image Files", "*.png", "*.jpg", "*.jpeg", "*.gif"));
-        java.io.File file = fc.showOpenDialog(uploadBtn.getScene().getWindow());
+        java.io.File file = fc.showOpenDialog(((Node)event.getSource()).getScene().getWindow());
         if (file != null) {
             imageFile = file;
             recipeImageView.setImage(new javafx.scene.image.Image(file.toURI().toString()));
         }
     }
 
-    @FXML private void onBack() { backBtn.getScene().getWindow().hide(); }
+    @FXML 
+    private void onBack(ActionEvent event) {
+        // Return to the previous scene (list or detail)
+        switchScene(event, returnFxmlPath, this.returnRecipe);
+    }
 
     /* =====================================================================
      *  Initialize table columns
@@ -199,6 +215,35 @@ public class RecipeEditAddController {
         if (serveSpinner.getValueFactory() == null) {
             serveSpinner.setValueFactory(
                     new javafx.scene.control.SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 1));
+        }
+    }
+
+    /**
+     * Helper to switch scenes.
+     * @param event The trigger event to get the source window.
+     * @param fxmlFile The FXML file to load.
+     * @param recipe The recipe data to pass to the next controller.
+     */
+    private void switchScene(ActionEvent event, String fxmlFile, Recipes recipe) {
+        try {
+            Node source = (Node) event.getSource();
+            javafx.stage.Stage stage = (javafx.stage.Stage) source.getScene().getWindow();
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
+            Parent root = loader.load();
+
+            // Pass data to the next controller if needed
+            if (fxmlFile.contains("recipe_detail.fxml")) {
+                RecipeInteractionController controller = loader.getController();
+                controller.setRecipe(recipe);
+            }
+            // No data needed for recipe_list.fxml as it loads all recipes by default
+
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "Failed to load page: " + fxmlFile).showAndWait();
         }
     }
 }
