@@ -63,6 +63,7 @@ public class RecipeInteractionController {
     /* ---------- Runtime state ---------- */
     private Recipes currentRecipe;
     private int baseServings = 1;
+    private List<RecipeIngredients> originalIngredients;
 
     /* =====================================================================
      *  Initialization
@@ -146,13 +147,23 @@ public class RecipeInteractionController {
      *  Ingredient table helper
      * =================================================================== */
     private void updateIngredientsTable(int newServings) {
-        double ratio = (double) newServings / baseServings;
-        for (RecipeIngredients ri : ingredientsTable.getItems()) {
+        if (originalIngredients == null) return;
+
+        double ratio = (baseServings > 0) ? (double) newServings / baseServings : 1.0;
+
+        List<RecipeIngredients> currentIngredients = ingredientsTable.getItems();
+        for (int i = 0; i < originalIngredients.size(); i++) {
+            RecipeIngredients originalIngredient = originalIngredients.get(i);
+            RecipeIngredients currentIngredient = currentIngredients.get(i);
+
             try {
-                var oldAmt = new java.math.BigDecimal(ri.getAmount());
-                var newAmt = oldAmt.multiply(java.math.BigDecimal.valueOf(ratio));
-                ri.setAmount(newAmt.stripTrailingZeros().toPlainString());
-            } catch (Exception ignore) {}
+                var originalAmount = new java.math.BigDecimal(originalIngredient.getAmount());
+                var newAmount = originalAmount.multiply(java.math.BigDecimal.valueOf(ratio));
+                currentIngredient.setAmount(newAmount.stripTrailingZeros().toPlainString());
+            } catch (Exception ignore) {
+                // In case of parsing errors, revert to original amount
+                currentIngredient.setAmount(originalIngredient.getAmount());
+            }
         }
     }
 
@@ -169,9 +180,15 @@ public class RecipeInteractionController {
         cookTimeLabel.setText("Cooking Time: " + recipe.getCookTime() + " min");
         instructionsArea.setText(recipe.getInstructions());
 
-        List<RecipeIngredients> list = recipeIngredientsService.getByRecipeId(recipe.getId());
-        ingredientsTable.setItems(FXCollections.observableArrayList(list));
-        updateIngredientsTable(baseServings);
+        // Store the original ingredients
+        this.originalIngredients = recipeIngredientsService.getByRecipeId(recipe.getId());
+
+        // Create a fresh list for display to avoid modifying the originals
+        List<RecipeIngredients> displayIngredients = new java.util.ArrayList<>();
+        for (RecipeIngredients ri : this.originalIngredients) {
+            displayIngredients.add(new RecipeIngredients(ri)); // Requires a copy constructor in RecipeIngredients
+        }
+        ingredientsTable.setItems(FXCollections.observableArrayList(displayIngredients));
 
         List<Comments> comments = commentService.getCommentsByRecipeId(recipe.getId());
         commentsListView.setItems(FXCollections.observableArrayList(comments));

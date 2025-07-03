@@ -41,6 +41,19 @@ public class RecipeIngredients implements Serializable {
         this.unit.set(unit);
     }
 
+    /**
+     * Copy constructor for creating a deep copy of a RecipeIngredients object.
+     * @param other The object to copy.
+     */
+    public RecipeIngredients(RecipeIngredients other) {
+        this.recipeId = other.getRecipeId();
+        this.ingredientId = other.getIngredientId();
+        this.setAmount(other.getAmount());
+        this.setUnit(other.getUnit());
+        this.setIngredientName(other.getIngredientName());
+        this.setDescription(other.getDescription());
+    }
+
     public int getRecipeId() {
         return recipeId;
     }
