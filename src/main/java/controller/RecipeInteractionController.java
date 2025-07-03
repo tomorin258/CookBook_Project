@@ -39,7 +39,7 @@ public class RecipeInteractionController {
     @FXML private Spinner<Integer> serveSpinner;
     @FXML private Label likeCountLabel;
     @FXML private Button likeBtn;
-    @FXML private ListView<Comments> commentsListView; // <-- 添加 FXML 注入
+    @FXML private ListView<Comments> commentsListView;
 
     @FXML private TableView<RecipeIngredients> ingredientsTable;
     @FXML private TableColumn<RecipeIngredients, String> ingredientNameCol;
@@ -52,8 +52,8 @@ public class RecipeInteractionController {
     @FXML private ImageView recipeImageView;
 
     /* ---------- Comment area ---------- */
-    @FXML private TextField commentField;           // 输入框
-    @FXML private Button addCommentBtn;             // “Add” 按钮
+    @FXML private TextField commentField;          
+    @FXML private Button addCommentBtn;      
 
     /* ---------- Services ---------- */
     private final RecipeService recipeService = new RecipeService();
@@ -73,7 +73,6 @@ public class RecipeInteractionController {
             serveSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 1));
         }
 
-        /* 配料表列绑定（保持原逻辑） */
         ingredientNameCol.setCellValueFactory(c -> c.getValue().ingredientNameProperty());
         ingredientNameCol.setCellFactory(TextFieldTableCell.forTableColumn(new DefaultStringConverter()));
         ingredientNameCol.setOnEditCommit(e -> e.getRowValue().setIngredientName(e.getNewValue()));
@@ -90,10 +89,8 @@ public class RecipeInteractionController {
         ingredientDescCol.setCellFactory(TextFieldTableCell.forTableColumn(new DefaultStringConverter()));
         ingredientDescCol.setOnEditCommit(e -> e.getRowValue().setDescription(e.getNewValue()));
 
-        /* 份量调整监听 */
         serveSpinner.valueProperty().addListener((obs, o, n) -> updateIngredientsTable(n));
 
-        // 2. 简化 CellFactory，只显示评论内容
         commentsListView.setCellFactory(param -> new ListCell<Comments>() {
             @Override
             protected void updateItem(Comments item, boolean empty) {
@@ -119,7 +116,7 @@ public class RecipeInteractionController {
     }
 
     /* =====================================================================
-     *  Add Comment  (整合新 ListView)
+     *  Add Comment
      * =================================================================== */
     @FXML
     private void onAddComment() {
@@ -129,19 +126,16 @@ public class RecipeInteractionController {
             return;
         }
 
-        /* 1. 写入数据库 */
         Comments cmt = new Comments();
         cmt.setRecipeId(currentRecipe.getId());
         cmt.setUserId(getCurrentUserId());
         cmt.setContent(txt);
-        // 在保存前设置当前时间，确保UI不会因为null而崩溃
         cmt.setCreatedAt(new java.util.Date()); 
 
         boolean ok = commentService.addComment(cmt);
 
-        /* 2. 更新 UI */
         if (ok) {
-            commentsListView.getItems().add(cmt); // 立即刷新
+            commentsListView.getItems().add(cmt); 
             commentField.clear();
         } else {
             showAlert("Fail to save comment, please try again!");
@@ -175,16 +169,13 @@ public class RecipeInteractionController {
         cookTimeLabel.setText("Cooking Time: " + recipe.getCookTime() + " min");
         instructionsArea.setText(recipe.getInstructions());
 
-        /* 配料列表 */
         List<RecipeIngredients> list = recipeIngredientsService.getByRecipeId(recipe.getId());
         ingredientsTable.setItems(FXCollections.observableArrayList(list));
         updateIngredientsTable(baseServings);
 
-        /* 加载评论列表 */
         List<Comments> comments = commentService.getCommentsByRecipeId(recipe.getId());
         commentsListView.setItems(FXCollections.observableArrayList(comments));
 
-        /* 图片 */
         if (recipeImageView != null && recipe.getImageUrl() != null) {
             try {
                 var url = getClass().getResource("/" + recipe.getImageUrl());
@@ -226,17 +217,14 @@ public class RecipeInteractionController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
             Parent root = loader.load();
 
-            // 根据目标 FXML 文件，获取控制器并传递数据
             if (fxml.contains("recipe_edit_add.fxml")) {
                 RecipeEditAddController controller = loader.getController();
                 controller.loadRecipe(data);
-                // Set the return target to the detail view
                 controller.setReturnTarget("/fxml/recipe_detail.fxml", data);
             } else if (fxml.contains("recipe_detail.fxml")) {
                 RecipeInteractionController controller = loader.getController();
                 controller.setRecipe(data);
             }
-            // 对于 recipe_list.fxml，通常不需要传递特定数据
 
             stage.setScene(new Scene(root));
             stage.show();
@@ -252,5 +240,5 @@ public class RecipeInteractionController {
         new Alert(Alert.AlertType.INFORMATION, msg).showAndWait();
     }
 
-    private int getCurrentUserId() { return 1; }  // TODO: replace with real login userId
+    private int getCurrentUserId() { return 1; }
 }

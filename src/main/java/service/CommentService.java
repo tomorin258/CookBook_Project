@@ -12,7 +12,7 @@ public class CommentService {
     public boolean addComment(Comments comment) {
         try (SqlSession session = MyBatisUtil.getSqlSession(true)) {
             CommentsMapper mapper = session.getMapper(CommentsMapper.class);
-            return mapper.addComments(comment); // 直接返回boolean
+            return mapper.addComments(comment);
         }
     }
 

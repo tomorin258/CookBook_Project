@@ -65,9 +65,6 @@ public class RecipeEditAddController {
         this.returnRecipe = recipe;
     }
 
-    /* =====================================================================
-     *  加载已有菜谱
-     * =================================================================== */
     public void loadRecipe(Recipes recipe) {
         if (recipe == null) return;
 
@@ -77,7 +74,6 @@ public class RecipeEditAddController {
         cookTimeField.setText(String.valueOf(recipe.getCookTime()));
         instructionsArea.setText(recipe.getInstructions());
 
-        // TODO: 若要回显评论，在此查询 CommentService 并填充
         if (commentsArea != null) commentsArea.setText("");
 
         List<RecipeIngredients> list = recipeIngredientsService.getByRecipeId(recipe.getId());
@@ -124,7 +120,6 @@ public class RecipeEditAddController {
         recipe.setInstructions(instructions);
         recipe.setUserId(CurrentUser.getId());
 
-        /* 图片路径处理（原逻辑保持） */
         if (imageFile != null) {
             String projectRoot = System.getProperty("user.dir").replace("\\", "/");
             String imagesDir   = projectRoot + "/src/main/resources/images";
@@ -134,15 +129,10 @@ public class RecipeEditAddController {
             recipe.setImageUrl("images/" + relPath);
         }
 
-        /* 保存或更新菜谱 */
         if (isEdit) recipeService.updateRecipe(recipe);
         else        recipeService.addRecipe(recipe);
         int recipeId = recipe.getId();
 
-        /* TODO: 保存 comments  */
-        // CommentService.saveComment(recipeId, CurrentUser.getId(), comments);
-
-        /* 重新保存配料 */
         if (isEdit) recipeIngredientsService.deleteByRecipeId(recipeId);
         for (RecipeIngredients ri : ingredientsTable.getItems()) {
             ri.setRecipeId(recipeId);

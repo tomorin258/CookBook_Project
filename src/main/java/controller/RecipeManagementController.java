@@ -32,7 +32,7 @@ public class RecipeManagementController {
     @FXML private Button saveBtn;
     @FXML private TextField keywordField;
     @FXML private ListView<Recipes> recipeListView;
-    @FXML private VBox sortedListVBox; // 这是 recipe_sortbylikes.fxml 中的 VBox
+    @FXML private VBox sortedListVBox;
     @FXML private Button prevPageBtn, nextPageBtn;
     @FXML private Label pageInfoLabel;
     @FXML private Button backBtn, addRecipeBtn, searchBtn, sortLikeBtn;
@@ -119,7 +119,6 @@ public class RecipeManagementController {
         nextPageBtn.setDisable(page == totalPage);
     }
 
-    // 用这个版本替换你现有的 showSortedPageByLikes 方法
     private void showSortedPageByLikes(int page) {
         sortedListVBox.getChildren().clear();
         if (sortedRecipes == null || sortedRecipes.isEmpty()) {
@@ -129,9 +128,7 @@ public class RecipeManagementController {
         int from = (page - 1) * pageSize;
         int to   = Math.min(from + pageSize, sortedRecipes.size());
 
-        // 遍历当前页的菜谱
         for (Recipes rec : sortedRecipes.subList(from, to)) {
-            // 1. 创建卡片UI (这里我们直接创建，不需要单独的方法)
             HBox card = new HBox(15);
             card.setAlignment(Pos.CENTER_LEFT);
             card.setPadding(new Insets(10));
@@ -144,21 +141,18 @@ public class RecipeManagementController {
             Label titleLabel = new Label(rec.getTitle());
             titleLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
 
-            // 使用正确的 getLikeCount() 方法
             Label likesLabel = new Label("👍 " + rec.getLikeCount());
             likesLabel.setStyle("-fx-font-size: 14px;");
 
             VBox titleAndLikes = new VBox(5, titleLabel, likesLabel);
             card.getChildren().addAll(imageView, titleAndLikes);
 
-            // 2. 【核心】为卡片添加点击事件
             card.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2) {
                     switchScene(event.getSource(), "/fxml/recipe_detail.fxml", rec);
                 }
             });
 
-            // 3. 将卡片添加到VBox
             sortedListVBox.getChildren().add(card);
         }
 
@@ -170,7 +164,6 @@ public class RecipeManagementController {
     @FXML private void onPrevPage() { 
         if (currentPage > 1) {
             --currentPage;
-            // 根据当前在哪个VBox上操作，调用对应的方法
             if (sortedListVBox != null && sortedListVBox.isVisible()) {
                 showSortedPageByLikes(currentPage);
             } else {
@@ -189,12 +182,10 @@ public class RecipeManagementController {
         }
     }
     @FXML private void onBack(ActionEvent event)     { 
-        // 从排序页面返回列表页
         switchScene(event.getSource(), "/fxml/recipe_list.fxml", null);
     }
 
     @FXML private void onAddRecipe(ActionEvent event) {
-        // 跳转到添加页面，并设置返回目标为列表页
         switchScene(event.getSource(), "/fxml/recipe_edit_add.fxml", null);
     }
 
@@ -208,7 +199,6 @@ public class RecipeManagementController {
 
     @FXML
     private void onSortByLikes(ActionEvent event) {
-        // 跳转到排序页面
         switchScene(event.getSource(), "/fxml/recipe_sortbylikes.fxml", null);
     }
 
@@ -249,26 +239,6 @@ public class RecipeManagementController {
                     getClass().getResource("/" + url)).toExternalForm());
         } catch (Exception e) {
             return new Image(getClass().getResource("/images/placeholder.png").toExternalForm());
-        }
-    }
-
-    /**
-     * 这是你已经有的、用来打开详情页的方法
-     * @param recipe 要在详情页中显示的菜谱
-     */
-    private void openDetail(Recipes recipe) {
-        // 此方法现在可以被 switchScene 替代，但为保持兼容性，我们让它也调用 switchScene
-        Node node = recipeListView; // 获取一个有效的Node
-        try {
-            Stage stage = (Stage) node.getScene().getWindow();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/recipe_detail.fxml"));
-            Parent root = loader.load();
-            RecipeInteractionController controller = loader.getController();
-            controller.setRecipe(recipe);
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 }
