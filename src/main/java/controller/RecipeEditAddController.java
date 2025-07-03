@@ -131,6 +131,11 @@ public class RecipeEditAddController {
             return;
         }
 
+        if (cookTimeStr == null || cookTimeStr.isBlank()) {
+            new Alert(Alert.AlertType.ERROR, "Cooking time cannot be empty!").showAndWait();
+            return;
+        }
+
         for (RecipeIngredients ri : ingredientsTable.getItems()) {
             String amount = ri.getAmount();
                 if (amount == null || amount.isBlank() || !amount.matches("\\d+(\\.\\d+)?")) {
