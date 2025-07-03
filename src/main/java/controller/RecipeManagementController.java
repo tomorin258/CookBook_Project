@@ -191,6 +191,10 @@ public class RecipeManagementController {
 
     @FXML public void onSearch() {
         String keyword = keywordField.getText();
+        if (keyword == null || keyword.trim().isEmpty()) {
+            new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.WARNING, "Keyword cannot be empty!").showAndWait();
+            return;
+        }
         sortedRecipes = searchRecipes(keyword);
         totalPage = (int) Math.ceil((double) sortedRecipes.size() / pageSize);
         currentPage = 1;
@@ -219,10 +223,9 @@ public class RecipeManagementController {
                 controller.setRecipe(data);
             } else if (fxml.equals("/fxml/recipe_edit_add.fxml")) {
                 RecipeEditAddController controller = loader.getController();
-                if (data != null) { // Editing existing recipe
+                if (data != null) {
                     controller.loadRecipe(data);
                 }
-                // When adding a new recipe or editing, set the return path to the list view
                 controller.setReturnTarget("/fxml/recipe_list.fxml", null);
             }
 

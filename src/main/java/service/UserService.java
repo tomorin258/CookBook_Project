@@ -38,7 +38,7 @@ public class UserService {
             UsersMapper usersMapper = session.getMapper(UsersMapper.class);
             Users existUser = usersMapper.getUsersByName(username).stream().findFirst().orElse(null);
             if (existUser != null) {
-                return "account already exists, please choose another one!";
+                return "account name already exists, please choose another one!";
             }
             Users newUser = new Users();
             newUser.setUserName(username);

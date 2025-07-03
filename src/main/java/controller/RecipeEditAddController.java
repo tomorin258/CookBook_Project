@@ -109,7 +109,15 @@ public class RecipeEditAddController {
         if (servings == null) {
             new Alert(Alert.AlertType.ERROR, "Servings cannot be null!").showAndWait();
             return;
-        }
+        }  
+
+        for (RecipeIngredients ri : ingredientsTable.getItems()) {
+            String amount = ri.getAmount();
+                if (amount == null || amount.isBlank() || !amount.matches("\\d+(\\.\\d+)?")) {
+                    new Alert(Alert.AlertType.ERROR, "Ingredient amount must be a number (no letters or symbols): " + amount).showAndWait();
+                    return; 
+                }
+        }  
 
         boolean isEdit = (editingRecipe != null);
         Recipes recipe = isEdit ? editingRecipe : new Recipes();
@@ -147,7 +155,6 @@ public class RecipeEditAddController {
 
         new Alert(Alert.AlertType.INFORMATION, "Recipe saved successfully!").showAndWait();
 
-        // After saving, get the updated recipe object to refresh the detail view correctly
         Recipes updatedRecipe = recipeService.getRecipeById(recipeId);
         switchScene(event, returnFxmlPath, updatedRecipe);
     }
