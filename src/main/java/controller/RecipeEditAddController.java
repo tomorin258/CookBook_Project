@@ -111,6 +111,26 @@ public class RecipeEditAddController {
             return;
         }  
 
+        if (title == null || title.isBlank()) {
+            new Alert(Alert.AlertType.ERROR, "Recipe title cannot be empty!").showAndWait();
+            return;
+        }
+
+        if (imageFile == null && (editingRecipe == null || editingRecipe.getImageUrl() == null || editingRecipe.getImageUrl().isBlank())) {
+            new Alert(Alert.AlertType.ERROR, "Recipe image cannot be empty!").showAndWait();
+            return;
+        }
+
+        if (instructions == null || instructions.isBlank()) {
+            new Alert(Alert.AlertType.ERROR, "Recipe instructions cannot be empty!").showAndWait();
+            return;
+        }
+    
+        if (ingredientsTable.getItems() == null || ingredientsTable.getItems().isEmpty()) {
+            new Alert(Alert.AlertType.ERROR, "Recipe must have at least one ingredient!").showAndWait();
+            return;
+        }
+
         for (RecipeIngredients ri : ingredientsTable.getItems()) {
             String amount = ri.getAmount();
                 if (amount == null || amount.isBlank() || !amount.matches("\\d+(\\.\\d+)?")) {
