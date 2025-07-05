@@ -26,7 +26,6 @@ public class RecipeIngredientsService {
     public List<RecipeIngredients> getByRecipeId(int recipeId) {
         try (SqlSession session = MyBatisUtil.getSqlSession()) {
             RecipeIngredientsMapper mapper = session.getMapper(RecipeIngredientsMapper.class);
-            // 调用带联表查ingredient_name的方法
             return mapper.getByRecipeId(recipeId);
         }
     }

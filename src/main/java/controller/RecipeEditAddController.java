@@ -153,11 +153,15 @@ public class RecipeEditAddController {
 
         for (RecipeIngredients ri : ingredientsTable.getItems()) {
             String amount = ri.getAmount();
+            String unit = ri.getUnit();
                 if (amount == null || amount.isBlank() || !amount.matches("\\d+(\\.\\d+)?")) {
                     new Alert(Alert.AlertType.ERROR, "Ingredient amount must be a number (no letters or symbols): " + amount).showAndWait();
                     return; 
                 }
-            String unit = ri.getUnit();
+                if (unit == null || unit.isBlank()) {
+                    new Alert(Alert.AlertType.ERROR, "Unit cannot be empty!").showAndWait();
+                    return;
+                }
                 if (unit != null && unit.matches(".*\\d.*")) {
                     new Alert(Alert.AlertType.ERROR, "Unit cannot contain numbers: " + unit).showAndWait();
                     return;
