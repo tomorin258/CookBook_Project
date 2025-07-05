@@ -126,6 +126,10 @@ public class RecipeInteractionController {
             showAlert("Comments should not be empty!");
             return;
         }
+        if (txt.length() > 50) {
+            showAlert("Comments cannot exceed 50 characters!");
+            return;
+        }
 
         Comments cmt = new Comments();
         cmt.setRecipeId(currentRecipe.getId());

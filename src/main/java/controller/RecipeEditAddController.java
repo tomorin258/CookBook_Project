@@ -111,8 +111,18 @@ public class RecipeEditAddController {
             return;
         }  
 
+        if (servings == null || servings > 50) {
+            new Alert(Alert.AlertType.ERROR, "Servings cannot be null and must not exceed 50!").showAndWait();
+            return;
+        }  
+
         if (title == null || title.isBlank()) {
             new Alert(Alert.AlertType.ERROR, "Recipe title cannot be empty!").showAndWait();
+            return;
+        }
+
+        if (title.length() > 50) {
+            new Alert(Alert.AlertType.ERROR, "Recipe title cannot exceed 50 characters!").showAndWait();
             return;
         }
 
@@ -136,11 +146,21 @@ public class RecipeEditAddController {
             return;
         }
 
+        if (cookTimeStr.matches(".*[a-zA-Z].*")) {
+            new Alert(Alert.AlertType.ERROR, "Cooking time must be numeric and cannot contain letters!").showAndWait();
+            return;
+        }
+
         for (RecipeIngredients ri : ingredientsTable.getItems()) {
             String amount = ri.getAmount();
                 if (amount == null || amount.isBlank() || !amount.matches("\\d+(\\.\\d+)?")) {
                     new Alert(Alert.AlertType.ERROR, "Ingredient amount must be a number (no letters or symbols): " + amount).showAndWait();
                     return; 
+                }
+            String unit = ri.getUnit();
+                if (unit != null && unit.matches(".*\\d.*")) {
+                    new Alert(Alert.AlertType.ERROR, "Unit cannot contain numbers: " + unit).showAndWait();
+                    return;
                 }
         }  
 
