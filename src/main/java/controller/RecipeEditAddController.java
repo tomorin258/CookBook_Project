@@ -26,14 +26,13 @@ import util.CurrentUser;
 
 public class RecipeEditAddController {
 
-    /* ---------- FXML nodes ---------- */
     @FXML private Button saveBtn;
     @FXML private Button backBtn;
     @FXML private TextField titleField;
     @FXML private Spinner<Integer> serveSpinner;
     @FXML private TextField cookTimeField;
     @FXML private TextArea instructionsArea;
-    @FXML private TextArea commentsArea;                 //  NEW
+    @FXML private TextArea commentsArea;     
     @FXML private ImageView recipeImageView;
 
     @FXML private javafx.scene.control.TableView<RecipeIngredients> ingredientsTable;
@@ -46,20 +45,15 @@ public class RecipeEditAddController {
     @FXML private Button delRowBtn;
     @FXML private Button uploadBtn;
 
-    /* ---------- Services ---------- */
     private final RecipeIngredientsService recipeIngredientsService = new RecipeIngredientsService();
     private final RecipeService            recipeService            = new RecipeService();
     private final IngredientService        ingredientService        = new IngredientService();
 
-    /* ---------- State ---------- */
     private java.io.File imageFile;
     private Recipes editingRecipe;
-    private String returnFxmlPath = "/fxml/recipe_list.fxml"; // Default return path
-    private Recipes returnRecipe; // Data for the return scene (e.g., for detail view)
+    private String returnFxmlPath = "/fxml/recipe_list.fxml"; 
+    private Recipes returnRecipe; 
 
-    /* =====================================================================
-     *  Set the scene to return to after saving or cancelling
-     * =================================================================== */
     public void setReturnTarget(String fxmlPath, Recipes recipe) {
         this.returnFxmlPath = fxmlPath;
         this.returnRecipe = recipe;
@@ -85,9 +79,6 @@ public class RecipeEditAddController {
         }
     }
 
-    /* =====================================================================
-     *  UI handlers
-     * =================================================================== */
     @FXML
     private void onRemoveAll() {
         titleField.clear();
@@ -230,13 +221,9 @@ public class RecipeEditAddController {
 
     @FXML 
     private void onBack(ActionEvent event) {
-        // Return to the previous scene (list or detail)
         switchScene(event, returnFxmlPath, this.returnRecipe);
     }
 
-    /* =====================================================================
-     *  Initialize table columns
-     * =================================================================== */
     @FXML
     public void initialize() {
         ingredientsTable.setEditable(true);
@@ -278,12 +265,10 @@ public class RecipeEditAddController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
             Parent root = loader.load();
 
-            // Pass data to the next controller if needed
             if (fxmlFile.contains("recipe_detail.fxml")) {
                 RecipeInteractionController controller = loader.getController();
                 controller.setRecipe(recipe);
             }
-            // No data needed for recipe_list.fxml as it loads all recipes by default
 
             stage.setScene(new Scene(root));
             stage.show();

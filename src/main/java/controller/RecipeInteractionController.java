@@ -35,7 +35,6 @@ import service.RecipeService;
 
 public class RecipeInteractionController {
 
-    /* ---------- FXML nodes ---------- */
     @FXML private Spinner<Integer> serveSpinner;
     @FXML private Label likeCountLabel;
     @FXML private Button likeBtn;
@@ -51,23 +50,17 @@ public class RecipeInteractionController {
     @FXML private TextArea instructionsArea;
     @FXML private ImageView recipeImageView;
 
-    /* ---------- Comment area ---------- */
     @FXML private TextField commentField;          
     @FXML private Button addCommentBtn;      
 
-    /* ---------- Services ---------- */
     private final RecipeService recipeService = new RecipeService();
     private final RecipeIngredientsService recipeIngredientsService = new RecipeIngredientsService();
-    private final CommentService commentService = new CommentService(); // <-- 添加 Service 实例
+    private final CommentService commentService = new CommentService(); 
 
-    /* ---------- Runtime state ---------- */
     private Recipes currentRecipe;
     private int baseServings = 1;
     private List<RecipeIngredients> originalIngredients;
 
-    /* =====================================================================
-     *  Initialization
-     * =================================================================== */
     @FXML
     public void initialize() {
         if (serveSpinner.getValueFactory() == null) {
@@ -105,9 +98,6 @@ public class RecipeInteractionController {
         });
     }
 
-    /* =====================================================================
-     *  Like
-     * =================================================================== */
     @FXML
     private void onLike(ActionEvent e) {
         int likes = currentRecipe.getLikeCount() + 1;
@@ -116,9 +106,6 @@ public class RecipeInteractionController {
         likeCountLabel.setText(String.valueOf(likes));
     }
 
-    /* =====================================================================
-     *  Add Comment
-     * =================================================================== */
     @FXML
     private void onAddComment() {
         String txt = commentField.getText() == null ? "" : commentField.getText().trim();
@@ -147,9 +134,6 @@ public class RecipeInteractionController {
         }
     }
 
-    /* =====================================================================
-     *  Ingredient table helper
-     * =================================================================== */
     private void updateIngredientsTable(int newServings) {
         if (originalIngredients == null) return;
 
@@ -165,15 +149,11 @@ public class RecipeInteractionController {
                 var newAmount = originalAmount.multiply(java.math.BigDecimal.valueOf(ratio));
                 currentIngredient.setAmount(newAmount.stripTrailingZeros().toPlainString());
             } catch (Exception ignore) {
-                // In case of parsing errors, revert to original amount
                 currentIngredient.setAmount(originalIngredient.getAmount());
             }
         }
     }
 
-    /* =====================================================================
-     *  Set recipe & populate UI
-     * =================================================================== */
     public void setRecipe(Recipes recipe) {
         this.currentRecipe = recipe;
         if (recipe == null) return;
@@ -184,13 +164,11 @@ public class RecipeInteractionController {
         cookTimeLabel.setText("Cooking Time: " + recipe.getCookTime() + " min");
         instructionsArea.setText(recipe.getInstructions());
 
-        // Store the original ingredients
         this.originalIngredients = recipeIngredientsService.getByRecipeId(recipe.getId());
 
-        // Create a fresh list for display to avoid modifying the originals
         List<RecipeIngredients> displayIngredients = new java.util.ArrayList<>();
         for (RecipeIngredients ri : this.originalIngredients) {
-            displayIngredients.add(new RecipeIngredients(ri)); // Requires a copy constructor in RecipeIngredients
+            displayIngredients.add(new RecipeIngredients(ri)); 
         }
         ingredientsTable.setItems(FXCollections.observableArrayList(displayIngredients));
 
@@ -205,9 +183,6 @@ public class RecipeInteractionController {
         }
     }
 
-    /* =====================================================================
-     *  Navigation buttons (back / edit / delete) — unchanged
-     * =================================================================== */
     @FXML private void onBack(ActionEvent e) { 
         switchScene(e, "/fxml/recipe_list.fxml", null);
     }
@@ -254,9 +229,6 @@ public class RecipeInteractionController {
         }
     }
 
-    /* =====================================================================
-     *  Helpers
-     * =================================================================== */
     private void showAlert(String msg) {
         new Alert(Alert.AlertType.INFORMATION, msg).showAndWait();
     }

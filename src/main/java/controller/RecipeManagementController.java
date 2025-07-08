@@ -1,3 +1,8 @@
+
+/**
+ * Main controller for recipe management page, including pagination, search, sorting, and navigation logic.
+ * Responsible for interacting with the view and service layer, and handling user actions.
+ */
 package controller;
 
 import java.io.IOException;
@@ -27,8 +32,13 @@ import javafx.stage.Stage;
 import model.Recipes;
 import service.RecipeService;
 
+
+/**
+ * Controller for recipe management, handling CRUD, pagination, sorting, and page navigation.
+ */
 public class RecipeManagementController {
 
+    // FXML injected controls
     @FXML private Button saveBtn;
     @FXML private TextField keywordField;
     @FXML private ListView<Recipes> recipeListView;
@@ -40,24 +50,45 @@ public class RecipeManagementController {
     @FXML private Spinner<Integer> serveSpinner;
     @FXML private TextArea instructionsArea;
     @FXML private ImageView recipeImageView;
+
+    // Pagination related variables
     private int currentPage = 1;
     private final int pageSize = 5;
     private int totalPage = 1;
     private List<Recipes> sortedRecipes;
+
+    // Service layer object
     private final RecipeService recipeService = new RecipeService();
+
+    /**
+     * Add a recipe
+     */
     public boolean addRecipe(Recipes recipe)   { return recipeService.addRecipe(recipe);   }
+    /**
+     * Delete a recipe
+     */
     public boolean deleteRecipe(int id)        { return recipeService.deleteRecipe(id);    }
+    /**
+     * Edit a recipe
+     */
     public boolean editRecipe(Recipes recipe)   { return recipeService.editRecipe(recipe);  }
+    /**
+     * Search recipes
+     */
     public List<Recipes> searchRecipes(String k){ return recipeService.searchRecipes(k);    }
+    /**
+     * Initialization method, sets up list rendering, event binding, and loads data.
+     * Automatically called when the page loads.
+     */
     @FXML
     public void initialize() {
+        // Set custom cell rendering for ListView
         if (recipeListView != null) {
             recipeListView.setCellFactory(list -> new ListCell<>() {
-
+                // Image and title for each list item
                 private final ImageView img = new ImageView();
                 private final Label      title = new Label();
                 private final HBox       box = new HBox(12, img, title);
-
                 {
                     img.setFitWidth(64);
                     img.setFitHeight(64);
@@ -66,7 +97,6 @@ public class RecipeManagementController {
                     box.setAlignment(Pos.CENTER_LEFT);
                     box.setPadding(new Insets(6, 12, 6, 12));
                 }
-
                 @Override
                 protected void updateItem(Recipes rec, boolean empty) {
                     super.updateItem(rec, empty);
@@ -79,6 +109,7 @@ public class RecipeManagementController {
                     }
                 }
             });
+            // Double-click to jump to detail page
             recipeListView.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2) {
                     Recipes selected = recipeListView.getSelectionModel().getSelectedItem();
@@ -89,6 +120,7 @@ public class RecipeManagementController {
             });
             loadAllRecipes();
         }
+        // Load recipes sorted by likes
         if (sortedListVBox != null) {
             sortedRecipes = recipeService.getRecipesSortedByLikes();
             totalPage = (int) Math.ceil((double) sortedRecipes.size() / pageSize);
@@ -96,6 +128,9 @@ public class RecipeManagementController {
             showSortedPageByLikes(currentPage);
         }
     }
+    /**
+     * Load all recipes and display them with pagination.
+     */
     private void loadAllRecipes() {
         List<Recipes> all = recipeService.searchRecipes(null);
         sortedRecipes = all; 
@@ -104,6 +139,10 @@ public class RecipeManagementController {
         showSortedPage(currentPage);
     }
 
+    /**
+     * Display recipes by page.
+     * @param page current page number
+     */
     private void showSortedPage(int page) {
         recipeListView.getItems().clear();
         if (sortedRecipes == null || sortedRecipes.isEmpty()) {
@@ -119,6 +158,10 @@ public class RecipeManagementController {
         nextPageBtn.setDisable(page == totalPage);
     }
 
+    /**
+     * Display recipes sorted by likes with pagination.
+     * @param page current page number
+     */
     private void showSortedPageByLikes(int page) {
         sortedListVBox.getChildren().clear();
         if (sortedRecipes == null || sortedRecipes.isEmpty()) {
@@ -161,6 +204,9 @@ public class RecipeManagementController {
         nextPageBtn.setDisable(page == totalPage);
     }
 
+    /**
+     * Previous page button event.
+     */
     @FXML private void onPrevPage() { 
         if (currentPage > 1) {
             --currentPage;
@@ -171,6 +217,9 @@ public class RecipeManagementController {
             }
         }
     }
+    /**
+     * Next page button event.
+     */
     @FXML private void onNextPage() { 
         if (currentPage < totalPage) {
             ++currentPage;
@@ -181,14 +230,23 @@ public class RecipeManagementController {
             }
         }
     }
+    /**
+     * Back button event, navigates to the recipe list page.
+     */
     @FXML private void onBack(ActionEvent event)     { 
         switchScene(event.getSource(), "/fxml/recipe_list.fxml", null);
     }
 
+    /**
+     * Add recipe button event, navigates to the add/edit page.
+     */
     @FXML private void onAddRecipe(ActionEvent event) {
         switchScene(event.getSource(), "/fxml/recipe_edit_add.fxml", null);
     }
 
+    /**
+     * Search button event, searches recipes by keyword.
+     */
     @FXML public void onSearch() {
         String keyword = keywordField.getText();
         if (keyword == null || keyword.trim().isEmpty()) {
@@ -201,15 +259,27 @@ public class RecipeManagementController {
         showSortedPage(currentPage);
     }
 
+    /**
+     * Sort by likes button event, navigates to the sorted-by-likes page.
+     */
     @FXML
     private void onSortByLikes(ActionEvent event) {
         switchScene(event.getSource(), "/fxml/recipe_sortbylikes.fxml", null);
     }
 
+    /**
+     * Set the search keyword to the input field.
+     */
     public void setKeyword(String keyword) {
         keywordField.setText(keyword);
     }
 
+    /**
+     * Utility method for page navigation and data passing between pages.
+     * @param eventSource event source
+     * @param fxml target page fxml path
+     * @param data recipe data to pass
+     */
     private void switchScene(Object eventSource, String fxml, Recipes data) {
         try {
             Node source = (Node) eventSource;
@@ -236,6 +306,11 @@ public class RecipeManagementController {
         }
     }
 
+    /**
+     * Safely load an image, use a placeholder if the image does not exist.
+     * @param url image path
+     * @return Image object
+     */
     private Image loadImageSafe(String url) {
         try {
             return new Image(Objects.requireNonNull(

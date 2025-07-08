@@ -22,7 +22,7 @@ import javafx.stage.Stage;
  * @author Hao He
  */
 
-public class CatagorybyLikeView extends Application {
+public class CategorybyLikeView extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {

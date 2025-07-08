@@ -1,4 +1,4 @@
-package Init;
+package init;
 import javafx.stage.Stage;
 import view.*;
 
