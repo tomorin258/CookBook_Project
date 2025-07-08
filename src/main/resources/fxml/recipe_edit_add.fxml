@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Author: Hao He -->
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
@@ -10,7 +11,7 @@
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="controller.RecipeEditAddController">
 
-    <!-- ── TOP BAR ─────────────────────────────────────────────────────────── -->
+    <!-- TOP BAR -->
     <top>
         <HBox alignment="CENTER_LEFT" spacing="10"
               style="-fx-background-color:#d3eaff; -fx-padding:12;">
@@ -36,7 +37,7 @@
         </HBox>
     </top>
 
-    <!-- ── CENTER AREA ─────────────────────────────────────────────────────── -->
+    <!-- CENTER AREA -->
     <center>
         <VBox spacing="15" style="-fx-padding:15 20 20 20;">
 
@@ -46,7 +47,7 @@
                          style="-fx-background-radius:6;"/>
             </HBox>
 
-            <!-- Ingredients table (200 px) -->
+            <!-- Ingredients table -->
             <ScrollPane fitToWidth="true" fitToHeight="true" VBox.vgrow="NEVER"
                         style="-fx-background:#ffffff; -fx-background-radius:8; -fx-padding:6;">
                 <content>
@@ -81,7 +82,7 @@
         </VBox>
     </center>
 
-    <!-- ── RIGHT SIDEBAR ───────────────────────────────────────────────────── -->
+    <!-- RIGHT SIDEBAR -->
     <right>
         <VBox alignment="TOP_CENTER" spacing="14"
               style="-fx-padding:16 24 16 16; -fx-background-color:#d9ecff;">
@@ -112,7 +113,7 @@
             <Separator orientation="HORIZONTAL" prefWidth="200"
                        style="-fx-background-color:#8cc7ff;"/>
 
-            <!-- Comments (editable) -->
+            <!-- Comments -->
             <Label text="Comments:" style="-fx-font-size:14; -fx-font-weight:bold;"/>
             <TextArea fx:id="commentsArea" wrapText="true" editable="true"
                       prefHeight="220" prefWidth="220" VBox.vgrow="ALWAYS"

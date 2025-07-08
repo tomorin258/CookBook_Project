@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Author: Hao He -->
+
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<!-- Login screen -->
+<!--  Login screen -->
 <BorderPane prefHeight="420" prefWidth="640"
             xmlns="http://javafx.com/javafx/17.0.12"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="controller.RecipeLoginController"
             style="-fx-background-color:#e6f4ff;">
 
-    <!-- ── Top bar: centered title ─────────────────────────────────────────── -->
+    <!-- Top bar: centered title -->
     <top>
         <StackPane style="-fx-background-color:#d3eaff; -fx-padding:14;">
             <Label text="CookBook — Start a food tour!"
@@ -18,7 +20,7 @@
         </StackPane>
     </top>
 
-    <!-- ── Login form ──────────────────────────────────────────────────────── -->
+    <!-- Login form -->
     <center>
         <VBox alignment="CENTER" spacing="18">
             <Label text="Log In" style="-fx-font-size:28; -fx-font-weight:bold;"/>
