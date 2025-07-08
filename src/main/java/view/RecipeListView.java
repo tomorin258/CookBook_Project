@@ -4,8 +4,26 @@ import controller.RecipeManagementController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
 import java.io.IOException;
+
+/**
+ * A window that displays a pageable, searchable list of {@link model.Recipes}.
+ *
+ * <p>The UI is loaded from {@code /fxml/recipe_list.fxml}. After loading,
+ * the corresponding {@link controller.RecipeManagementController} is cached
+ * so callers can access it through {@link #getController()}.</p>
+ *
+ * <p>The stage starts with a minimum size of <strong>768 × 850&nbsp;px</strong>
+ * (users may enlarge it but cannot shrink it below these dimensions).</p>
+ *
+ * <p><strong>Initial keyword search:</strong> when the
+ * {@link #RecipeListView(String) keyword-accepting constructor} is used, the
+ * provided keyword is forwarded to the controller via
+ * {@code setKeyword(String)} and {@code onSearch()} is invoked immediately,
+ * so the window opens with a pre-filtered list.</p>
+ *
+ * @author Hao He
+ */
 
 public class RecipeListView extends Stage {
 

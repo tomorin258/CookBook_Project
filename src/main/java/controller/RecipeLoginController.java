@@ -66,6 +66,21 @@ public class RecipeLoginController {
         String password = passwordField.getText();
         String confirm = confirmField.getText();
         String result = userService.register(username, password, confirm);
+        if (username != null && username.length() > 8) {
+            new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR,
+                "Username cannot exceed 8 characters!").showAndWait();
+            return;
+        }
+        if (password != null && password.length() > 12) {
+        new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR,
+            "Password cannot exceed 12 characters!").showAndWait();
+        return;
+        }
+        if (password != null && password.matches(".*\\p{Punct}.*")) {
+            new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR,
+            "Password cannot contain punctuation symbols!").showAndWait();
+        return;
+        }
         messageLabel.setText(result);
     }
 

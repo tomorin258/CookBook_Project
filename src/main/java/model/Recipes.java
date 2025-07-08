@@ -112,6 +112,15 @@ public class Recipes implements Serializable {
         this.imageUrl = imageUrl;
     }
 
+    // 统一使用 getLikeCount() 方法，为了兼容性也提供 getLikesCount() 方法
+    public Integer getLikesCount() {
+        return likeCount;
+    }
+
+    public void setLikesCount(Integer likesCount) {
+        this.likeCount = likesCount != null ? likesCount : 0;
+    }
+
     /**
      * Returns a string representation of the Recipes object.
      *

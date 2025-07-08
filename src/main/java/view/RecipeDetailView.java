@@ -9,6 +9,24 @@ import model.Recipes;
 
 import java.io.IOException;
 
+/**
+ * A modal dialog window that presents the details of one {@link Recipes} item.
+ * <p>
+ * The UI is loaded from {@code /fxml/recipe_detail.fxml}. After loading, the
+ * selected recipe is injected into the {@link RecipeInteractionController}
+ * so that all labels / buttons within the view reflect its data.
+ * <p>
+ * <strong>Key characteristics</strong>
+ * <ul>
+ *   <li>Fixed size: 640 × 420 px (non-resizable)</li>
+ *   <li>Owned &amp; blocking: {@link Modality#WINDOW_MODAL}</li>
+ *   <li>Typically shown via {@link #showAndWait()} to pause the caller until the
+ *       user closes the dialog.</li>
+ * </ul>
+ *
+ * @author Hao He
+ */
+
 public class RecipeDetailView extends Stage {
 
     private final RecipeInteractionController controller;

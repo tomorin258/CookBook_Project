@@ -42,7 +42,7 @@
     </update>
 
     <!-- Select a recipes entry by ID -->
-    <select id="getRecipesById" parameterType="int" resultMap="RecipesResultMap">
+    <select id="getRecipeById" parameterType="int" resultMap="RecipesResultMap">
         SELECT id, user_id, title, instructions, cook_time, servings, like_count, image_url
         FROM recipes
         WHERE id = #{id}
@@ -74,6 +74,13 @@
     <select id="getAllRecipes" resultMap="RecipesResultMap">
         SELECT id, user_id, title, instructions, cook_time, servings, like_count, image_url
         FROM recipes
+    </select>
+
+    <!-- Select all recipes entries sorted by like count in descending order -->
+    <select id="getRecipesSortedByLikes" resultMap="RecipesResultMap">
+        SELECT id, user_id, title, instructions, cook_time, servings, like_count, image_url
+        FROM recipes
+        ORDER BY like_count DESC
     </select>
 
 </mapper>

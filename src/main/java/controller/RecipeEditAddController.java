@@ -1,8 +1,14 @@
 package controller;
 
+import java.io.IOException;
 import java.util.List;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Spinner;
@@ -48,10 +54,17 @@ public class RecipeEditAddController {
     /* ---------- State ---------- */
     private java.io.File imageFile;
     private Recipes editingRecipe;
+    private String returnFxmlPath = "/fxml/recipe_list.fxml"; // Default return path
+    private Recipes returnRecipe; // Data for the return scene (e.g., for detail view)
 
     /* =====================================================================
-     *  加载已有菜谱
+     *  Set the scene to return to after saving or cancelling
      * =================================================================== */
+    public void setReturnTarget(String fxmlPath, Recipes recipe) {
+        this.returnFxmlPath = fxmlPath;
+        this.returnRecipe = recipe;
+    }
+
     public void loadRecipe(Recipes recipe) {
         if (recipe == null) return;
 
@@ -61,7 +74,6 @@ public class RecipeEditAddController {
         cookTimeField.setText(String.valueOf(recipe.getCookTime()));
         instructionsArea.setText(recipe.getInstructions());
 
-        // TODO: 若要回显评论，在此查询 CommentService 并填充
         if (commentsArea != null) commentsArea.setText("");
 
         List<RecipeIngredients> list = recipeIngredientsService.getByRecipeId(recipe.getId());
@@ -88,17 +100,73 @@ public class RecipeEditAddController {
     }
 
     @FXML
-    private void onSave() {
+    private void onSave(ActionEvent event) {
         String title        = titleField.getText();
         Integer servings    = serveSpinner.getValue();
         String cookTimeStr  = cookTimeField.getText();
         String instructions = instructionsArea.getText();
-        String comments     = commentsArea.getText();    //  NEW
 
         if (servings == null) {
             new Alert(Alert.AlertType.ERROR, "Servings cannot be null!").showAndWait();
             return;
+        }  
+
+        if (servings == null || servings > 50) {
+            new Alert(Alert.AlertType.ERROR, "Servings cannot be null and must not exceed 50!").showAndWait();
+            return;
+        }  
+
+        if (title == null || title.isBlank()) {
+            new Alert(Alert.AlertType.ERROR, "Recipe title cannot be empty!").showAndWait();
+            return;
         }
+
+        if (title.length() > 50) {
+            new Alert(Alert.AlertType.ERROR, "Recipe title cannot exceed 50 characters!").showAndWait();
+            return;
+        }
+
+        if (imageFile == null && (editingRecipe == null || editingRecipe.getImageUrl() == null || editingRecipe.getImageUrl().isBlank())) {
+            new Alert(Alert.AlertType.ERROR, "Recipe image cannot be empty!").showAndWait();
+            return;
+        }
+
+        if (instructions == null || instructions.isBlank()) {
+            new Alert(Alert.AlertType.ERROR, "Recipe instructions cannot be empty!").showAndWait();
+            return;
+        }
+    
+        if (ingredientsTable.getItems() == null || ingredientsTable.getItems().isEmpty()) {
+            new Alert(Alert.AlertType.ERROR, "Recipe must have at least one ingredient!").showAndWait();
+            return;
+        }
+
+        if (cookTimeStr == null || cookTimeStr.isBlank()) {
+            new Alert(Alert.AlertType.ERROR, "Cooking time cannot be empty!").showAndWait();
+            return;
+        }
+
+        if (cookTimeStr.matches(".*[a-zA-Z].*")) {
+            new Alert(Alert.AlertType.ERROR, "Cooking time must be numeric and cannot contain letters!").showAndWait();
+            return;
+        }
+
+        for (RecipeIngredients ri : ingredientsTable.getItems()) {
+            String amount = ri.getAmount();
+            String unit = ri.getUnit();
+                if (amount == null || amount.isBlank() || !amount.matches("\\d+(\\.\\d+)?")) {
+                    new Alert(Alert.AlertType.ERROR, "Ingredient amount must be a number (no letters or symbols): " + amount).showAndWait();
+                    return; 
+                }
+                if (unit == null || unit.isBlank()) {
+                    new Alert(Alert.AlertType.ERROR, "Unit cannot be empty!").showAndWait();
+                    return;
+                }
+                if (unit != null && unit.matches(".*\\d.*")) {
+                    new Alert(Alert.AlertType.ERROR, "Unit cannot contain numbers: " + unit).showAndWait();
+                    return;
+                }
+        }  
 
         boolean isEdit = (editingRecipe != null);
         Recipes recipe = isEdit ? editingRecipe : new Recipes();
@@ -109,7 +177,6 @@ public class RecipeEditAddController {
         recipe.setInstructions(instructions);
         recipe.setUserId(CurrentUser.getId());
 
-        /* 图片路径处理（原逻辑保持） */
         if (imageFile != null) {
             String projectRoot = System.getProperty("user.dir").replace("\\", "/");
             String imagesDir   = projectRoot + "/src/main/resources/images";
@@ -119,15 +186,10 @@ public class RecipeEditAddController {
             recipe.setImageUrl("images/" + relPath);
         }
 
-        /* 保存或更新菜谱 */
         if (isEdit) recipeService.updateRecipe(recipe);
         else        recipeService.addRecipe(recipe);
         int recipeId = recipe.getId();
 
-        /* TODO: 保存 comments  */
-        // CommentService.saveComment(recipeId, CurrentUser.getId(), comments);
-
-        /* 重新保存配料 */
         if (isEdit) recipeIngredientsService.deleteByRecipeId(recipeId);
         for (RecipeIngredients ri : ingredientsTable.getItems()) {
             ri.setRecipeId(recipeId);
@@ -142,13 +204,8 @@ public class RecipeEditAddController {
 
         new Alert(Alert.AlertType.INFORMATION, "Recipe saved successfully!").showAndWait();
 
-        try {
-            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(
-                    getClass().getResource("/fxml/recipe_list.fxml"));
-            javafx.scene.Parent root = loader.load();
-            javafx.stage.Stage stage = (javafx.stage.Stage) saveBtn.getScene().getWindow();
-            stage.setScene(new javafx.scene.Scene(root));
-        } catch (Exception e) { e.printStackTrace(); }
+        Recipes updatedRecipe = recipeService.getRecipeById(recipeId);
+        switchScene(event, returnFxmlPath, updatedRecipe);
     }
 
     @FXML private void onAddRow()     { ingredientsTable.getItems().add(new RecipeIngredients()); }
@@ -159,19 +216,23 @@ public class RecipeEditAddController {
     }
 
     @FXML
-    private void onUpload() {
+    private void onUpload(ActionEvent event) {
         javafx.stage.FileChooser fc = new javafx.stage.FileChooser();
         fc.setTitle("Choose Image");
         fc.getExtensionFilters().add(new javafx.stage.FileChooser.ExtensionFilter(
                 "Image Files", "*.png", "*.jpg", "*.jpeg", "*.gif"));
-        java.io.File file = fc.showOpenDialog(uploadBtn.getScene().getWindow());
+        java.io.File file = fc.showOpenDialog(((Node)event.getSource()).getScene().getWindow());
         if (file != null) {
             imageFile = file;
             recipeImageView.setImage(new javafx.scene.image.Image(file.toURI().toString()));
         }
     }
 
-    @FXML private void onBack() { backBtn.getScene().getWindow().hide(); }
+    @FXML 
+    private void onBack(ActionEvent event) {
+        // Return to the previous scene (list or detail)
+        switchScene(event, returnFxmlPath, this.returnRecipe);
+    }
 
     /* =====================================================================
      *  Initialize table columns
@@ -200,6 +261,35 @@ public class RecipeEditAddController {
         if (serveSpinner.getValueFactory() == null) {
             serveSpinner.setValueFactory(
                     new javafx.scene.control.SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 1));
+        }
+    }
+
+    /**
+     * Helper to switch scenes.
+     * @param event The trigger event to get the source window.
+     * @param fxmlFile The FXML file to load.
+     * @param recipe The recipe data to pass to the next controller.
+     */
+    private void switchScene(ActionEvent event, String fxmlFile, Recipes recipe) {
+        try {
+            Node source = (Node) event.getSource();
+            javafx.stage.Stage stage = (javafx.stage.Stage) source.getScene().getWindow();
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
+            Parent root = loader.load();
+
+            // Pass data to the next controller if needed
+            if (fxmlFile.contains("recipe_detail.fxml")) {
+                RecipeInteractionController controller = loader.getController();
+                controller.setRecipe(recipe);
+            }
+            // No data needed for recipe_list.fxml as it loads all recipes by default
+
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "Failed to load page: " + fxmlFile).showAndWait();
         }
     }
 }

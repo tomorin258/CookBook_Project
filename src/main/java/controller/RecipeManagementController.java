@@ -1,11 +1,17 @@
 package controller;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;           
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;              
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;    
@@ -13,10 +19,11 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;         
-import javafx.scene.image.ImageView;     
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;        
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import model.Recipes;
 import service.RecipeService;
 
@@ -75,7 +82,9 @@ public class RecipeManagementController {
             recipeListView.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2) {
                     Recipes selected = recipeListView.getSelectionModel().getSelectedItem();
-                    if (selected != null) openDetail(selected);
+                    if (selected != null) {
+                        switchScene(event.getSource(), "/fxml/recipe_detail.fxml", selected);
+                    }
                 }
             });
             loadAllRecipes();
@@ -109,6 +118,7 @@ public class RecipeManagementController {
         prevPageBtn.setDisable(page == 1);
         nextPageBtn.setDisable(page == totalPage);
     }
+
     private void showSortedPageByLikes(int page) {
         sortedListVBox.getChildren().clear();
         if (sortedRecipes == null || sortedRecipes.isEmpty()) {
@@ -117,28 +127,74 @@ public class RecipeManagementController {
         }
         int from = (page - 1) * pageSize;
         int to   = Math.min(from + pageSize, sortedRecipes.size());
-        sortedRecipes.subList(from, to).forEach(rec -> {
-            Label lbl = new Label(rec.getTitle() + "  👍" + rec.getLikeCount());
-            lbl.setStyle("-fx-font-size:18; -fx-text-fill:#0d3b66; -fx-background-color:#fff;"
-                    + "-fx-padding:8 12; -fx-background-radius:8;");
-            sortedListVBox.getChildren().add(lbl);
-        });
+
+        for (Recipes rec : sortedRecipes.subList(from, to)) {
+            HBox card = new HBox(15);
+            card.setAlignment(Pos.CENTER_LEFT);
+            card.setPadding(new Insets(10));
+            card.setStyle("-fx-background-color: #ffffff; -fx-border-color: #cccccc; -fx-border-radius: 8; -fx-background-radius: 8;");
+
+            ImageView imageView = new ImageView(loadImageSafe(rec.getImageUrl()));
+            imageView.setFitHeight(80);
+            imageView.setFitWidth(80);
+
+            Label titleLabel = new Label(rec.getTitle());
+            titleLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+
+            Label likesLabel = new Label("👍 " + rec.getLikeCount());
+            likesLabel.setStyle("-fx-font-size: 14px;");
+
+            VBox titleAndLikes = new VBox(5, titleLabel, likesLabel);
+            card.getChildren().addAll(imageView, titleAndLikes);
+
+            card.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2) {
+                    switchScene(event.getSource(), "/fxml/recipe_detail.fxml", rec);
+                }
+            });
+
+            sortedListVBox.getChildren().add(card);
+        }
 
         pageInfoLabel.setText("Page " + page + " / " + totalPage);
         prevPageBtn.setDisable(page == 1);
         nextPageBtn.setDisable(page == totalPage);
     }
-    @FXML private void onPrevPage() { if (currentPage > 1) showSortedPageByLikes(--currentPage); }
-    @FXML private void onNextPage() { if (currentPage < totalPage) showSortedPageByLikes(++currentPage); }
-    @FXML private void onBack()     { backBtn.getScene().getWindow().hide(); }
 
-    @FXML private void onAddRecipe() {
-        openWindow("/fxml/recipe_edit_add.fxml", "Add Recipe");
+    @FXML private void onPrevPage() { 
+        if (currentPage > 1) {
+            --currentPage;
+            if (sortedListVBox != null && sortedListVBox.isVisible()) {
+                showSortedPageByLikes(currentPage);
+            } else {
+                showSortedPage(currentPage);
+            }
+        }
+    }
+    @FXML private void onNextPage() { 
+        if (currentPage < totalPage) {
+            ++currentPage;
+            if (sortedListVBox != null && sortedListVBox.isVisible()) {
+                showSortedPageByLikes(currentPage);
+            } else {
+                showSortedPage(currentPage);
+            }
+        }
+    }
+    @FXML private void onBack(ActionEvent event)     { 
+        switchScene(event.getSource(), "/fxml/recipe_list.fxml", null);
     }
 
-    @FXML
-    public void onSearch() {
+    @FXML private void onAddRecipe(ActionEvent event) {
+        switchScene(event.getSource(), "/fxml/recipe_edit_add.fxml", null);
+    }
+
+    @FXML public void onSearch() {
         String keyword = keywordField.getText();
+        if (keyword == null || keyword.trim().isEmpty()) {
+            new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.WARNING, "Keyword cannot be empty!").showAndWait();
+            return;
+        }
         sortedRecipes = searchRecipes(keyword);
         totalPage = (int) Math.ceil((double) sortedRecipes.size() / pageSize);
         currentPage = 1;
@@ -146,47 +202,46 @@ public class RecipeManagementController {
     }
 
     @FXML
-    private void onSortByLikes() {
-        openWindow("/fxml/recipe_sortbylikes.fxml", "Recipes Sorted by Likes");
+    private void onSortByLikes(ActionEvent event) {
+        switchScene(event.getSource(), "/fxml/recipe_sortbylikes.fxml", null);
     }
 
     public void setKeyword(String keyword) {
-        if (keywordField != null) keywordField.setText(keyword);
+        keywordField.setText(keyword);
     }
-    private Image loadImageSafe(String relPath) {
+
+    private void switchScene(Object eventSource, String fxml, Recipes data) {
         try {
-            return new Image(Objects.requireNonNull(
-                    getClass().getResource("/" + relPath)).toExternalForm());
-        } catch (Exception e) {
-            return new Image(getClass().getResource("/images/placeholder.png").toExternalForm());
+            Node source = (Node) eventSource;
+            Stage stage = (Stage) source.getScene().getWindow();
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
+            Parent root = loader.load();
+
+            if (fxml.equals("/fxml/recipe_detail.fxml")) {
+                RecipeInteractionController controller = loader.getController();
+                controller.setRecipe(data);
+            } else if (fxml.equals("/fxml/recipe_edit_add.fxml")) {
+                RecipeEditAddController controller = loader.getController();
+                if (data != null) {
+                    controller.loadRecipe(data);
+                }
+                controller.setReturnTarget("/fxml/recipe_list.fxml", null);
+            }
+
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
-    private void openDetail(Recipes selected) {
-        openWindowWithRecipe("/fxml/recipe_detail.fxml", "Recipe Detail", selected);
-    }
-
-    private void openWindow(String fxml, String title) {
+    private Image loadImageSafe(String url) {
         try {
-            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource(fxml));
-            javafx.scene.Parent root = loader.load();
-            javafx.stage.Stage stage = new javafx.stage.Stage();
-            stage.setTitle(title);
-            stage.setScene(new javafx.scene.Scene(root));
-            stage.show();
-        } catch (Exception e) { e.printStackTrace(); }
-    }
-
-    private void openWindowWithRecipe(String fxml, String title, Recipes rec) {
-        try {
-            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource(fxml));
-            javafx.scene.Parent root = loader.load();
-            controller.RecipeInteractionController c = loader.getController();
-            c.setRecipe(rec);
-            javafx.stage.Stage stage = new javafx.stage.Stage();
-            stage.setTitle(title);
-            stage.setScene(new javafx.scene.Scene(root));
-            stage.show();
-        } catch (Exception e) { e.printStackTrace(); }
+            return new Image(Objects.requireNonNull(
+                    getClass().getResource("/" + url)).toExternalForm());
+        } catch (Exception e) {
+            return new Image(getClass().getResource("/images/placeholder.png").toExternalForm());
+        }
     }
 }

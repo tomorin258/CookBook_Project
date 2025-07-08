@@ -41,6 +41,19 @@ public class RecipeIngredients implements Serializable {
         this.unit.set(unit);
     }
 
+    /**
+     * Copy constructor for creating a deep copy of a RecipeIngredients object.
+     * @param other The object to copy.
+     */
+    public RecipeIngredients(RecipeIngredients other) {
+        this.recipeId = other.getRecipeId();
+        this.ingredientId = other.getIngredientId();
+        this.setAmount(other.getAmount());
+        this.setUnit(other.getUnit());
+        this.setIngredientName(other.getIngredientName());
+        this.setDescription(other.getDescription());
+    }
+
     public int getRecipeId() {
         return recipeId;
     }
@@ -93,11 +106,11 @@ public class RecipeIngredients implements Serializable {
         return ingredientName;
     }
 
-    public String getDescription() { return description.get(); } // 新增：获取描述
+    public String getDescription() { return description.get(); } 
 
-    public void setDescription(String desc) { description.set(desc); } // 新增：设置描述
+    public void setDescription(String desc) { description.set(desc); } 
 
-    public SimpleStringProperty descriptionProperty() { return description; } // 新增：描述属性
+    public SimpleStringProperty descriptionProperty() { return description; } 
 
     @Override
     public String toString() {

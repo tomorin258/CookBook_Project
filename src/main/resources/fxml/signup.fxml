@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Author: Hao He -->
+
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -9,7 +11,7 @@
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="controller.RecipeLoginController">
 
-    <!-- ── TOP BAR ─────────────────────────────────────────── -->
+    <!-- TOP BAR -->
     <top>
         <StackPane style="-fx-background-color:#d3eaff; -fx-padding:14;">
             <Label text="CookBook — Get your account!"
@@ -17,7 +19,7 @@
         </StackPane>
     </top>
 
-    <!-- ── FORM AREA ───────────────────────────────────────── -->
+    <!-- FORM AREA -->
     <center>
         <VBox alignment="CENTER" spacing="18">
             <Label text="Create Account" style="-fx-font-size:28; -fx-font-weight:bold;"/>
