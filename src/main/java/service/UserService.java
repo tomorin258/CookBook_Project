@@ -1,3 +1,8 @@
+
+/**
+ * Service class for handling user-related business logic.
+ * Provides methods for user login and registration.
+ */
 package service;
 
 import org.apache.ibatis.session.SqlSession;
@@ -9,6 +14,13 @@ import model.Users;
 public class UserService {
     /**
      * Login check.
+     */
+    /**
+     * Checks user login credentials.
+     *
+     * @param username the username
+     * @param password the password
+     * @return the user object if credentials are valid, otherwise null
      */
     public Users login(String username, String password) {
         try (SqlSession session = MyBatisUtil.getSqlSession()) {
@@ -23,6 +35,14 @@ public class UserService {
 
     /**
      * Register a new user.
+     */
+    /**
+     * Registers a new user.
+     *
+     * @param username the username
+     * @param password the password
+     * @param confirm the password confirmation
+     * @return a message indicating the result of registration
      */
     public String register(String username, String password, String confirm) {
         if (username == null || username.isEmpty()) {
