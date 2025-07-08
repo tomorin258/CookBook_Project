@@ -1,3 +1,8 @@
+
+/**
+ * Controller for recipe interaction view, including displaying recipe details, handling likes, comments, and ingredient editing.
+ * Provides methods for initializing the view, updating servings, adding comments, and navigation.
+ */
 package controller;
 
 import java.io.IOException;
@@ -61,6 +66,9 @@ public class RecipeInteractionController {
     private int baseServings = 1;
     private List<RecipeIngredients> originalIngredients;
 
+    /**
+     * Initializes the interaction view, sets up controls and loads recipe data.
+     */
     @FXML
     public void initialize() {
         if (serveSpinner.getValueFactory() == null) {

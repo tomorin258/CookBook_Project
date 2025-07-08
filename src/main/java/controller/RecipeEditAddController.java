@@ -1,3 +1,8 @@
+
+/**
+ * Controller for the recipe add/edit view, handling form input, ingredient table, image upload, and save actions.
+ * Provides methods for loading a recipe, saving, and navigation.
+ */
 package controller;
 
 import java.io.IOException;
@@ -54,11 +59,20 @@ public class RecipeEditAddController {
     private String returnFxmlPath = "/fxml/recipe_list.fxml"; 
     private Recipes returnRecipe; 
 
+    /**
+     * Sets the return target for navigation after saving or canceling.
+     * @param fxmlPath the FXML path to return to
+     * @param recipe the recipe to return with (optional)
+     */
     public void setReturnTarget(String fxmlPath, Recipes recipe) {
         this.returnFxmlPath = fxmlPath;
         this.returnRecipe = recipe;
     }
 
+    /**
+     * Loads the given recipe into the edit form.
+     * @param recipe the recipe to load
+     */
     public void loadRecipe(Recipes recipe) {
         if (recipe == null) return;
 

@@ -1,3 +1,8 @@
+
+/**
+ * Controller for handling user login, registration, and navigation between login and signup views.
+ * Provides methods for login, signup, and registration actions.
+ */
 package controller;
 
 import javafx.event.ActionEvent;
@@ -24,6 +29,10 @@ public class RecipeLoginController {
 
     private final UserService userService = new UserService();
 
+    /**
+     * Handles the login button action. Authenticates the user and navigates to the recipe list view on success.
+     * @param event the action event
+     */
     @FXML
     private void onLogin(ActionEvent event) {
         String userName = usernameField.getText();
@@ -47,6 +56,10 @@ public class RecipeLoginController {
         }
     }
 
+    /**
+     * Handles the signup button action. Navigates to the signup view.
+     * @param event the action event
+     */
     @FXML
     private void onSignup(ActionEvent event) {
         try {
@@ -60,6 +73,10 @@ public class RecipeLoginController {
         }
     }
 
+    /**
+     * Handles the register button action. Registers a new user and shows validation messages.
+     * @param event the action event
+     */
     @FXML
     private void onRegister(ActionEvent event) {
         String username = usernameField.getText();
@@ -84,6 +101,10 @@ public class RecipeLoginController {
         messageLabel.setText(result);
     }
 
+    /**
+     * Handles the back button action. Navigates back to the login view.
+     * @param event the action event
+     */
     @FXML
     private void onBackToLogin(ActionEvent event) {
         try {
